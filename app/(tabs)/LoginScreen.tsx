@@ -4,7 +4,24 @@ import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 const LoginScreen = () => {
   return (
     <SafeAreaView>
-      <View>Trang dăng nhập chứa form</View>
+      <View>
+           <Text>
+
+
+
+
+
+
+
+
+
+
+
+
+            Trang dăng nhập chứa form
+               </Text>
+
+   </View>
     </SafeAreaView>
   );
 };
