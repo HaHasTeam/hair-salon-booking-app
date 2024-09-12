@@ -5,7 +5,14 @@ const LoginScreen = () => {
   return (
     <SafeAreaView>
       <View>
-        <Text>Trang dăng nhập chứa form</Text>
+        <Text>Login</Text>
+        <TextInput
+                style={styles.input}
+                onChangeText={onChangeNumber}
+                value={number}
+                placeholder="useless placeholder"
+                keyboardType="numeric"
+              />
       </View>
     </SafeAreaView>
   )
