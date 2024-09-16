@@ -11,6 +11,12 @@ const RegisterScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const navigation = useNavigation()
   const handleRegister = async () => {
+    // Check if all fields are filled
+    if (!email || !username || !password || !confirmPassword) {
+      Alert.alert('Error', 'All fields are required')
+      return
+    }
+
     // Email validation
     if (!validateEmail(email)) {
       Alert.alert('Error', 'Please enter a valid email')
@@ -24,18 +30,24 @@ const RegisterScreen = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3004/customer/create', {
+      console.log(email, username, password)
+      const response = await axios.post('http://10.0.2.2:3004/bookminton/customer/create', {
         email,
         username,
         password
       })
       if (response.status === 201) {
         Alert.alert('Success', 'Customer registered successfully')
+        setEmail('')
+        setUsername('')
+        setPassword('')
+        setConfirmPassword('')
         navigation.navigate('(authentication)/LoginScreen')
       } else {
         Alert.alert('Error', response.data.message || 'Registration failed')
       }
     } catch (error) {
+      console.error(error)
       Alert.alert('Error', error.response?.data?.message || 'An error occurred while registering')
     }
   }

@@ -1,9 +1,38 @@
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import axios from 'axios'
+import React, { useState } from 'react'
+import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const navigation = useNavigation()
+
+  const handleLogin = async () => {
+    // Check if both fields are filled
+    if (!email || !password) {
+      Alert.alert('Error', 'Email and password are required')
+      return
+    }
+    try {
+      const response = await axios.post('http://10.0.2.2:3004/bookminton/auth/login', {
+        email,
+        password
+      })
+
+      if (response.status === 200) {
+        Alert.alert('Success', 'Logged in successfully')
+        console.log(response?.data?.data)
+        // Navigate to the appropriate screen upon successful login
+        // Replace with your home screen route
+      } else {
+        Alert.alert('Error', response?.data?.message || 'Login failed')
+      }
+    } catch (error) {
+      console.error(error)
+      Alert.alert('Error', error.response?.data?.message || 'An error occurred while logging in')
+    }
+  }
   return (
     <SafeAreaView className='flex-1 justify-center items-center bg-white'>
       <View className='w-4/5'>
@@ -12,8 +41,8 @@ const LoginScreen = () => {
         <TextInput
           className=' rounded-lg p-4 mb-4 text-base bg-emerald-50 focus:border focus:border-green-500'
           placeholder='Email'
-          //   value={email}
-          //   onChangeText={setEmail}
+          value={email}
+          onChangeText={setEmail}
           keyboardType='email-address'
           autoCapitalize='none'
         />
@@ -21,15 +50,12 @@ const LoginScreen = () => {
         <TextInput
           className=' rounded-lg p-4 mb-6 text-base bg-emerald-50 focus:border focus:border-green-500'
           placeholder='Password'
-          //   value={password}
-          //   onChangeText={setPassword}
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry={true}
         />
 
-        <TouchableOpacity
-          className='bg-green-700 rounded-lg py-3 shadow-xl'
-          //   onPress={handleLogin}
-        >
+        <TouchableOpacity className='bg-green-700 rounded-lg py-3 shadow-xl' onPress={handleLogin}>
           <Text className='text-center text-white font-bold text-lg'>Sign in</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('(authentication)/RegisterScreen')}>
