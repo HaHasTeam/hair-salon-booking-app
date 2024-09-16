@@ -23,8 +23,9 @@ const LoginScreen = () => {
       if (response.status === 200) {
         Alert.alert('Success', 'Logged in successfully')
         console.log(response?.data?.data)
-        // Navigate to the appropriate screen upon successful login
-        // Replace with your home screen route
+        setEmail('')
+        setPassword('')
+        // navigation.navigate('HomeScreen');
       } else {
         Alert.alert('Error', response?.data?.message || 'Login failed')
       }
