@@ -1,9 +1,45 @@
+import { validateEmail } from '@/validations/InputValidation'
 import { useNavigation } from '@react-navigation/native'
-import React from 'react'
-import { SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import axios from 'axios'
+import React, { useState } from 'react'
+import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
 const RegisterScreen = () => {
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const navigation = useNavigation()
+  const handleRegister = async () => {
+    // Email validation
+    if (!validateEmail(email)) {
+      Alert.alert('Error', 'Please enter a valid email')
+      return
+    }
+
+    // Password confirmation validation
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match')
+      return
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3004/customer/create', {
+        email,
+        username,
+        password
+      })
+      if (response.status === 201) {
+        Alert.alert('Success', 'Customer registered successfully')
+        navigation.navigate('(authentication)/LoginScreen')
+      } else {
+        Alert.alert('Error', response.data.message || 'Registration failed')
+      }
+    } catch (error) {
+      Alert.alert('Error', error.response?.data?.message || 'An error occurred while registering')
+    }
+  }
+
   return (
     <SafeAreaView className='flex-1 justify-center items-center bg-white'>
       <View className='w-4/5'>
@@ -12,16 +48,16 @@ const RegisterScreen = () => {
         <TextInput
           className='bg-emerald-50 rounded-lg p-4 mb-4 text-base focus:border focus:border-green-500'
           placeholder='Email'
-          //   value={email}
-          //   onChangeText={setEmail}
+          value={email}
+          onChangeText={setEmail}
           keyboardType='email-address'
           autoCapitalize='none'
         />
         <TextInput
           className='bg-emerald-50 rounded-lg p-4 mb-4 text-base focus:border focus:border-green-500'
           placeholder='Username'
-          //   value={username}
-          //   onChangeText={setUsername}
+          value={username}
+          onChangeText={setUsername}
           keyboardType='default'
           autoCapitalize='none'
         />
@@ -29,27 +65,24 @@ const RegisterScreen = () => {
         <TextInput
           className='bg-emerald-50 rounded-lg p-4 mb-6 text-base focus:border focus:border-green-500'
           placeholder='Password'
-          //   value={password}
-          //   onChangeText={setPassword}
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry={true}
         />
         <TextInput
           className='bg-emerald-50 rounded-lg p-4 mb-6 text-base focus:border focus:border-green-500'
           placeholder='Confirm Password'
-          //   value={confirmPassword}
-          //   onChangeText={setConfirmPassword}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
           secureTextEntry={true}
         />
 
-        <TouchableOpacity
-          className='bg-green-700 rounded-lg py-3 shadow-xl'
-          //   onPress={handleRegister}
-        >
-          <Text className='text-center text-white font-bold text-lg'>Register</Text>
+        <TouchableOpacity className='bg-green-700 rounded-lg py-3 shadow-xl' onPress={handleRegister}>
+          <Text className='text-center text-white font-bold text-lg'>Sign Up</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('(authentication)/LoginScreen')}>
           <Text className='text-center text-sm text-green-600 mt-4'>
-            Already have an account? <Text className='text-green-600 underline'>Login</Text>
+            Already have an account? <Text className='text-green-600 underline'>Sign in</Text>
           </Text>
         </TouchableOpacity>
       </View>
