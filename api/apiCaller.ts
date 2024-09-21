@@ -1,3 +1,4 @@
+import { log } from '@/utils/logger.util'
 import axios, { AxiosResponse, Method } from 'axios'
 
 /**
@@ -17,7 +18,9 @@ export const request = (
   params: object = {},
   body: object = {}
 ): Promise<AxiosResponse> => {
-  const API_URL = process.env.API_URL
+  const API_URL = process.env.EXPO_PUBLIC_API_URL
+  log.debug('requestUrl: ', API_URL + endpoint)
+
   return axios({
     url: API_URL + endpoint,
     method: method,

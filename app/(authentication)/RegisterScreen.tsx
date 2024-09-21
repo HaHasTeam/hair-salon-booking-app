@@ -3,13 +3,16 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
-
+import { useRegister } from '@/api/auth'
+import { useAuth } from '@/provider/AuthProvider'
 const RegisterScreen = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const navigation = useNavigation()
+
+  const { register, isSuccess } = useRegister()
   const handleRegister = async () => {
     // Check if all fields are filled
     if (!email || !username || !password || !confirmPassword) {
@@ -29,27 +32,31 @@ const RegisterScreen = () => {
       return
     }
 
-    try {
-      console.log(email, username, password)
-      const response = await axios.post('http://10.0.2.2:3004/bookminton/customer/create', {
-        email,
-        username,
-        password
-      })
-      if (response.status === 201) {
-        Alert.alert('Success', 'Customer registered successfully')
-        setEmail('')
-        setUsername('')
-        setPassword('')
-        setConfirmPassword('')
-        navigation.navigate('(authentication)/LoginScreen')
-      } else {
-        Alert.alert('Error', response.data.message || 'Registration failed')
-      }
-    } catch (error) {
-      console.error(error)
-      Alert.alert('Error', error.response?.data?.message || 'An error occurred while registering')
-    }
+    // try {
+    console.log(email, username, password)
+    const data = register({ email, password, username })
+    console.log('=================36===================')
+    console.log(isSuccess, data)
+    console.log('====================================')
+    //   const response = await axios.post('http://10.0.2.2:3004/bookminton/customer/create', {
+    //     email,
+    //     username,
+    //     password
+    //   })
+    //   if (response.status === 201) {
+    //     Alert.alert('Success', 'Customer registered successfully')
+    //     setEmail('')
+    //     setUsername('')
+    //     setPassword('')
+    //     setConfirmPassword('')
+    //     navigation.navigate('(authentication)/LoginScreen')
+    //   } else {
+    //     Alert.alert('Error', response.data.message || 'Registration failed')
+    //   }
+    // } catch (error) {
+    //   console.error(error)
+    //   Alert.alert('Error', error.response?.data?.message || 'An error occurred while registering')
+    // }
   }
 
   return (
