@@ -7,6 +7,7 @@ import 'react-native-reanimated'
 import { NativeBaseProvider, Text, Box } from 'native-base'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import QueryProvider from '@/provider/QueryProvider'
+import AuthProvider from '@/provider/AuthProvider'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
@@ -31,12 +32,14 @@ export default function RootLayout() {
     <NativeBaseProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <QueryProvider>
-          <Stack>
-            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-            <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: false }} />
-            <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: false }} />
-            <Stack.Screen name='+not-found' />
-          </Stack>
+          <AuthProvider>
+            <Stack>
+              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: false }} />
+              <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: false }} />
+              <Stack.Screen name='+not-found' />
+            </Stack>
+          </AuthProvider>
         </QueryProvider>
       </ThemeProvider>
     </NativeBaseProvider>

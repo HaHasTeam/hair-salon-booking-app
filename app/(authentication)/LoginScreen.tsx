@@ -2,36 +2,29 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
-
+import { useLogin } from '@/api/auth'
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
 
+  const { login, isSuccess } = useLogin()
   const handleLogin = async () => {
     // Check if both fields are filled
     if (!email || !password) {
       Alert.alert('Error', 'Email and password are required')
       return
     }
-    try {
-      const response = await axios.post('http://10.0.2.2:3004/bookminton/auth/login', {
-        email,
-        password
-      })
 
-      if (response.status === 200) {
-        Alert.alert('Success', 'Logged in successfully')
-        console.log(response?.data?.data)
-        setEmail('')
-        setPassword('')
-        // navigation.navigate('HomeScreen');
-      } else {
-        Alert.alert('Error', response?.data?.message || 'Login failed')
-      }
-    } catch (error) {
-      console.error(error)
-      Alert.alert('Error', error.response?.data?.message || 'An error occurred while logging in')
+    login({ email, password })
+    if (isSuccess) {
+      Alert.alert('Success', 'Logged in successfully')
+
+      setEmail('')
+      setPassword('')
+      navigation.navigate('(tabs)')
+    } else {
+      Alert.alert('Error', 'Login failed')
     }
   }
   return (
