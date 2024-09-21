@@ -1,4 +1,4 @@
-import { validateEmail } from '@/validations/InputValidation'
+import { validateEmail } from '@/utils/validations/InputValidation'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useState } from 'react'
