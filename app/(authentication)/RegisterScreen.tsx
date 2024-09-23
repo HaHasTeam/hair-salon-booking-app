@@ -1,6 +1,5 @@
 import { validateEmail } from '@/utils/validations/InputValidation'
 import { useNavigation } from '@react-navigation/native'
-import axios from 'axios'
 import React, { useState } from 'react'
 import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useRegister } from '@/api/auth'
@@ -38,6 +37,17 @@ const RegisterScreen = () => {
     console.log('=================36===================')
     console.log(isSuccess, data)
     console.log('====================================')
+    if (isSuccess) {
+      Alert.alert('Success', 'Registered successfully')
+
+      setEmail('')
+      setUsername('')
+      setPassword('')
+      setConfirmPassword('')
+      navigation.navigate('(tabs)')
+    } else {
+      Alert.alert('Error', 'Register failed')
+    }
     //   const response = await axios.post('http://10.0.2.2:3004/bookminton/customer/create', {
     //     email,
     //     username,

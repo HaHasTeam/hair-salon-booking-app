@@ -17,6 +17,9 @@ const LoginScreen = () => {
     }
 
     login({ email, password })
+    console.log('=================36===================')
+    console.log(isSuccess)
+    console.log('====================================')
     if (isSuccess) {
       Alert.alert('Success', 'Logged in successfully')
 

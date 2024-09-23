@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function TabTwoScreen() {
   const { accessToken, profile } = useAuth()
   const test = AsyncStorage.getItem('accessToken')
-  console.log('accessToken', profile)
+  console.log('accessToken', accessToken, profile)
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
