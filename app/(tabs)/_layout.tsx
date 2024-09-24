@@ -22,21 +22,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
         }}
       />
-      <Tabs.Screen
-        name='explore'
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          )
-        }}
-      />
+
       <Tabs.Screen
         name='LoginRegisterScreen'
         options={{
           title: 'Account',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person-circle-outline' : 'person-circle-outline'} color={color} />
+          )
+        }}
+      />
+      <Tabs.Screen
+        name='branchs'
+        options={{
+          title: 'Pickle Play',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'tennisball-outline' : 'tennisball-outline'} color={color} />
           )
         }}
       />
