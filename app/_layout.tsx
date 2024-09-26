@@ -37,6 +37,9 @@ export default function RootLayout() {
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
               <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: false }} />
               <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: false }} />
+              <Stack.Screen name='(profile)/EditProfile' options={{ headerShown: true }} />
+              <Stack.Screen name='(profile)/ChangePassword' options={{ headerShown: true }} />
+              <Stack.Screen name='+not-found' />
             </Stack>
           </AuthProvider>
         </QueryProvider>
