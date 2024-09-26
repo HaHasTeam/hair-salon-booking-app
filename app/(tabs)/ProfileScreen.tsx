@@ -1,5 +1,5 @@
 import { useUserProfile } from '@/api/customer'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { View, Text, ActivityIndicator, Touchable, TouchableOpacity } from 'react-native'
 import UserAvatar from '@/components/Avatar'
 import Feather from '@expo/vector-icons/Feather'
@@ -8,31 +8,30 @@ import AntDesign from '@expo/vector-icons/AntDesign'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { SafeAreaView } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
 const ProfileScreen = () => {
-  const { data, error, isLoading } = useUserProfile()
+  const { data: profile, error, isLoading } = useUserProfile()
   const navigation = useNavigation()
+  const queryClient = useQueryClient()
 
-  // Mocked profile data for testing
-  const profile = {
-    username: 'johndoe',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '123-456-7890',
-    gender: 'Female',
-    image: 'https://example.com/john-doe.jpg'
+  // Use useFocusEffect to refetch the profile when the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      // Invalidate and refetch the profile query when screen is focused
+      queryClient.invalidateQueries(['profile'])
+    }, [queryClient])
+  )
+
+  if (isLoading) {
+    return <ActivityIndicator size='large' color='#0000ff' />
   }
 
-  // if (isLoading) {
-  //   return <ActivityIndicator size='large' color='#0000ff' />
-  // }
-
-  // if (error) {
-  //   console.log(error)
-  //   return <Text className='mt-28'>{error.message}</Text>
-  // }
+  if (error) {
+    console.log(error)
+    return <Text className='mt-28'>{error.message}</Text>
+  }
   console.log('profile', profile)
 
   return (

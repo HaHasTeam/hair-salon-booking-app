@@ -1,25 +1,72 @@
 import { validateEmail } from '@/utils/validations/InputValidation'
 import { useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
-import { Alert, Button, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { useRegister } from '@/api/auth'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { useUpdateProfile, useUserProfile } from '@/api/customer'
 import { StyleSheet } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
-import AntDesign from '@expo/vector-icons/AntDesign'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { useQueryClient } from '@tanstack/react-query'
 
 const EditProfile = () => {
+  const [id, setId] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [gender, setGender] = useState('')
-  const [dob, setDob] = useState(new Date(1598051730000))
-  const [mode, setMode] = useState('date')
+  const [dob, setDob] = useState(new Date())
   const [show, setShow] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [hasChanges, setHasChanges] = useState(false)
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate
+  // Fetch profile using the hook
+  const { data: profile, error, isLoading } = useUserProfile()
+  const { mutate: updateProfile, isSuccess } = useUpdateProfile()
+  const queryClient = useQueryClient()
+
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    // Set profile data to state when it's available
+    if (profile) {
+      setEmail(profile.email)
+      setId(profile.id)
+      setPhone(profile.phone)
+      setUsername(profile.username)
+      setFirstName(profile.firstName)
+      setLastName(profile.lastName)
+      setGender(profile.gender)
+      setDob(new Date(profile.dob))
+    }
+  }, [profile])
+
+  useEffect(() => {
+    if (profile) {
+      const isDataChanged =
+        profile.username !== username ||
+        profile.phone !== phone ||
+        profile.firstName !== firstName ||
+        profile.lastName !== lastName ||
+        profile.gender !== gender ||
+        profile.dob !== dob.toISOString()
+
+      setHasChanges(isDataChanged)
+    }
+  }, [username, phone, firstName, lastName, gender, dob, profile])
+
+  if (isLoading) {
+    return <ActivityIndicator size='large' color='#0000ff' />
+  }
+
+  if (error) {
+    console.log(error)
+    return <Text className='mt-28'>{error.message}</Text>
+  }
+
+  const handleDateChange = (event: any, selectedDate?: Date) => {
+    const currentDate = selectedDate || dob
     setShow(false)
     setDob(currentDate)
   }
@@ -28,20 +75,42 @@ const EditProfile = () => {
     setShow(true)
   }
 
-  const navigation = useNavigation()
-
   const data = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' }
   ]
-
-  const { register, isSuccess } = useRegister()
 
   const handleEditProfile = async () => {
     // Email validation
     if (!validateEmail(email)) {
       Alert.alert('Error', 'Please enter a valid email')
       return
+    }
+
+    setIsSaving(true)
+
+    // Call the mutation function to update the profile
+    try {
+      await updateProfile({
+        id,
+        phone,
+        email,
+        username,
+        firstName,
+        lastName,
+        gender,
+        dob: dob.toISOString()
+      })
+
+      console.log('Profile updated successfully!')
+      queryClient.invalidateQueries(['profile'])
+      Alert.alert('Success', 'Profile updated successfully!')
+      setIsSaving(false)
+      setHasChanges(false)
+    } catch (error) {
+      setIsSaving(false)
+      Alert.alert('Error', 'Failed to update profile.')
+      console.error('Error while updating profile:', error)
     }
   }
 
@@ -50,17 +119,6 @@ const EditProfile = () => {
       <View className='w-4/5'>
         <Text className='text-xl font-bold mb-6 text-center text-green-700'>Edit Profile</Text>
 
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Email</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Email'
-            value={email}
-            onChangeText={setEmail}
-            keyboardType='email-address'
-            autoCapitalize='none'
-          />
-        </View>
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>Username</Text>
           <TextInput
@@ -72,6 +130,33 @@ const EditProfile = () => {
             autoCapitalize='none'
           />
         </View>
+
+        <View className='mb-4'>
+          <Text className='text-gray-600 text-base'>Email</Text>
+          <TextInput
+            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+            placeholder='Email'
+            value={email}
+            onChangeText={setEmail}
+            keyboardType='email-address'
+            autoCapitalize='none'
+            editable={false}
+            selectTextOnFocus={false}
+          />
+        </View>
+
+        <View className='mb-4'>
+          <Text className='text-gray-600 text-base'>Phone Number</Text>
+          <TextInput
+            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+            placeholder='Phone Number'
+            value={phone}
+            onChangeText={setPhone}
+            keyboardType='number-pad'
+            autoCapitalize='none'
+          />
+        </View>
+
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>First Name</Text>
           <TextInput
@@ -83,6 +168,7 @@ const EditProfile = () => {
             autoCapitalize='none'
           />
         </View>
+
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>Last Name</Text>
           <TextInput
@@ -94,9 +180,9 @@ const EditProfile = () => {
             autoCapitalize='none'
           />
         </View>
+
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>Gender</Text>
-
           <Dropdown
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
@@ -107,25 +193,29 @@ const EditProfile = () => {
             valueField='value'
             placeholder='Select gender'
             value={gender}
-            onChange={(item) => {
-              setGender(item.value)
-            }}
+            onChange={(item) => setGender(item.value)}
           />
         </View>
+
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>Date Of Birth</Text>
           {show && <DateTimePicker testID='dateTimePicker' value={dob} mode={'date'} onChange={handleDateChange} />}
           <TextInput
             className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
             placeholder='Date Of Birth'
-            value={dob.toLocaleString()}
+            value={dob.toISOString().split('T')[0]}
             keyboardType='default'
             autoCapitalize='none'
-            onPress={showDatePicker}
+            onPressIn={showDatePicker}
           />
         </View>
-        <TouchableOpacity className='bg-green-700 rounded-lg py-3 shadow-xl mt-5' onPress={handleEditProfile}>
-          <Text className='text-center text-white font-bold text-lg'>Save</Text>
+
+        <TouchableOpacity
+          className={`bg-green-700 rounded-lg py-3 shadow-xl mt-5 ${!hasChanges || isSaving ? 'opacity-50' : ''}`}
+          onPress={handleEditProfile}
+          disabled={!hasChanges || isSaving}
+        >
+          <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -145,10 +235,6 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
-    fontWeight: 600
-  },
-  iconStyle: {
-    width: 20,
-    height: 20
+    fontWeight: '600'
   }
 })
