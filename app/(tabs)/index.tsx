@@ -1,11 +1,8 @@
-import { Image, StyleSheet, Platform } from 'react-native'
-
-import { HelloWave } from '@/components/HelloWave'
+import { Image, StyleSheet } from 'react-native'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
-import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
-import { ScrollView } from 'native-base'
-
+import Parallax from '@/components/CarouselCustom'
+import BranchCard from '@/components/branch/BranchCard'
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
@@ -13,11 +10,9 @@ export default function HomeScreen() {
       headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} style={styles.reactLogo} />}
     >
       <ThemedView style={styles.titleContainer}>
-        <ThemedView>
-          <HelloWave />
-        </ThemedView>
-        <ThemedText type='title'>Chào mừng đến với Har!dsafsdafdsfsafd </ThemedText>
+        <Parallax />
       </ThemedView>
+      <BranchCard />
     </ParallaxScrollView>
   )
 }
@@ -25,8 +20,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
+    alignItems: 'center'
   },
   stepContainer: {
     gap: 8,
