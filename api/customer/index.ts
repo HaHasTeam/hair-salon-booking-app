@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { GET, PUT } from '@/api/apiCaller'
+import { GET, POST, PUT } from '@/api/apiCaller'
 import { ENDPOINT } from '@/api'
 import { useAuth } from '@/provider/AuthProvider'
 import IProfile from '@/types/Profile'
+import { Alert } from 'react-native'
 
 export const useUserProfile = () => {
   const { accessToken } = useAuth()
@@ -64,10 +65,51 @@ export const useUpdateProfile = () => {
       }
     },
     onSuccess: (data, variables) => {
-      queryClient.setQueryData(['profile', { id: variables.id }], data)
+      queryClient.setQueryData(['profile', { _id: variables._id }], data)
+      Alert.alert('Success', 'Profile updated successfully!')
     },
-    onError: (error) => {
-      console.error('Error updating profile:', error)
+    onError: (error: any) => {
+      // Display a proper error message
+      const errorMessage = error.response?.data?.error[0].message ?? 'Failed to update profile.'
+      Alert.alert('Error', errorMessage)
+    }
+  })
+}
+export const useUpdatePassword = () => {
+  const { accessToken } = useAuth()
+  const queryClient = useQueryClient()
+
+  return useMutation<IProfile, Error, IProfile>({
+    mutationFn: async (data: IProfile) => {
+      if (!accessToken) {
+        throw new Error('No access token available. Please log in again.')
+      }
+
+      const response = await POST(
+        ENDPOINT.changePassword,
+        {
+          oldPassword: data.oldPassword,
+          newPassword: data.password // Make sure it's "newPassword" in the API
+        },
+        {},
+        { authorization: 'Bearer ' + accessToken }
+      )
+
+      if (response.status !== 201) {
+        throw new Error(`Failed to update password: ${response.statusText}`)
+      }
+
+      return response.data.data
+    },
+    onSuccess: () => {
+      // Invalidate cache and show success alert
+      queryClient.invalidateQueries(['profile'])
+      Alert.alert('Success', 'Password updated successfully!')
+    },
+    onError: (error: any) => {
+      // Display a proper error message
+      const errorMessage = error.response?.data?.message ?? 'Failed to update password.'
+      Alert.alert('Error', errorMessage)
     }
   })
 }

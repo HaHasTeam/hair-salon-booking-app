@@ -1,5 +1,4 @@
 import { validateEmail } from '@/utils/validations/InputValidation'
-import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useUpdateProfile, useUserProfile } from '@/api/customer'
@@ -9,7 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { useQueryClient } from '@tanstack/react-query'
 
 const EditProfile = () => {
-  const [id, setId] = useState('')
+  const [_id, setId] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -23,16 +22,14 @@ const EditProfile = () => {
 
   // Fetch profile using the hook
   const { data: profile, error, isLoading } = useUserProfile()
-  const { mutate: updateProfile, isSuccess } = useUpdateProfile()
+  const { mutate: updateProfile } = useUpdateProfile()
   const queryClient = useQueryClient()
-
-  const navigation = useNavigation()
 
   useEffect(() => {
     // Set profile data to state when it's available
     if (profile) {
       setEmail(profile.email)
-      setId(profile.id)
+      setId(profile._id)
       setPhone(profile.phone)
       setUsername(profile.username)
       setFirstName(profile.firstName)
@@ -92,24 +89,21 @@ const EditProfile = () => {
     // Call the mutation function to update the profile
     try {
       await updateProfile({
-        id,
-        phone,
-        email,
-        username,
-        firstName,
-        lastName,
-        gender,
+        _id: _id,
+        phone: phone,
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        gender: gender,
         dob: dob.toISOString()
       })
 
-      console.log('Profile updated successfully!')
       queryClient.invalidateQueries(['profile'])
-      Alert.alert('Success', 'Profile updated successfully!')
       setIsSaving(false)
       setHasChanges(false)
     } catch (error) {
       setIsSaving(false)
-      Alert.alert('Error', 'Failed to update profile.')
       console.error('Error while updating profile:', error)
     }
   }
@@ -117,7 +111,7 @@ const EditProfile = () => {
   return (
     <SafeAreaView className='flex-1 py-5 items-center bg-white'>
       <View className='w-4/5'>
-        <Text className='text-xl font-bold mb-6 text-center text-green-700'>Edit Profile</Text>
+        <Text className='text-xl font-bold mb-6 text-center text-green-700'>Change password</Text>
 
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>Username</Text>

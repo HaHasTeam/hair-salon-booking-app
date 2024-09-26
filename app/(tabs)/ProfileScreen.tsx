@@ -67,9 +67,12 @@ const ProfileScreen = () => {
             size='xxl'
           />
         </View>
-        <Text className='text-base mt-2 font-bold text-center text-lg'>
-          {profile?.firstName} {profile?.lastName}
-        </Text>
+        {(profile?.firstName !== '' || profile?.lastName !== '') && (
+          <Text className='text-base mt-2 font-bold text-center text-lg'>
+            {profile?.firstName} {profile?.lastName}
+          </Text>
+        )}
+
         <Text className='mt-2 text-center text-gray-500'>@{profile?.email}</Text>
 
         <View className='px-5 my-4'>
