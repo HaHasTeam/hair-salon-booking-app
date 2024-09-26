@@ -16,10 +16,8 @@ const ProfileScreen = () => {
   const navigation = useNavigation()
   const queryClient = useQueryClient()
 
-  // Use useFocusEffect to refetch the profile when the screen is focused
   useFocusEffect(
     useCallback(() => {
-      // Invalidate and refetch the profile query when screen is focused
       queryClient.invalidateQueries(['profile'])
     }, [queryClient])
   )
@@ -37,21 +35,16 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView className='flex-1 bg-white'>
       <View className='w-full px-2 mt-9 flex-row items-center'>
-        {/* Icon Container */}
         <TouchableOpacity className='flex-none'>
           <Ionicons name='chevron-back' size={24} color='black' />
         </TouchableOpacity>
 
-        {/* Spacer View to push Text to center */}
         <View className='flex-1'></View>
 
-        {/* Title Text */}
         <Text className='text-green-600 text-lg font-bold text-center'>Profile</Text>
 
-        {/* Spacer View to push Text to center */}
         <View className='flex-1'></View>
 
-        {/* Extra View for spacing */}
         <View className='flex-none w-6'></View>
       </View>
       <View className='px-4'>

@@ -20,13 +20,11 @@ const EditProfile = () => {
   const [isSaving, setIsSaving] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
 
-  // Fetch profile using the hook
   const { data: profile, error, isLoading } = useUserProfile()
   const { mutate: updateProfile } = useUpdateProfile()
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    // Set profile data to state when it's available
     if (profile) {
       setEmail(profile.email)
       setId(profile._id)
@@ -78,7 +76,6 @@ const EditProfile = () => {
   ]
 
   const handleEditProfile = async () => {
-    // Email validation
     if (!validateEmail(email)) {
       Alert.alert('Error', 'Please enter a valid email')
       return
@@ -86,7 +83,6 @@ const EditProfile = () => {
 
     setIsSaving(true)
 
-    // Call the mutation function to update the profile
     try {
       await updateProfile({
         _id: _id,

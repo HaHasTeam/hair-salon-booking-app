@@ -69,7 +69,6 @@ export const useUpdateProfile = () => {
       Alert.alert('Success', 'Profile updated successfully!')
     },
     onError: (error: any) => {
-      // Display a proper error message
       const errorMessage = error.response?.data?.error[0].message ?? 'Failed to update profile.'
       Alert.alert('Error', errorMessage)
     }
@@ -89,7 +88,7 @@ export const useUpdatePassword = () => {
         ENDPOINT.changePassword,
         {
           oldPassword: data.oldPassword,
-          newPassword: data.password // Make sure it's "newPassword" in the API
+          newPassword: data.password
         },
         {},
         { authorization: 'Bearer ' + accessToken }
@@ -102,12 +101,10 @@ export const useUpdatePassword = () => {
       return response.data.data
     },
     onSuccess: () => {
-      // Invalidate cache and show success alert
       queryClient.invalidateQueries(['profile'])
       Alert.alert('Success', 'Password updated successfully!')
     },
     onError: (error: any) => {
-      // Display a proper error message
       const errorMessage = error.response?.data?.message ?? 'Failed to update password.'
       Alert.alert('Error', errorMessage)
     }
