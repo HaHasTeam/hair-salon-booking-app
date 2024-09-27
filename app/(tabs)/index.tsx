@@ -3,16 +3,76 @@ import ParallaxScrollView from '@/components/ParallaxScrollView'
 import { ThemedView } from '@/components/ThemedView'
 import Parallax from '@/components/CarouselCustom'
 import BranchCard from '@/components/branch/BranchCard'
+import { useBranchList } from '@/api/branchs'
+import { ThemedText } from '@/components/ThemedText'
+import { TabBarIcon } from '@/components/navigation/TabBarIcon'
+import { View } from 'native-base'
+const list = [
+  {
+    id: '1',
+    title: 'First Item',
+    color: '#26292E',
+    img: require('@/assets/images/1.jpg')
+  },
+  {
+    id: '2',
+    title: 'Second Item',
+    color: '#899F9C',
+    img: require('@/assets/images/2.jpg')
+  },
+  {
+    id: '3',
+    title: 'Third Item',
+    color: '#B3C680',
+    img: require('@/assets/images/3.jpg')
+  },
+  {
+    id: '4',
+    title: 'Fourth Item',
+    color: '#5C6265',
+    img: require('@/assets/images/4.jpg')
+  },
+  {
+    id: '5',
+    title: 'Fifth Item',
+    color: '#F5D399',
+    img: require('@/assets/images/5.jpg')
+  }
+]
 export default function HomeScreen() {
+  const { data } = useBranchList()
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} style={styles.reactLogo} />}
     >
       <ThemedView style={styles.titleContainer}>
-        <Parallax />
+        <Parallax
+          data={list}
+          renderCard={({ item }) => {
+            return (
+              <ThemedView>
+                <Image style={styles.img} source={item.img} />
+              </ThemedView>
+            )
+          }}
+        />
       </ThemedView>
-      <BranchCard />
+      <ThemedView>
+        <View display={'flex'} alignItems={'center'} alignContent={'center'} flexDirection={'row'}>
+          <ThemedText className='text-green-600 '>Sân nổi bật</ThemedText>
+          <TabBarIcon name='arrow-forward-circle-outline' className='text-green-600 ' />
+        </View>
+        <Parallax
+          data={data}
+          renderCard={({ item }) => {
+            console.log('item.images[0]', item.images[0])
+
+            return <BranchCard branch={item} />
+          }}
+        />
+      </ThemedView>
     </ParallaxScrollView>
   )
 }
@@ -32,5 +92,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute'
+  },
+  img: {
+    height: '100%',
+    width: '100%'
   }
 })
