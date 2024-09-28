@@ -1,11 +1,12 @@
 import { validateEmail } from '@/utils/validations/InputValidation'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useUpdateProfile, useUserProfile } from '@/api/customer'
 import { StyleSheet } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useQueryClient } from '@tanstack/react-query'
+import ParallaxScrollView from '@/components/ParallaxScrollView'
 
 const EditProfile = () => {
   const [_id, setId] = useState('')
@@ -105,110 +106,115 @@ const EditProfile = () => {
   }
 
   return (
-    <SafeAreaView className='flex-1 py-5 items-center bg-white'>
-      <View className='w-4/5'>
-        <Text className='text-xl font-bold mb-6 text-center text-green-700'>Change password</Text>
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} />}
+    >
+      <SafeAreaView className='flex-1 py-5 items-center bg-white'>
+        <View className='w-4/5'>
+          <Text className='text-xl font-bold mb-6 text-center text-green-700'>Change password</Text>
 
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Username</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Username'
-            value={username}
-            onChangeText={setUsername}
-            keyboardType='default'
-            autoCapitalize='none'
-          />
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Username</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Username'
+              value={username}
+              onChangeText={setUsername}
+              keyboardType='default'
+              autoCapitalize='none'
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Email</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Email'
+              value={email}
+              onChangeText={setEmail}
+              keyboardType='email-address'
+              autoCapitalize='none'
+              editable={false}
+              selectTextOnFocus={false}
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Phone Number</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Phone Number'
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType='number-pad'
+              autoCapitalize='none'
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>First Name</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='First Name'
+              value={firstName}
+              onChangeText={setFirstName}
+              keyboardType='default'
+              autoCapitalize='none'
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Last Name</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Last Name'
+              value={lastName}
+              onChangeText={setLastName}
+              keyboardType='default'
+              autoCapitalize='none'
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Gender</Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              data={data}
+              maxHeight={300}
+              labelField='label'
+              valueField='value'
+              placeholder='Select gender'
+              value={gender}
+              onChange={(item) => setGender(item.value)}
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Date Of Birth</Text>
+            {show && <DateTimePicker testID='dateTimePicker' value={dob} mode={'date'} onChange={handleDateChange} />}
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Date Of Birth'
+              value={dob.toISOString().split('T')[0]}
+              keyboardType='default'
+              autoCapitalize='none'
+              onPressIn={showDatePicker}
+            />
+          </View>
+
+          <TouchableOpacity
+            className={`bg-green-700 rounded-lg py-3 shadow-xl mt-5 ${!hasChanges || isSaving ? 'opacity-50' : ''}`}
+            onPress={handleEditProfile}
+            disabled={!hasChanges || isSaving}
+          >
+            <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
+          </TouchableOpacity>
         </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Email</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Email'
-            value={email}
-            onChangeText={setEmail}
-            keyboardType='email-address'
-            autoCapitalize='none'
-            editable={false}
-            selectTextOnFocus={false}
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Phone Number</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Phone Number'
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType='number-pad'
-            autoCapitalize='none'
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>First Name</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='First Name'
-            value={firstName}
-            onChangeText={setFirstName}
-            keyboardType='default'
-            autoCapitalize='none'
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Last Name</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Last Name'
-            value={lastName}
-            onChangeText={setLastName}
-            keyboardType='default'
-            autoCapitalize='none'
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Gender</Text>
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            data={data}
-            maxHeight={300}
-            labelField='label'
-            valueField='value'
-            placeholder='Select gender'
-            value={gender}
-            onChange={(item) => setGender(item.value)}
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Date Of Birth</Text>
-          {show && <DateTimePicker testID='dateTimePicker' value={dob} mode={'date'} onChange={handleDateChange} />}
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Date Of Birth'
-            value={dob.toISOString().split('T')[0]}
-            keyboardType='default'
-            autoCapitalize='none'
-            onPressIn={showDatePicker}
-          />
-        </View>
-
-        <TouchableOpacity
-          className={`bg-green-700 rounded-lg py-3 shadow-xl mt-5 ${!hasChanges || isSaving ? 'opacity-50' : ''}`}
-          onPress={handleEditProfile}
-          disabled={!hasChanges || isSaving}
-        >
-          <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ParallaxScrollView>
   )
 }
 

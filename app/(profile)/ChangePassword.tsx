@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useUpdatePassword } from '@/api/customer'
+import ParallaxScrollView from '@/components/ParallaxScrollView'
 
 const ChangePassword = () => {
   const [password, setPassword] = useState('')
@@ -55,55 +56,60 @@ const ChangePassword = () => {
   }
 
   return (
-    <SafeAreaView className='flex-1 py-5 items-center bg-white'>
-      <View className='w-4/5'>
-        <Text className='text-xl font-bold mb-6 text-center text-green-700'>Change Password</Text>
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+      headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} />}
+    >
+      <SafeAreaView className='flex-1 py-5 items-center bg-white'>
+        <View className='w-4/5'>
+          <Text className='text-xl font-bold mb-6 text-center text-green-700'>Change Password</Text>
 
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Old Password</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Enter your old password'
-            value={oldPassword}
-            onChangeText={setOldPassword}
-            secureTextEntry={true}
-            autoCapitalize='none'
-          />
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Old Password</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Enter your old password'
+              value={oldPassword}
+              onChangeText={setOldPassword}
+              secureTextEntry={true}
+              autoCapitalize='none'
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>New Password</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Enter your new password'
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={true}
+              autoCapitalize='none'
+            />
+          </View>
+
+          <View className='mb-4'>
+            <Text className='text-gray-600 text-base'>Confirm New Password</Text>
+            <TextInput
+              className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
+              placeholder='Confirm your new password'
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={true}
+              autoCapitalize='none'
+            />
+          </View>
+
+          <TouchableOpacity
+            className={`bg-green-700 rounded-lg py-3 shadow-xl mt-5 ${!isButtonEnabled || isSaving ? 'opacity-50' : ''}`}
+            onPress={handleEditProfile}
+            disabled={!isButtonEnabled || isSaving}
+          >
+            <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
+          </TouchableOpacity>
         </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>New Password</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Enter your new password'
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={true}
-            autoCapitalize='none'
-          />
-        </View>
-
-        <View className='mb-4'>
-          <Text className='text-gray-600 text-base'>Confirm New Password</Text>
-          <TextInput
-            className='border-gray-300 border-b py-2 text-base focus:border-green-500 font-semibold'
-            placeholder='Confirm your new password'
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry={true}
-            autoCapitalize='none'
-          />
-        </View>
-
-        <TouchableOpacity
-          className={`bg-green-700 rounded-lg py-3 shadow-xl mt-5 ${!isButtonEnabled || isSaving ? 'opacity-50' : ''}`}
-          onPress={handleEditProfile}
-          disabled={!isButtonEnabled || isSaving}
-        >
-          <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ParallaxScrollView>
   )
 }
 
