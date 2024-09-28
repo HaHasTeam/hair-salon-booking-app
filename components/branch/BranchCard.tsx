@@ -15,7 +15,9 @@ const BranchCard = ({ branch }: { branch: IBranch }) => {
         <Link href={`/branchs/${branch._id}`} asChild>
           <Pressable className='rounded-md overflow-hidden border border-slate-400 flex flex-col max-w-[300px] h-[200px]'>
             <Image src={images} className='w-full h-32 object-cover ' alt='image placeholder' />
-            <Text className='w-fit text-lg p-2 line-clamp-2'>{branch.name}</Text>
+            <Text className='w-fit text-lg p-2' numberOfLines={2}>
+              {branch.name}
+            </Text>
           </Pressable>
         </Link>
       )}

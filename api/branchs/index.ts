@@ -16,3 +16,18 @@ export const useBranchList = () => {
     }
   })
 }
+
+export const useBranchDetail = ({ id }: { id: string }) => {
+  return useQuery({
+    queryKey: ['branches', id],
+    queryFn: async () => {
+      const response = await GET(ENDPOINT.getBranchDetail(id), {})
+      console.log('response: ', response)
+      if (response.status !== 200) {
+        throw new Error(`Failed to fetch Branch Detail: ${response.statusText}`)
+      }
+
+      return response.data.data
+    }
+  })
+}

@@ -1,29 +1,36 @@
 import { useBranchList } from '@/api/branchs'
+import BranchListItem from '@/components/branch/BranchListItem'
 import CustomFlatList from '@/components/CustomFlatList'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import SearchBar from '@/components/SearchBar'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
 import { IBranch } from '@/types/Branch'
 import { Link, useSegments } from 'expo-router'
 import { View } from 'native-base'
 import { useState } from 'react'
-import { Image, SafeAreaView, StyleSheet } from 'react-native'
+import { ActivityIndicator, Image, SafeAreaView, StyleSheet } from 'react-native'
 
 const BranchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const segments = useSegments()
-  const { data } = useBranchList()
+  const { data, isLoading } = useBranchList()
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
     console.log('onSubmitSearch', searchKey)
   }
+
   const renderItem = ({ item }: { item: IBranch }) => {
     return (
-      <View>
-        <ThemedText>{item.name}</ThemedText>
-      </View>
+      <BranchListItem
+        item={item}
+        onPressBooking={() => console.log('Minh')}
+        onPressBranchCard={() => {
+          console.log('minh2')
+        }}
+      />
     )
+  }
+  if (isLoading) {
+    return <ActivityIndicator size='large' />
   }
   return (
     <CustomFlatList

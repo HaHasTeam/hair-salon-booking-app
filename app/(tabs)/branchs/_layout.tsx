@@ -1,17 +1,30 @@
-import { ThemedView } from '@/components/ThemedView'
-import { Colors } from '@/constants/Colors'
-import { StackScreenWithSearchBar } from '@/constants/layout'
-import { Stack } from 'expo-router'
+import { Stack, useNavigation } from 'expo-router'
+import { Pressable, Text } from 'native-base'
 
 export default function MenuStack() {
   return (
     <Stack>
-      <Stack.Screen name='index' options={{ headerShown: false }} />
-
       <Stack.Screen
-        name='[id]'
+        name='index'
         options={{
-          headerShown: false
+          headerTitle: () => {
+            const navigation = useNavigation()
+            return (
+              <Pressable
+                onPress={() => {
+                  navigation.navigate('index')
+                  navigation.setOptions({
+                    scrollToTopEnabled: true
+                  })
+                }}
+              >
+                <Text fontSize={'2xl'} fontWeight={'bold'} color={'tomato'} padding={2}>
+                  PickleBall
+                </Text>
+              </Pressable>
+            )
+          },
+          headerShadowVisible: false
         }}
       />
     </Stack>
