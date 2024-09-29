@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useUpdatePassword } from '@/api/customer'
+import ParallaxScrollView from '@/components/ParallaxScrollView'
 
 const ChangePassword = () => {
   const [password, setPassword] = useState('')
@@ -100,7 +101,14 @@ const ChangePassword = () => {
           onPress={handleEditProfile}
           disabled={!isButtonEnabled || isSaving}
         >
-          <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
+          {isSaving ? (
+            <View className='flex items-center justify-center'>
+              <Text className='text-center text-white font-bold text-lg mr-2'>Saving...</Text>
+              <ActivityIndicator size='small' color='#00ff00' />
+            </View>
+          ) : (
+            <Text className='text-center text-white font-bold text-lg mr-2'>Save</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>

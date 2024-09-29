@@ -1,11 +1,12 @@
 import { validateEmail } from '@/utils/validations/InputValidation'
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useUpdateProfile, useUserProfile } from '@/api/customer'
 import { StyleSheet } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useQueryClient } from '@tanstack/react-query'
+import ParallaxScrollView from '@/components/ParallaxScrollView'
 
 const EditProfile = () => {
   const [_id, setId] = useState('')
@@ -52,7 +53,7 @@ const EditProfile = () => {
   }, [username, phone, firstName, lastName, gender, dob, profile])
 
   if (isLoading) {
-    return <ActivityIndicator size='large' color='#0000ff' />
+    return <ActivityIndicator size='large' color='#00ff00' />
   }
 
   if (error) {
@@ -107,7 +108,7 @@ const EditProfile = () => {
   return (
     <SafeAreaView className='flex-1 py-5 items-center bg-white'>
       <View className='w-4/5'>
-        <Text className='text-xl font-bold mb-6 text-center text-green-700'>Change password</Text>
+        <Text className='text-xl font-bold mb-6 text-center text-green-700'>Edit profile</Text>
 
         <View className='mb-4'>
           <Text className='text-gray-600 text-base'>Username</Text>
@@ -205,7 +206,14 @@ const EditProfile = () => {
           onPress={handleEditProfile}
           disabled={!hasChanges || isSaving}
         >
-          <Text className='text-center text-white font-bold text-lg'>{isSaving ? 'Saving...' : 'Save'}</Text>
+          {isSaving ? (
+            <View className='flex items-center justify-center'>
+              <Text className='text-center text-white font-bold text-lg mr-2'>Saving...</Text>
+              <ActivityIndicator size='small' color='#00ff00' />
+            </View>
+          ) : (
+            <Text className='text-center text-white font-bold text-lg mr-2'>Save</Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
