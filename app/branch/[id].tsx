@@ -64,7 +64,7 @@ const BranchDetail = () => {
 
         {/* Footer */}
         <Pressable className='  flex-row items-center justify-between border-y-2 border-gray-300 p-5 '>
-          <Link href={'/(profile)/EditProfile'} className='rounded-md bg-green-500 p-5 px-8 w-full text-center'>
+          <Link href={`/booking/${data._id}`} className='rounded-md bg-green-500 p-5 px-8 w-full text-center'>
             <Text className='text-lg font-bold text-white'>Đặt Sân ngay</Text>
           </Link>
         </Pressable>
