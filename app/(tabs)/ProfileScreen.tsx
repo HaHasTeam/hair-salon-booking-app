@@ -48,9 +48,8 @@ const ProfileScreen = () => {
       }
     >
       <SafeAreaView className='flex-1 bg-white'>
-        <Text className='text-green-600 text-lg font-bold text-center mt-3'>Profile</Text>
-        <View className='px-4'>
-          <View className='mt-3 items-center justify-center'>
+        <View className='flex-1'>
+          <View className='items-center justify-center'>
             <UserAvatar
               src={
                 profile?.gender === 'Female'
