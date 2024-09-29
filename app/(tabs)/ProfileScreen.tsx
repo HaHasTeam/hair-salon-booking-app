@@ -24,7 +24,7 @@ const ProfileScreen = () => {
   )
 
   if (isLoading) {
-    return <ActivityIndicator size='large' color='#0000ff' />
+    return <ActivityIndicator size='large' color='#00ff00' />
   }
 
   if (error) {
@@ -36,22 +36,19 @@ const ProfileScreen = () => {
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} />}
+      headerImage={
+        <Image
+          source={require('@/assets/images/profile.jpg')}
+          style={{
+            width: '100%',
+            height: '100%',
+            resizeMode: 'cover'
+          }}
+        />
+      }
     >
       <SafeAreaView className='flex-1 bg-white'>
-        <View className='w-full px-2 mt-9 flex-row items-center'>
-          <TouchableOpacity className='flex-none'>
-            <Ionicons name='chevron-back' size={24} color='black' />
-          </TouchableOpacity>
-
-          <View className='flex-1'></View>
-
-          <Text className='text-green-600 text-lg font-bold text-center'>Profile</Text>
-
-          <View className='flex-1'></View>
-
-          <View className='flex-none w-6'></View>
-        </View>
+        <Text className='text-green-600 text-lg font-bold text-center mt-3'>Profile</Text>
         <View className='px-4'>
           <View className='mt-3 items-center justify-center'>
             <UserAvatar

@@ -1,7 +1,9 @@
 import { Button } from 'native-base'
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import { router } from 'expo-router'
-const LoginRegisterScreen = ({ navigation }: any) => {
+import { useNavigation } from '@react-navigation/native'
+const LoginRegisterScreen = () => {
+  const navigation = useNavigation()
   return (
     <SafeAreaView style={style.view}>
       <Image style={style.image} source={require('../../assets/images/illustration.png')} />
@@ -11,7 +13,7 @@ const LoginRegisterScreen = ({ navigation }: any) => {
         <Button
           style={style.signupButton}
           variant={'solid'}
-          onPress={() => router.replace('/RegisterScreen')}
+          onPress={() => navigation.navigate('(authentication)/RegisterScreen')}
           _text={{
             fontWeight: '500',
             fontSize: 20
@@ -22,14 +24,14 @@ const LoginRegisterScreen = ({ navigation }: any) => {
         <Button
           style={style.loginButton}
           variant={'outline'}
-          onPress={() => router.replace('/LoginScreen')}
+          onPress={() => navigation.navigate('(authentication)/LoginScreen')}
           _text={{
             color: '#3D5CFF',
             fontWeight: '500',
             fontSize: 20
           }}
         >
-          Log in
+          Sign in
         </Button>
       </View>
     </SafeAreaView>
