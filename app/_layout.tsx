@@ -35,10 +35,10 @@ export default function RootLayout() {
           <AuthProvider>
             <Stack>
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: false }} />
-              <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: false }} />
-              <Stack.Screen name='(profile)/EditProfile' options={{ headerShown: true }} />
-              <Stack.Screen name='(profile)/ChangePassword' options={{ headerShown: true }} />
+              <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: true, title: 'Sign up' }} />
+              <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: true, title: 'Sign in' }} />
+              <Stack.Screen name='(profile)/EditProfile' options={{ headerShown: true, title: 'Edit profile' }} />
+              <Stack.Screen name='(profile)/ChangePassword' options={{ headerShown: true, title: 'Change password' }} />
               <Stack.Screen name='+not-found' />
             </Stack>
           </AuthProvider>
