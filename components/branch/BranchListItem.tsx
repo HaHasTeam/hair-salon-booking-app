@@ -18,7 +18,7 @@ const BranchListItem = ({
   const images = (item.images && item.images[0]) ?? ImagePlace
 
   return (
-    <Link href={`/${segment.join('/')}/${item._id}`} asChild>
+    <Link href={`/branch/${item._id}`} asChild>
       <TouchableOpacity key={item._id} style={styles.card}>
         <View>
           <View style={styles.cardTop}>

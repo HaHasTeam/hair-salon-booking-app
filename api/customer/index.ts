@@ -16,7 +16,7 @@ export const useUserProfile = () => {
       }
 
       const response = await GET(ENDPOINT.profile, {}, { authorization: 'Bearer ' + accessToken })
-      console.log('response: ', response)
+
       if (response.status !== 200) {
         throw new Error(`Failed to fetch profile: ${response.statusText}`)
       }
@@ -35,7 +35,6 @@ export const useUpdateProfile = () => {
       if (!accessToken) {
         throw new Error('No access token available. Please log in again.')
       }
-      console.log(3)
 
       try {
         const response = await PUT(
@@ -53,7 +52,6 @@ export const useUpdateProfile = () => {
           { authorization: 'Bearer ' + accessToken }
         )
 
-        console.log('response: ', JSON.stringify(response))
         if (response.status !== 200) {
           throw new Error(`Failed to update profile: ${response.statusText}`)
         }

@@ -8,7 +8,6 @@ export interface IManager {
   lastName: string
   phone: string
   dob: Date
-
   expiredDate?: Date
   maxCourt?: number
   role: string
