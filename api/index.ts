@@ -6,5 +6,6 @@ export const ENDPOINT = {
   changePassword: '/user/reset-password',
   getAllBranch: '/branch',
   getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
-  getCourtAvailable: '/court/get-court-available'
+  getCourtAvailable: '/court/get-court-available',
+  getPaymentInfo: '/payment/create-payment-url-for-booking'
 }

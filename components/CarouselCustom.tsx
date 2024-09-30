@@ -40,8 +40,10 @@ const list = [
 
 function Parallax({
   data,
-  renderCard
+  renderCard,
+  autoPlayInterval
 }: {
+  autoPlayInterval: number
   data: any[]
   renderCard: ({ item, index }: { item: any; index: number }) => React.ReactElement
 }) {
@@ -75,7 +77,7 @@ function Parallax({
       pagingEnabled={pagingEnabled}
       snapEnabled={snapEnabled}
       autoPlay={autoPlay}
-      autoPlayInterval={1500}
+      autoPlayInterval={autoPlayInterval}
       mode='parallax'
       modeConfig={{
         parallaxScrollingScale: 0.9,

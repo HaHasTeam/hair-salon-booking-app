@@ -11,6 +11,6 @@ export interface IBooking {
   startDate: string
   endDate: string
   status: string
-  court: ICourt | string
+  court: ICourt
   customer?: string | IUser.IModel
 }

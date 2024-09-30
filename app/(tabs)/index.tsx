@@ -49,6 +49,7 @@ export default function HomeScreen() {
     >
       <ThemedView style={styles.titleContainer}>
         <Parallax
+          autoPlayInterval={2000}
           data={list}
           renderCard={({ item }) => {
             return (
@@ -65,6 +66,7 @@ export default function HomeScreen() {
           <TabBarIcon name='arrow-forward-circle-outline' className='text-green-600 ' />
         </View>
         <Parallax
+          autoPlayInterval={2500}
           data={data}
           renderCard={({ item }) => {
             console.log('item.images[0]', item.images[0])

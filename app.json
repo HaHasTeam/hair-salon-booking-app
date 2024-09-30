@@ -13,7 +13,8 @@
       "backgroundColor": "#0FA958"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.listkelvin.hairsalonbookingapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,6 +33,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9e551a9f-e523-4b7f-a810-12964ffe4fb0"
+      }
     }
   }
 }
