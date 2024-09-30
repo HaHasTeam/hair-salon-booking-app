@@ -5,5 +5,6 @@ export const ENDPOINT = {
   profile: '/customer',
   changePassword: '/user/reset-password',
   getAllBranch: '/branch',
-  getBranchDetail: (id: string) => `/branch/get-by-id/${id}`
+  getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
+  getCourtAvailable: '/court/get-court-available'
 }

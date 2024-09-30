@@ -1,3 +1,5 @@
+import { ISlot } from '@/types/Slot'
+
 export const HEADER_HEIGHT = 250
 export function formatToVND(amount: number): string {
   const formatter = new Intl.NumberFormat('vi-VN', {
@@ -47,4 +49,12 @@ export function getThu(date: Date | undefined): string {
   }
 
   return thu
+}
+
+export function calculateTotalPrice(slots: ISlot[], courtPrice: number): number {
+  let sum = 0
+  for (const slot of slots) {
+    sum += (1 + slot.surcharge) * courtPrice
+  }
+  return sum
 }

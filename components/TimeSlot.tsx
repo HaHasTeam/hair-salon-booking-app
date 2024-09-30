@@ -28,6 +28,7 @@ export const TimeSlot = ({
 
   const timeSlots = useMemo(() => {
     const slots = [] as ITimeSlot[]
+    // console.log('timeSlotData', timeSlotData)
 
     if (timeSlotData?.length !== 0) {
       for (const slot of timeSlotData) {
@@ -46,16 +47,14 @@ export const TimeSlot = ({
           parseInt(slot.endTime?.split(':')[1] ?? '1', 10)
         )
 
-        const startTimeString = startTime
-          .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          .replace(/^0/, '')
+        const startTimeString = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
 
-        const endTimeString = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).replace(/^0/, '')
+        const endTimeString = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
 
         slots.push({
           ...slot,
           isInThePass: endTime < new Date(),
-          timeDisplay: `${startTimeString}-${endTimeString}`
+          timeDisplay: `${startTimeString} - ${endTimeString}`
         })
       }
       return slots
@@ -64,6 +63,8 @@ export const TimeSlot = ({
     return slots
   }, [selectDay, timeSlotData])
   const toggleSlot = (slot: ITimeSlot) => {
+    console.log('slote', slot)
+
     const slotIndex = timeSlots.indexOf(slot)
     if (!startSlot) {
       setStartSlot(slot)
@@ -86,10 +87,10 @@ export const TimeSlot = ({
   }
 
   return (
-    <VStack alignItems={'center'} justifyContent={'center'} className='border'>
-      <Text className='mb-3 text-2xl font-bold'>{title}</Text>
+    <VStack alignItems={'center'} justifyContent={'center'} className='border-t-2 border-t-green-300'>
+      <Text className='my-3 text-2xl font-bold'>{title}</Text>
 
-      <HStack flexWrap={'wrap'} alignItems={'center'}>
+      <HStack flexWrap={'wrap'} alignItems={'center'} justifyContent={'center'} space={2}>
         {timeSlots.length !== 0 ? (
           timeSlots.map((slot) => (
             <Button
@@ -112,9 +113,9 @@ export const TimeSlot = ({
                     ? 'outline'
                     : 'outline'
               }
-              className={`h-12 w-1/3 p-0 text-xs  rounded-md   ${
+              className={`h-12 w-fit  text-xs  rounded-md mb-2 ${slot.isInThePass && 'bg-slate-300'} ${
                 selectedSlots.includes(slot)
-                  ? 'bg-green-800 text-green-200'
+                  ? 'bg-green-400 text-green-200'
                   : startSlot === slot ||
                       (startSlot &&
                         endSlot &&
@@ -127,11 +128,11 @@ export const TimeSlot = ({
                             ? timeSlots.indexOf(endSlot)
                             : timeSlots.indexOf(startSlot)))
                     ? 'hover:bg-muted'
-                    : 'text-muted-foreground'
+                    : 'text-slate-400'
               }`}
               onPress={() => toggleSlot(slot)}
             >
-              <Text>{slot.timeDisplay}</Text>
+              <Text className={`${slot.isInThePass && 'text-slate-400'}`}>{slot.timeDisplay}</Text>
             </Button>
           ))
         ) : (

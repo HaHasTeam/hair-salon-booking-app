@@ -18,7 +18,7 @@ export default function MenuStack() {
                 //   })
                 // }}
                 >
-                  <Text fontSize={'2xl'} fontWeight={'bold'} color={'tomato'} padding={2}>
+                  <Text fontSize={'2xl'} fontWeight={'bold'} color={'green.400'} padding={2}>
                     PickleBall
                   </Text>
                 </Pressable>
