@@ -3,8 +3,7 @@ import { StyleSheet, useColorScheme } from 'react-native'
 import Animated, { interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset } from 'react-native-reanimated'
 
 import { ThemedView } from '@/components/ThemedView'
-
-const HEADER_HEIGHT = 250
+import { HEADER_HEIGHT } from '@/utils/utils'
 
 type Props = PropsWithChildren<{
   headerImage: ReactElement

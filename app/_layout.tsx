@@ -1,10 +1,10 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { Stack } from 'expo-router'
+import { Stack, useNavigation } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import 'react-native-reanimated'
-import { NativeBaseProvider, Text, Box } from 'native-base'
+import { NativeBaseProvider, Text, Box, Pressable } from 'native-base'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import QueryProvider from '@/provider/QueryProvider'
 import AuthProvider from '@/provider/AuthProvider'
@@ -35,6 +35,7 @@ export default function RootLayout() {
           <AuthProvider>
             <Stack>
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen name='checkout' options={{ headerShown: false }} />
               <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: true, title: 'Sign up' }} />
               <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: true, title: 'Sign in' }} />
               <Stack.Screen name='(profile)/EditProfile' options={{ headerShown: true, title: 'Edit profile' }} />

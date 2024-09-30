@@ -38,9 +38,15 @@ const list = [
   }
 ]
 
-function Parallax() {
+function Parallax({
+  data,
+  renderCard
+}: {
+  data: any[]
+  renderCard: ({ item, index }: { item: any; index: number }) => React.ReactElement
+}) {
   const [isVertical, setIsVertical] = React.useState(false)
-  const [autoPlay, setAutoPlay] = React.useState(false)
+  const [autoPlay, setAutoPlay] = React.useState(true)
   const [pagingEnabled, setPagingEnabled] = React.useState<boolean>(true)
   const [snapEnabled, setSnapEnabled] = React.useState<boolean>(true)
   const progress = useSharedValue<number>(0)
@@ -75,29 +81,10 @@ function Parallax() {
         parallaxScrollingScale: 0.9,
         parallaxScrollingOffset: 50
       }}
-      data={list}
-      renderItem={({ item, index }) => (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignSelf: 'center',
-            backgroundColor: item?.color
-          }}
-        >
-          <Image style={styles.img} source={item.img} />
-        </View>
-      )}
+      data={data}
+      renderItem={({ item, index }) => renderCard({ item, index })}
     />
   )
 }
 
 export default Parallax
-
-const styles = StyleSheet.create({
-  img: {
-    height: '100%',
-    width: '100%'
-  }
-})
