@@ -17,8 +17,7 @@ export const useLogin = (): IAuth.ILoginResult => {
       return await POST(ENDPOINT.login, data, {})
     },
     onSuccess: async (res: AxiosResponse) => {
-      if (res) {
-        console.log(res)
+      if (res.data.data.accessToken) {
         await AsyncStorage.setItem('accessToken', res.data.data.accessToken)
         await AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
         return res.data.data

@@ -8,6 +8,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import { View } from 'native-base'
 import { Calendar } from 'react-native-big-calendar'
+import { Link } from 'expo-router'
 const events = [
   {
     title: 'Meeting',
@@ -60,6 +61,7 @@ export default function HomeScreen() {
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={<Image source={require('@/assets/images/partial-react-logo.png')} style={styles.reactLogo} />}
     >
+      <Link href={'/ressult'}>tesst</Link>
       <ThemedView style={styles.titleContainer}>
         <Parallax
           autoPlayInterval={2000}

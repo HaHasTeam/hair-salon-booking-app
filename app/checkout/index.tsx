@@ -8,30 +8,124 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { useGetPayOsInfo } from '@/api/payment'
 import { useNavigation } from 'expo-router'
 import * as Linking from 'expo-linking'
+import { useRoute } from '@react-navigation/native'
+import { usePostBooking } from '@/api/booking'
+import { Alert } from 'react-native'
 const CheckoutPage = () => {
   const navigate = useNavigation()
   const { bookingData } = useCheckoutStore()
   const [paymentType, setPaymentType] = useState('full')
-  console.log('bookingData', bookingData)
+  const url = Linking.createURL('checkout')
+  const route = useRoute()
+  const url2 = Linking.useURL()
+
   const totalAmount = useMemo(() => {
     if (bookingData?.booking)
       return paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2
     return undefined
   }, [paymentType])
+  const { mutateAsync: bookingMutation } = usePostBooking({
+    onSuccessCB: (data) => {
+      console.log('post booking success', data)
+      if (data) {
+        navigate.navigate('checkout')
+      }
+    }
+  })
   const { mutateAsync } = useGetPayOsInfo({
     courtId: bookingData.booking?.court._id ?? '',
     totalAmount: totalAmount,
+    returnUrl: url,
     onSuccessCB: (data) => {
       Linking.canOpenURL(data.url).then((supported) => {
         if (supported) {
           Linking.openURL(data.url)
         } else {
-          console.log("Don't know how to open URI: " + data.url)
+          console.log("Don't know how to openew URI: " + data.url)
         }
       })
     }
   })
+  const handleBooking = async () => {
+    if (bookingData?.booking?.type === 'single_schedule' && bookingData.schedule) {
+      console.log({
+        booking: {
+          type: bookingData?.booking.type,
+          paymentType,
+          payment: 'tranfer',
+          totalPrice: bookingData.booking.totalPrice,
+          totalHour: bookingData.booking.totalHour,
+          startDate: bookingData.booking.startDate,
+          endDate: bookingData.booking.endDate,
+          court: bookingData.booking.court._id
+        },
+        schedule: {
+          type: bookingData.schedule.type,
+          slots: bookingData.schedule.slots,
+          startTime: bookingData.schedule?.startTime,
+          endTime: bookingData.schedule?.endTime,
+          date: bookingData.schedule?.date,
+          court: bookingData.schedule.court._id
+        },
+        transaction: {
+          amount: bookingData.booking.totalPrice,
+          payment: '123123'
+        }
+      })
 
+      await bookingMutation({
+        booking: {
+          type: bookingData.booking.type,
+          paymentType,
+          paymentMethod: 'tranfer',
+          totalPrice: bookingData.booking.totalPrice,
+          totalHour: bookingData.booking.totalHour,
+          startDate: bookingData.booking.startDate,
+          endDate: bookingData.booking.endDate,
+          court: bookingData.booking.court._id
+        },
+        schedule: {
+          type: bookingData.schedule.type,
+          slots: bookingData.schedule.slots,
+          startTime: bookingData.schedule?.startTime,
+          endTime: bookingData.schedule?.endTime,
+          date: bookingData.schedule?.date,
+          court: bookingData.schedule.court._id
+        },
+
+        transaction: {
+          amount: paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2,
+          payment: '123123'
+        }
+      })
+    }
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        if (url2) {
+          const { queryParams } = Linking.parse(url2)
+          console.log('queryParams', queryParams)
+
+          let orderCode = (route as any).params.orderCode
+          let status = (route as any).params.status
+          console.log('check order code: ', orderCode, status)
+          if (!orderCode || !status) return
+
+          if (status === 'PAID') {
+            await handleBooking()
+          } else if (status === 'CANCELLED') {
+            Alert.alert('Cancelled', 'Transaction is cancelled')
+          } else {
+            Alert.alert('Error', 'Transaction is error')
+          }
+        }
+      } catch (error: any) {
+        console.log('error: ', error)
+      }
+    })()
+  }, [])
   return (
     <>
       <View className={'flex-1 p-4 mt-10'}>

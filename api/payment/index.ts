@@ -7,10 +7,12 @@ import { useAuth } from '@/provider/AuthProvider'
 export const useGetPayOsInfo = ({
   totalAmount,
   courtId,
+  returnUrl,
   onSuccessCB
 }: {
   totalAmount?: number
   courtId: string
+  returnUrl: string
   onSuccessCB: (data) => void
 }) => {
   const { accessToken } = useAuth()
@@ -24,8 +26,8 @@ export const useGetPayOsInfo = ({
             amount: totalAmount,
             description: 'Booking PickleBall Court',
             courtId: courtId,
-            returnUrl: 'exp://26.41.74.208:8081/result',
-            cancelUrl: 'exp://26.41.74.208:8081/result'
+            returnUrl: returnUrl,
+            cancelUrl: returnUrl
           },
           {},
           { authorization: 'Bearer ' + accessToken }
