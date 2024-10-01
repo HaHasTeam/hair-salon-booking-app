@@ -7,6 +7,19 @@ import { useBranchList } from '@/api/branchs'
 import { ThemedText } from '@/components/ThemedText'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import { View } from 'native-base'
+import { Calendar } from 'react-native-big-calendar'
+const events = [
+  {
+    title: 'Meeting',
+    start: new Date(2020, 1, 11, 10, 0),
+    end: new Date(2020, 1, 11, 10, 30)
+  },
+  {
+    title: 'Coffee break',
+    start: new Date(2020, 1, 11, 15, 45),
+    end: new Date(2020, 1, 11, 16, 30)
+  }
+]
 const list = [
   {
     id: '1',
@@ -75,6 +88,7 @@ export default function HomeScreen() {
           }}
         />
       </ThemedView>
+      <Calendar events={events} height={600} />
     </ParallaxScrollView>
   )
 }

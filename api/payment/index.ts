@@ -1,21 +1,31 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { POST } from '../apiCaller'
 import { ENDPOINT } from '..'
 import { BookingData } from '@/hooks/useCheckoutStore'
 import { useAuth } from '@/provider/AuthProvider'
 
-export const useGetPayOsInfo = ({ totalAmount, courtId }: { totalAmount?: number; courtId: string }) => {
+export const useGetPayOsInfo = ({
+  totalAmount,
+  courtId,
+  onSuccessCB
+}: {
+  totalAmount?: number
+  courtId: string
+  onSuccessCB: (data) => void
+}) => {
   const { accessToken } = useAuth()
-  return useQuery({
-    queryKey: ['bookingPayOSLink', totalAmount],
-    queryFn: async () => {
+  return useMutation({
+    mutationKey: ['bookingPayOSLink', totalAmount],
+    mutationFn: async () => {
       if (totalAmount && courtId) {
         const response = await POST(
           ENDPOINT.getPaymentInfo,
           {
             amount: totalAmount,
             description: 'Booking PickleBall Court',
-            courtId: courtId
+            courtId: courtId,
+            returnUrl: 'exp://26.41.74.208:8081/result',
+            cancelUrl: 'exp://26.41.74.208:8081/result'
           },
           {},
           { authorization: 'Bearer ' + accessToken }
@@ -24,12 +34,13 @@ export const useGetPayOsInfo = ({ totalAmount, courtId }: { totalAmount?: number
         if (response.status !== 200) {
           throw new Error(`Failed to fetch bookingPayOSLink: ${response.statusText}`)
         }
-        console.log(response.data)
-        return response.data
+        return response.data.data
       }
 
       return null
     },
-    enabled: !!totalAmount
+    onSuccess(data) {
+      onSuccessCB(data)
+    }
   })
 }

@@ -2,11 +2,12 @@ import { Button, CheckIcon, HStack, Select, Text, View, VStack } from 'native-ba
 import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 import CourtCard from '@/components/court/CourtCard'
 import { formatToVND } from '@/utils/utils'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { useGetPayOsInfo } from '@/api/payment'
 import { useNavigation } from 'expo-router'
+import * as Linking from 'expo-linking'
 const CheckoutPage = () => {
   const navigate = useNavigation()
   const { bookingData } = useCheckoutStore()
@@ -17,13 +18,20 @@ const CheckoutPage = () => {
       return paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2
     return undefined
   }, [paymentType])
-  const { data: PayOSInfor, isFetching: isGettingPayInfor } = useGetPayOsInfo({
+  const { mutateAsync } = useGetPayOsInfo({
     courtId: bookingData.booking?.court._id ?? '',
-    totalAmount: totalAmount
+    totalAmount: totalAmount,
+    onSuccessCB: (data) => {
+      Linking.canOpenURL(data.url).then((supported) => {
+        if (supported) {
+          Linking.openURL(data.url)
+        } else {
+          console.log("Don't know how to open URI: " + data.url)
+        }
+      })
+    }
   })
-  // if (isLoading) {
-  //   return <ActivityIndicator size='large' />
-  // }
+
   return (
     <>
       <View className={'flex-1 p-4 mt-10'}>
@@ -111,7 +119,14 @@ const CheckoutPage = () => {
           )} */}
         </View>
 
-        <Button className='my-3' variant={'solid'} colorScheme={'green'}>
+        <Button
+          className='my-3'
+          variant={'solid'}
+          colorScheme={'green'}
+          onPress={async () => {
+            await mutateAsync()
+          }}
+        >
           Confirm
         </Button>
         <Button
