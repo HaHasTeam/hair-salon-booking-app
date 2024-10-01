@@ -2,7 +2,7 @@ import type { CourtStatusEnum } from '.'
 
 import type { IManager } from './Manager'
 export interface ICourt {
-  _id?: string
+  _id: string
   name: string
   type: string
   price: number

@@ -5,6 +5,8 @@ export const ENDPOINT = {
   profile: '/customer',
   changePassword: '/user/reset-password',
   getAllBranch: '/branch',
+  postBooking: '/booking',
   getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
-  getCourtAvailable: '/court/get-court-available'
+  getCourtAvailable: '/court/get-court-available',
+  getPaymentInfo: '/payment/create-payment-url-for-booking'
 }
