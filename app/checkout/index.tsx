@@ -13,25 +13,16 @@ import { usePostBooking } from '@/api/booking'
 import { Alert } from 'react-native'
 const CheckoutPage = () => {
   const navigate = useNavigation()
-  const { bookingData } = useCheckoutStore()
-  const [paymentType, setPaymentType] = useState('full')
-  const url = Linking.createURL('checkout')
-  const route = useRoute()
-  const url2 = Linking.useURL()
+  const { bookingData, setPaymentType } = useCheckoutStore()
+  // const [paymentType, setPaymentType] = useState('full')
+  const url = Linking.createURL('ressult')
 
   const totalAmount = useMemo(() => {
     if (bookingData?.booking)
-      return paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2
+      return bookingData.paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2
     return undefined
-  }, [paymentType])
-  const { mutateAsync: bookingMutation } = usePostBooking({
-    onSuccessCB: (data) => {
-      console.log('post booking success', data)
-      if (data) {
-        navigate.navigate('checkout')
-      }
-    }
-  })
+  }, [bookingData.paymentType])
+
   const { mutateAsync } = useGetPayOsInfo({
     courtId: bookingData.booking?.court._id ?? '',
     totalAmount: totalAmount,
@@ -46,86 +37,7 @@ const CheckoutPage = () => {
       })
     }
   })
-  const handleBooking = async () => {
-    if (bookingData?.booking?.type === 'single_schedule' && bookingData.schedule) {
-      console.log({
-        booking: {
-          type: bookingData?.booking.type,
-          paymentType,
-          payment: 'tranfer',
-          totalPrice: bookingData.booking.totalPrice,
-          totalHour: bookingData.booking.totalHour,
-          startDate: bookingData.booking.startDate,
-          endDate: bookingData.booking.endDate,
-          court: bookingData.booking.court._id
-        },
-        schedule: {
-          type: bookingData.schedule.type,
-          slots: bookingData.schedule.slots,
-          startTime: bookingData.schedule?.startTime,
-          endTime: bookingData.schedule?.endTime,
-          date: bookingData.schedule?.date,
-          court: bookingData.schedule.court._id
-        },
-        transaction: {
-          amount: bookingData.booking.totalPrice,
-          payment: '123123'
-        }
-      })
 
-      await bookingMutation({
-        booking: {
-          type: bookingData.booking.type,
-          paymentType,
-          paymentMethod: 'tranfer',
-          totalPrice: bookingData.booking.totalPrice,
-          totalHour: bookingData.booking.totalHour,
-          startDate: bookingData.booking.startDate,
-          endDate: bookingData.booking.endDate,
-          court: bookingData.booking.court._id
-        },
-        schedule: {
-          type: bookingData.schedule.type,
-          slots: bookingData.schedule.slots,
-          startTime: bookingData.schedule?.startTime,
-          endTime: bookingData.schedule?.endTime,
-          date: bookingData.schedule?.date,
-          court: bookingData.schedule.court._id
-        },
-
-        transaction: {
-          amount: paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2,
-          payment: '123123'
-        }
-      })
-    }
-  }
-
-  useEffect(() => {
-    ;(async () => {
-      try {
-        if (url2) {
-          const { queryParams } = Linking.parse(url2)
-          console.log('queryParams', queryParams)
-
-          let orderCode = (route as any).params.orderCode
-          let status = (route as any).params.status
-          console.log('check order code: ', orderCode, status)
-          if (!orderCode || !status) return
-
-          if (status === 'PAID') {
-            await handleBooking()
-          } else if (status === 'CANCELLED') {
-            Alert.alert('Cancelled', 'Transaction is cancelled')
-          } else {
-            Alert.alert('Error', 'Transaction is error')
-          }
-        }
-      } catch (error: any) {
-        console.log('error: ', error)
-      }
-    })()
-  }, [])
   return (
     <>
       <View className={'flex-1 p-4 mt-10'}>
@@ -166,7 +78,7 @@ const CheckoutPage = () => {
           <HStack alignItems={'center'} justifyContent={'space-between'} space={2}>
             <Text className='text-lg font-semibold '>Amount:</Text>
             <Text>
-              {paymentType === 'full'
+              {bookingData.paymentType === 'full'
                 ? formatToVND(bookingData?.booking?.totalPrice)
                 : formatToVND(bookingData?.booking?.totalPrice / 2)}
             </Text>
@@ -181,7 +93,7 @@ const CheckoutPage = () => {
           <Text className='text-lg font-semibold '>Payment Type:</Text>
 
           <Select
-            selectedValue={paymentType}
+            selectedValue={bookingData.paymentType}
             minWidth='100'
             accessibilityLabel='Choose Payment Type'
             placeholder='Choose Payment Type'

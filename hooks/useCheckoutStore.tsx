@@ -5,6 +5,7 @@ import { create } from 'zustand'
 export type BookingData = {
   booking: Omit<IBooking, 'status'> | null
   schedule: Omit<ISchedule, 'status'> | null
+  paymentType: string
 }
 export type BookingDataState = {
   bookingData: BookingData
@@ -12,13 +13,15 @@ export type BookingDataState = {
 export type BookingDataActions = {
   setBookingData: (data: BookingData) => void
   resetBookingData: () => void
+  setPaymentType: (paymentType: string) => void
 }
 
 export type BookingDataStore = BookingDataState & BookingDataActions
 export const defaultInitState: BookingDataState = {
   bookingData: {
     booking: null,
-    schedule: null
+    schedule: null,
+    paymentType: 'full'
   }
 }
 
@@ -31,5 +34,9 @@ export const useCheckoutStore = create<BookingDataStore>()((set) => ({
 
       return { ...state }
     }),
-  resetBookingData: () => set(defaultInitState)
+  resetBookingData: () => set(defaultInitState),
+  setPaymentType: (data) =>
+    set((state) => {
+      return { ...state, paymentType: data }
+    })
 }))
