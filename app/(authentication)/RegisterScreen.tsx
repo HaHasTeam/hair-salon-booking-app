@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useRegister } from '@/api/auth'
-import { useAuth } from '@/provider/AuthProvider'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 const RegisterScreen = () => {
   const [email, setEmail] = useState('')
@@ -12,7 +11,23 @@ const RegisterScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const navigation = useNavigation()
 
-  const { register, isPending, isSuccess } = useRegister()
+  const { register, isPending, isSuccess } = useRegister({
+    onRegisterSuccess,
+    onRegisterFailed
+  })
+
+  function onRegisterSuccess() {
+    Alert.alert('Success', 'Registered successfully')
+
+    setEmail('')
+    setUsername('')
+    setPassword('')
+    setConfirmPassword('')
+    navigation.navigate('(tabs)')
+  }
+  function onRegisterFailed() {
+    Alert.alert('Error', 'Register failed')
+  }
   const handleRegister = async () => {
     // Check if all fields are filled
     if (!email || !username || !password || !confirmPassword) {
@@ -32,42 +47,7 @@ const RegisterScreen = () => {
       return
     }
 
-    // try {
-    console.log(email, username, password)
-    const data = register({ email, password, username })
-    console.log('=================36===================')
-    console.log(isSuccess, data)
-    console.log('====================================')
-    if (isSuccess) {
-      Alert.alert('Success', 'Registered successfully')
-
-      setEmail('')
-      setUsername('')
-      setPassword('')
-      setConfirmPassword('')
-      navigation.navigate('(tabs)')
-    } else {
-      Alert.alert('Error', 'Register failed')
-    }
-    //   const response = await axios.post('http://10.0.2.2:3004/bookminton/customer/create', {
-    //     email,
-    //     username,
-    //     password
-    //   })
-    //   if (response.status === 201) {
-    //     Alert.alert('Success', 'Customer registered successfully')
-    //     setEmail('')
-    //     setUsername('')
-    //     setPassword('')
-    //     setConfirmPassword('')
-    //     navigation.navigate('(authentication)/LoginScreen')
-    //   } else {
-    //     Alert.alert('Error', response.data.message || 'Registration failed')
-    //   }
-    // } catch (error) {
-    //   console.error(error)
-    //   Alert.alert('Error', error.response?.data?.message || 'An error occurred while registering')
-    // }
+    register({ email, password, username })
   }
 
   return (

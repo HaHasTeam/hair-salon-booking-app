@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
-import axios from 'axios'
 import React, { useState } from 'react'
-import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useLogin } from '@/api/auth'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 const LoginScreen = () => {
@@ -9,27 +8,22 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
 
-  const { login, isPending, isSuccess } = useLogin()
+  const { login } = useLogin({ onLoginSuccess, onLoginFailed })
+  function onLoginSuccess() {
+    Alert.alert('Success', 'Logged in successfully')
+    setEmail('')
+    setPassword('')
+    navigation.navigate('(tabs)')
+  }
+  function onLoginFailed() {
+    Alert.alert('Error', 'Login failed')
+  }
   const handleLogin = async () => {
-    // Check if both fields are filled
     if (!email || !password) {
       Alert.alert('Error', 'Email and password are required')
       return
     }
-
     login({ email, password })
-    console.log('=================36===================')
-    console.log(isSuccess)
-    console.log('====================================')
-    if (isSuccess) {
-      Alert.alert('Success', 'Logged in successfully')
-
-      setEmail('')
-      setPassword('')
-      navigation.navigate('(tabs)')
-    } else {
-      Alert.alert('Error', 'Login failed')
-    }
   }
 
   return (

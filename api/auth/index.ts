@@ -6,25 +6,35 @@ import { ENDPOINT } from '..'
 import { log } from '@/utils/logger.util'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const useLogin = (): IAuth.ILoginResult => {
+export const useLogin = ({
+  onLoginSuccess,
+  onLoginFailed
+}: {
+  onLoginSuccess: () => void
+  onLoginFailed: () => void
+}): IAuth.ILoginResult => {
   const {
-    mutate: login,
+    mutateAsync: login,
     isSuccess,
     isPending
   } = useMutation({
     mutationKey: ['login'],
     mutationFn: async (data: IAuth.ILoginParameters) => {
+      console.log(data)
+
       return await POST(ENDPOINT.login, data, {})
     },
     onSuccess: async (res: AxiosResponse) => {
       if (res.data.data.accessToken) {
         await AsyncStorage.setItem('accessToken', res.data.data.accessToken)
         await AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
+        onLoginSuccess()
         return res.data.data
       }
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response) {
+        onLoginFailed()
         log.error('error: ', error)
       }
     }
@@ -37,23 +47,32 @@ export const useLogin = (): IAuth.ILoginResult => {
   }
 }
 
-export const useRegister = (): IAuth.IRegisterResult => {
+export const useRegister = ({
+  onRegisterSuccess,
+  onRegisterFailed
+}: {
+  onRegisterSuccess: () => void
+  onRegisterFailed: () => void
+}): IAuth.IRegisterResult => {
   const {
-    mutate: register,
+    mutateAsync: register,
     isSuccess,
     isPending
   } = useMutation({
     mutationKey: ['register'],
     mutationFn: async (data: IAuth.IRegisterParameters) => {
+      console.log('register', data)
+
       return await POST(ENDPOINT.register, data, {})
     },
     onSuccess: async (res: AxiosResponse) => {
       log.debug(res)
+      onRegisterSuccess()
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response) {
         log.error('error: ', error)
-
+        onRegisterFailed()
         return error
       }
     }

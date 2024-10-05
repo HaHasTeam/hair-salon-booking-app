@@ -40,7 +40,7 @@ const CheckoutPage = () => {
 
   return (
     <>
-      <View className={'flex-1 p-4 mt-10'}>
+      <View className={'flex-1 p-4 mt-10 bg-white'}>
         <Text className='text-2xl font-bold  text-center'>Confirm Booking</Text>
         <Text className='text-xl text-center text-slate-500 mb-6'>Review your pickleball court booking details.</Text>
 
@@ -98,7 +98,7 @@ const CheckoutPage = () => {
             accessibilityLabel='Choose Payment Type'
             placeholder='Choose Payment Type'
             _selectedItem={{
-              bg: 'teal.600',
+              bg: 'green.600',
               endIcon: <CheckIcon size='5' />
             }}
             mt={1}

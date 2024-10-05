@@ -6,6 +6,7 @@ export default function MenuStack() {
       <Stack.Screen
         name='index'
         options={{
+          headerTintColor: '#fff',
           headerShown: false
         }}
       />

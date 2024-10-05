@@ -140,7 +140,7 @@ const Result = () => {
             Linking.openURL('https://pickleballhaha.vercel.app/')
           }}
         >
-          Access Platform Pickleball <br /> URL: https://pickleballhaha.vercel.app/
+          Access Platform Pickleball URL: https://pickleballhaha.vercel.app/
         </Button>
         <Link href={'/(tabs)'}>
           <Text>GO Home</Text>

@@ -52,7 +52,7 @@ export default function CalendarDaily({
               day.getDate() === selectedDay.getDate() && day.getMonth() === selectedDay.getMonth() ? 'default' : 'ghost'
             }
             size='lg'
-            className={`flex h-10 w-1/5 items-center justify-center rounded-md m-2 border ${
+            className={`flex h-10 w-1/5 items-center justify-center rounded-md m-2 border border-green-500 ${
               day.getDate() === selectedDay.getDate() &&
               day.getMonth() === selectedDay.getMonth() &&
               ' bg-green-300 text-green-500'
@@ -82,6 +82,7 @@ export default function CalendarDaily({
           size='sm'
           variant='outline'
           colorScheme={'green'}
+          borderColor={'green.500'}
           onPress={handlePreviousWeek}
           disabled={currentWeek === 0 && days[0].getTime() <= new Date().getTime()}
         >
