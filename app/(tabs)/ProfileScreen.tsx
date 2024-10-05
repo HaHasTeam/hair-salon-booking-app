@@ -11,6 +11,7 @@ import { SafeAreaView } from 'react-native'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const ProfileScreen = () => {
   const { data: profile, error, isLoading } = useUserProfile()
@@ -86,7 +87,12 @@ const ProfileScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
-              onPress={() => {}}
+              onPress={async () => {
+                await AsyncStorage.removeItem('accessToken')
+                await AsyncStorage.removeItem('refreshToken')
+
+                navigation.navigate('(tabs)')
+              }}
             >
               <AntDesign name='logout' size={24} color='red' className='mr-2' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Log out</Text>

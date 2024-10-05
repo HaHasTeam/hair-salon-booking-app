@@ -102,7 +102,7 @@ const BookingPage = () => {
           />
         }
       >
-        <Text>{branchDetail.name}</Text>
+        <Text className='text-2xl font-bold'>{branchDetail.name}</Text>
         <CalendarDaily
           setSelectedCourts={setSelectedCourts}
           setSelectedSlots={setSelectedSlots}
@@ -231,68 +231,6 @@ const BookingPage = () => {
 
 export default BookingPage
 
-// <Card
-//                     key={value._id}
-// className={`cursor-pointer ${
-//   selectedCourt !== null && selectedCourt._id === value._id
-//     ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-//     : 'hover:bg-muted'
-// }`}
-// onClick={() => handleCourtSelection(value)}
-//                   >
-//                     <CardContent className='grid gap-4 overflow-hidden p-5'>
-//                       <div className='flex items-center gap-4'>
-//                         <div
-//                           className={`cursor-pointer rounded-lg object-cover p-2 ${
-//                             selectedCourt !== null && selectedCourt._id === value._id
-//                               ? ' bg-slate-500 stroke-white '
-//                               : ' border-white text-white '
-//                           }`}
-//                         >
-//                           <Icons.badmintonCourt className='rounded-lg object-cover' />
-//                         </div>
-//                         <div>
-//                           <h3 className='font-semibold'>{value.name}</h3>
-//                           <span
-//                             className={`line-clamp-3 text-sm ${
-//                               selectedCourt !== null && selectedCourt._id === value._id
-//                                 ? ' text-slate-300 dark:text-slate-200 '
-//                                 : 'text-gray-500 dark:text-gray-400'
-//                             }`}
-//                           >
-//                             {value.description}
-//                           </span>
-//                         </div>
-//                       </div>
-//                       <div className='flex items-center justify-between'>
-//                         <div className='flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400'>
-//                           <CustomTag status={value.status} />
-//                         </div>
-//                         <div
-//                           className={`flex items-center gap-2 text-sm ${
-//                             selectedCourt !== null && selectedCourt._id === value._id
-//                               ? ' text-slate-300 dark:text-slate-200 '
-//                               : 'text-gray-500 dark:text-gray-400'
-//                           }`}
-//                         >
-//                           <UsersIcon className='size-4' />
-//                           <span>type: {value.type}</span>
-//                         </div>
-//                       </div>
-//                       <div className='flex items-center justify-between'>
-//                         <div
-//                           className={`flex items-center gap-2 text-sm ${
-//                             selectedCourt !== null && selectedCourt._id === value._id
-//                               ? ' text-slate-300 dark:text-slate-200 '
-//                               : 'text-gray-500 dark:text-gray-400'
-//                           }`}
-//                         >
-//                           {/* <DollarSignIcon className="size-4" /> */}
-//                           <span>{formatToVND(value.price)}/slot</span>
-//                         </div>
-//                       </div>
-//                     </CardContent>
-//                   </Card>
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',

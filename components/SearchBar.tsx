@@ -19,7 +19,7 @@ const SearchBar = ({
             // onTextInput={() => {
             //   onSubmitSearch(searchPhrase);
             // }}
-            placeholder='Enter watch name'
+            placeholder='tìm kiếm'
             placeholderTextColor='#9eadba'
             value={searchPhrase}
             onChangeText={setSearchPhrase}
