@@ -5,12 +5,22 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL": "http://103.75.180.159:3000/pickle-play"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "API_URL": "http://103.75.180.159:3000/pickle-play"
+      }
+    }
   },
   "submit": {
     "production": {}

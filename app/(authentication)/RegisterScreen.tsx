@@ -18,7 +18,6 @@ const RegisterScreen = () => {
 
   function onRegisterSuccess() {
     Alert.alert('Success', 'Registered successfully')
-
     setEmail('')
     setUsername('')
     setPassword('')
@@ -47,7 +46,7 @@ const RegisterScreen = () => {
       return
     }
 
-    register({ email, password, username })
+    await register({ email, password, username })
   }
 
   return (

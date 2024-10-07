@@ -87,9 +87,9 @@ const ProfileScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
-              onPress={async () => {
-                await AsyncStorage.removeItem('accessToken')
-                await AsyncStorage.removeItem('refreshToken')
+              onPress={() => {
+                // await AsyncStorage.removeItem('accessToken')
+                // await AsyncStorage.removeItem('refreshToken')
 
                 navigation.navigate('(tabs)')
               }}

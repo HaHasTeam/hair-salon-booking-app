@@ -3,13 +3,18 @@ import React, { useState } from 'react'
 import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useLogin } from '@/api/auth'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { AxiosResponse } from 'axios'
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
 
   const { login } = useLogin({ onLoginSuccess, onLoginFailed })
-  function onLoginSuccess() {
+  async function onLoginSuccess(res: AxiosResponse) {
+    console.log(res.data.data)
+    await AsyncStorage.setItem('accessToken', res.data.data.accessToken)
+    await AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
     Alert.alert('Success', 'Logged in successfully')
     setEmail('')
     setPassword('')
