@@ -10,7 +10,7 @@ export const useLogin = ({
   onLoginSuccess,
   onLoginFailed
 }: {
-  onLoginSuccess: () => void
+  onLoginSuccess: (res: AxiosResponse) => void
   onLoginFailed: () => void
 }): IAuth.ILoginResult => {
   const {
@@ -26,9 +26,12 @@ export const useLogin = ({
     },
     onSuccess: async (res: AxiosResponse) => {
       if (res.data.data.accessToken) {
+        console.log('accessToken', res.data.data.accessToken)
+        console.log('refreshToken', res.data.data.refreshToken)
+
         await AsyncStorage.setItem('accessToken', res.data.data.accessToken)
         await AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
-        onLoginSuccess()
+        await onLoginSuccess(res)
         return res.data.data
       }
     },
@@ -66,7 +69,8 @@ export const useRegister = ({
       return await POST(ENDPOINT.register, data, {})
     },
     onSuccess: async (res: AxiosResponse) => {
-      log.debug(res)
+      console.log(res.data.data)
+
       onRegisterSuccess()
     },
     onError: (error) => {

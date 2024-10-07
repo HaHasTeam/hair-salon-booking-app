@@ -42,7 +42,15 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           setAccessToken(storedToken[0]), setRefreshToken(storedToken[1])
           const decodedToken = jwtDecode(storedToken[0])
           if (decodedToken.exp && decodedToken.exp * 1000 > Date.now()) {
-            const response = await GET(ENDPOINT.me, {}, { authorization: 'Bearer ' + storedToken[0] })
+            const response = await GET(
+              ENDPOINT.me,
+              {},
+              {
+                authorization:
+                  'Bearer ' +
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzAzZjAxNTg3ZjJjMzM1NzU0OTY5YzAiLCJpYXQiOjE3MjgzMTE3OTYsImV4cCI6MTcyODM5ODE5Nn0.3Je9qCBywvt-KsYPu8z78PHqjj7cOWYz09ro-CotQjA'
+              }
+            )
 
             if (response.status === 200) {
               setProfile(response.data.data)
