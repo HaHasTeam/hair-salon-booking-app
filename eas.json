@@ -5,12 +5,22 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://company.com/api"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "API_URL": "https://company.com/api"
+      }
+    }
   },
   "submit": {
     "production": {}
