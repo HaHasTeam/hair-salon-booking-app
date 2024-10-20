@@ -1,5 +1,5 @@
 import { log } from '@/utils/logger.util'
-import axios, { AxiosResponse, Method } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios'
 
 /**
  * Creates an Axios instance for making HTTP requests.
@@ -11,14 +11,15 @@ import axios, { AxiosResponse, Method } from 'axios'
  * @param {object} [body={}] - An object containing the request body. Default is an empty object.
  * @returns {Promise} - A Promise that resolves to the response of the HTTP request.
  */
+export const API_URL = process.env.EXPO_PUBLIC_API_URL
 export const request = (
   endpoint: string,
   method: Method,
   headers: object = {},
   params: object = {},
-  body: object = {}
+  body: object = {},
 ): Promise<AxiosResponse> => {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL
+ const API_URL = process.env.EXPO_PUBLIC_API_URL
   log.debug('requestUrl: ', API_URL + endpoint)
 
   return axios({
@@ -26,7 +27,13 @@ export const request = (
     method: method,
     headers: Object.assign({}, headers),
     params: Object.assign(params),
-    data: body
+    data: body,
+    transformRequest:(data, headers) => {
+      if (data instanceof FormData) {
+        return data
+      }
+      return JSON.stringify(data)
+    }
   })
 }
 /**

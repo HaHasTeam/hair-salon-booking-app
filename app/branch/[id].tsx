@@ -11,6 +11,8 @@ import { IBranch } from '@/types/Branch'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import CourtCard from '@/components/court/CourtCard'
 import { ICourt } from '@/types/Court'
+import FeedBackSection from '@/components/FeedBackSection'
+
 const BranchDetail = () => {
   const { id: branchId } = useLocalSearchParams<{ id: string }>()
   const { data, isLoading } = useBranchDetail({ id: branchId })
@@ -74,6 +76,7 @@ const BranchDetail = () => {
             return <CourtCard court={item} key={item._id} />
           })}
         </View>
+        <FeedBackSection />
       </ParallaxScrollView>
     </>
   )

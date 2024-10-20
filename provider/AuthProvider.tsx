@@ -48,7 +48,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
               {
                 authorization:
                   'Bearer ' +
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzAzZjAxNTg3ZjJjMzM1NzU0OTY5YzAiLCJpYXQiOjE3MjgzMTE3OTYsImV4cCI6MTcyODM5ODE5Nn0.3Je9qCBywvt-KsYPu8z78PHqjj7cOWYz09ro-CotQjA'
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE0YWY2YTk4NTFlNDQ5OWIyZWRlODkiLCJpYXQiOjE3Mjk0MDkwMTEsImV4cCI6MTcyOTQ5NTQxMX0.LPhjN6nUAKziVhOmtC7tOuotS89XM4fXPGLdAVZmk8E'
               }
             )
 
