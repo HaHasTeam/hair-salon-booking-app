@@ -44,9 +44,11 @@ const FeedBackSection = () => {
               borderTopWidth: 1,
               borderTopColor: 'gray',
               marginTop: 10,
-              paddingTop: 10
+              paddingTop: 10,
+              gap: 10
             }}
           >
+            <FeedBackItem />
             <FeedBackItem />
           </View>
           <View

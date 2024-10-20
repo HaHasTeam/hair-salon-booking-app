@@ -19,12 +19,13 @@ const FeedbackCreate = () => {
       aspect: [4, 3]
     })
 
-    if (result.cancelled || !result.assets) {
+    if (result.canceled || !result.assets) {
       return
     }
 
     const formData = new FormData()
     for (const file of result.assets) {
+      // @ts-ignore
       formData.append('files', {
         uri: file.uri,
         name: file.fileName,
@@ -74,16 +75,16 @@ const FeedbackCreate = () => {
       allowsMultipleSelection: true,
       aspect: [4, 3]
     })
-
-    if (result.cancelled || !result.assets) {
+    if (result.canceled || !result.assets) {
       return
     }
     const formData = new FormData()
     for (const file of result.assets) {
+      // @ts-ignore
       formData.append('files', {
         uri: file.uri,
-        name: file.fileName,
-        type: file.mimeType
+        name: file.fileName as string,
+        type: file.mimeType as string
       })
 
       try {
