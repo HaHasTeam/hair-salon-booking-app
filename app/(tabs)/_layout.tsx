@@ -5,9 +5,11 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import { Colors } from '@/constants/Colors'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import TabBarCustom from '@/components/TabBarCustom'
-
+import { useAuth } from '@/provider/AuthProvider'
 export default function TabLayout() {
   const colorScheme = useColorScheme()
+  const { accessToken } = useAuth()
+  console.log('access token', accessToken)
 
   return (
     <Tabs
@@ -25,15 +27,15 @@ export default function TabLayout() {
         }}
       />
 
-      {/* <Tabs.Screen
-        name='LoginRegisterScreen'
+      <Tabs.Screen
+        name='ProfileScreen'
         options={{
-          title: 'Account',
+          title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person-circle-outline' : 'person-circle-outline'} color={color} />
           )
         }}
-      /> */}
+      />
 
       <Tabs.Screen
         name='branchs'
@@ -41,15 +43,6 @@ export default function TabLayout() {
           title: 'Cuawr',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'tennisball-outline' : 'tennisball-outline'} color={color} />
-          )
-        }}
-      />
-      <Tabs.Screen
-        name='ProfileScreen'
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'person-circle-outline' : 'person-circle-outline'} color={color} />
           )
         }}
       />

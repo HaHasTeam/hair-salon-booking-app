@@ -12,27 +12,21 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import { useRouter } from 'expo-router'
+import { useAuth } from '@/provider/AuthProvider'
 const ProfileScreen = () => {
-  const { data: profile, error, isLoading } = useUserProfile()
+  const { profile, loading, accessToken } = useAuth()
   const navigation = useNavigation()
-  const queryClient = useQueryClient()
+  const router = useRouter()
 
-  useFocusEffect(
-    useCallback(() => {
-      queryClient.invalidateQueries(['profile'])
-    }, [queryClient])
-  )
+  // if (loading) {
+  //   return <ActivityIndicator size='large' color='#00ff00' />
+  // }
 
-  if (isLoading) {
-    return <ActivityIndicator size='large' color='#00ff00' />
+  if (!accessToken) {
+    router.push('/LoginRegisterScreen')
   }
-
-  if (error) {
-    console.log(error)
-    return <Text className='mt-28'>{error.message}</Text>
-  }
-  console.log('profile', profile)
+  console.log('profile screen', profile)
 
   return (
     <ParallaxScrollView

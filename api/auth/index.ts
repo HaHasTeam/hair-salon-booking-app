@@ -65,8 +65,11 @@ export const useRegister = ({
     mutationKey: ['register'],
     mutationFn: async (data: IAuth.IRegisterParameters) => {
       console.log('register', data)
-
-      return await POST(ENDPOINT.register, data, {})
+      // const formData = new FormData()
+      // formData.append('email', data.email)
+      // formData.append('password', data.password)
+      // formData.append('username', data.username)
+      return await POST(ENDPOINT.register, { ...data }, {})
     },
     onSuccess: async (res: AxiosResponse) => {
       console.log(res.data.data)
