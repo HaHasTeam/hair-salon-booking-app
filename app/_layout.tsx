@@ -8,6 +8,7 @@ import { NativeBaseProvider, Text, Box, Pressable } from 'native-base'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import QueryProvider from '@/provider/QueryProvider'
 import AuthProvider from '@/provider/AuthProvider'
+import CreateFeedback from '@/components/CreateFeedback'
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
@@ -41,6 +42,23 @@ export default function RootLayout() {
               <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: true, title: 'Sign in' }} />
               <Stack.Screen name='(profile)/EditProfile' options={{ headerShown: true, title: 'Edit profile' }} />
               <Stack.Screen name='(profile)/ChangePassword' options={{ headerShown: true, title: 'Change password' }} />
+              <Stack.Screen
+                name='(modal)/feedbackModal'
+                options={{
+                  headerShown: true,
+                  title: 'Đánh giá',
+                  presentation: 'containedModal',
+                  headerRight: CreateFeedback
+                }}
+              />
+              <Stack.Screen
+                name='(modal)/feedbackCreate'
+                options={{
+                  headerShown: true,
+                  title: 'Đánh giá chất lượng dịch vụ',
+                  presentation: 'containedModal'
+                }}
+              />
               <Stack.Screen name='+not-found' />
             </Stack>
           </AuthProvider>

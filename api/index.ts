@@ -8,5 +8,9 @@ export const ENDPOINT = {
   postBooking: '/booking',
   getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
   getCourtAvailable: '/court/get-court-available',
-  getPaymentInfo: '/payment/create-payment-url-for-booking'
+  getPaymentInfo: '/payment/create-payment-url-for-booking',
+  uploadImages:"/file/upload",
+  postFeedback: '/feedback',
+  getFeedbackByBranchId: (id: string) => `/feedback/get-of-branch/${id}`,
+  getFeedbackById: (id: string) => `/feedback/get-by-id/${id}`,
 }
