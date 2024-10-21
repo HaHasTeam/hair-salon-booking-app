@@ -7,7 +7,7 @@ import { IBranch } from '@/types/Branch'
 const ImagePlace = require('@/assets/images/placeholder.png')
 const BranchCard = ({ branch }: { branch: IBranch }) => {
   const segments = useSegments()
-  console.log('segments', segments)
+
   const images = (branch.images && branch.images[0]) ?? ImagePlace
   return (
     <>
