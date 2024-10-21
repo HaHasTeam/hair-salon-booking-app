@@ -14,10 +14,10 @@ import { useGetCourtAvailable } from '@/api/courts'
 import { ICourt } from '@/types/Court'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import BadgeCustom from '@/components/BadgeCustom'
-import { useNavigation } from 'expo-router'
+import { router } from 'expo-router'
 const BookingPage = () => {
   const { id: branchId } = useLocalSearchParams<{ id: string }>()
-  const navigate = useNavigation()
+  // const navigate = useNavigation()
   const {
     data: branchDetail,
     isLoading: isBranchDetailLoading,
@@ -75,7 +75,7 @@ const BookingPage = () => {
           court: selectedCourt
         }
       })
-      navigate.navigate('checkout')
+      router.push('/checkout')
     }
   }
   if (isBranchDetailLoading) {

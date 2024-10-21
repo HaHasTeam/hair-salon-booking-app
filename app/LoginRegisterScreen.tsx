@@ -6,14 +6,14 @@ const LoginRegisterScreen = () => {
   const navigation = useNavigation()
   return (
     <SafeAreaView style={style.view}>
-      <Image style={style.image} source={require('../../assets/images/illustration.png')} />
+      <Image style={style.image} source={require('../assets/images/illustration.png')} />
       <Text style={style.header}>Fill your imagination</Text>
       <Text style={style.description}>Interesting courses are waiting for you, feel free to be creative</Text>
       <View style={style.buttonWrapper}>
         <Button
           style={style.signupButton}
           variant={'solid'}
-          onPress={() => navigation.navigate('(authentication)/RegisterScreen')}
+          onPress={() => router.push('/(authentication)/RegisterScreen')}
           _text={{
             fontWeight: '500',
             fontSize: 20
@@ -24,7 +24,7 @@ const LoginRegisterScreen = () => {
         <Button
           style={style.loginButton}
           variant={'outline'}
-          onPress={() => navigation.navigate('(authentication)/LoginScreen')}
+          onPress={() => router.push('/(authentication)/LoginScreen')}
           _text={{
             color: '#3D5CFF',
             fontWeight: '500',

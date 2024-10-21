@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from 'expo-router'
 import { jwtDecode } from 'jwt-decode'
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+
 import { GET } from '@/api/apiCaller'
 import { ENDPOINT } from '@/api'
 type AuthData = {
@@ -46,9 +46,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
               ENDPOINT.me,
               {},
               {
-                authorization:
-                  'Bearer ' +
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE0YWY2YTk4NTFlNDQ5OWIyZWRlODkiLCJpYXQiOjE3Mjk0MDkwMTEsImV4cCI6MTcyOTQ5NTQxMX0.LPhjN6nUAKziVhOmtC7tOuotS89XM4fXPGLdAVZmk8E'
+                authorization: 'Bearer ' + storedToken[0]
               }
             )
 

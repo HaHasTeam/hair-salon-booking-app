@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useRegister } from '@/api/auth'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const RegisterScreen = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -29,16 +30,17 @@ const RegisterScreen = () => {
   }
   const handleRegister = async () => {
     // Check if all fields are filled
+    // await AsyncStorage.clear()
     if (!email || !username || !password || !confirmPassword) {
       Alert.alert('Error', 'All fields are required')
       return
     }
 
     // Email validation
-    if (!validateEmail(email)) {
-      Alert.alert('Error', 'Please enter a valid email')
-      return
-    }
+    // if (!validateEmail(email)) {
+    //   Alert.alert('Error', 'Please enter a valid email')
+    //   return
+    // }
 
     // Password confirmation validation
     if (password !== confirmPassword) {
@@ -46,7 +48,7 @@ const RegisterScreen = () => {
       return
     }
 
-    await register({ email, password, username })
+    register({ email: email, password: password, username: username })
   }
 
   return (
