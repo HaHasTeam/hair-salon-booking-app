@@ -33,10 +33,27 @@ export default function TabLayout() {
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'person-circle-outline' : 'person-circle-outline'} color={color} />
-          )
+          ),
+          tabBarItemStyle: {
+            display: accessToken ? 'flex' : 'none'
+          }
         }}
       />
-
+      <Tabs.Screen
+        name='LoginRegisterScreen'
+        options={{
+          title: 'Login',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'person-circle-outline' : 'person-circle-outline'} color={color} />
+          ),
+          tabBarItemStyle: {
+            display: accessToken ? 'none' : 'flex'
+          },
+          tabBarStyle: {
+            display: 'none'
+          }
+        }}
+      />
       <Tabs.Screen
         name='branchs'
         options={{

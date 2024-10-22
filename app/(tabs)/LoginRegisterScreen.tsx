@@ -6,7 +6,7 @@ const LoginRegisterScreen = () => {
   const navigation = useNavigation()
   return (
     <SafeAreaView style={style.view}>
-      <Image style={style.image} source={require('../assets/images/illustration.png')} />
+      <Image style={style.image} source={require('../../assets/images/illustration.png')} />
       <Text style={style.header}>Fill your imagination</Text>
       <Text style={style.description}>Interesting courses are waiting for you, feel free to be creative</Text>
       <View style={style.buttonWrapper}>
