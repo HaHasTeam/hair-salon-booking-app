@@ -7,15 +7,14 @@ import { useColorScheme } from '@/hooks/useColorScheme'
 import TabBarCustom from '@/components/TabBarCustom'
 import { useAuth } from '@/provider/AuthProvider'
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
   const { accessToken } = useAuth()
   console.log('access token', accessToken)
 
   return (
     <Tabs
-      tabBar={(props) => <TabBarCustom {...props} />}
+      // tabBar={(props) => <TabBarCustom {...props} />}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false
       }}
     >
@@ -55,9 +54,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name='bookingService'
+        options={{
+          title: 'Đặt lịch giữ chỗ',
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={'calendar'} color={color} />,
+          tabBarItemStyle: {
+            display: accessToken ? 'flex' : 'none'
+          },
+          tabBarStyle: {
+            display: 'none'
+          }
+        }}
+      />
+      <Tabs.Screen
         name='branchs'
         options={{
-          title: 'Cuawr',
+          title: 'Branch',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'tennisball-outline' : 'tennisball-outline'} color={color} />
           )

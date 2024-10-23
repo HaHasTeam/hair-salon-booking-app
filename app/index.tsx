@@ -1,12 +1,12 @@
 import { Button } from 'native-base'
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import { router, Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { useNavigation } from '@react-navigation/native'
 const LoginRegisterScreen = () => {
   const navigation = useNavigation()
   return (
     <SafeAreaView style={style.view}>
-      <Image style={style.image} source={require('../../assets/images/illustration.png')} />
+      <Image style={style.image} source={require('../assets/images/illustration.png')} />
       <Text style={style.header}>Fill your imagination</Text>
       <Text style={style.description}>Interesting courses are waiting for you, feel free to be creative</Text>
       <View style={style.buttonWrapper}>
@@ -33,10 +33,10 @@ const LoginRegisterScreen = () => {
         >
           Sign in
         </Button>
-        <Link href={'/(tabs)'} style={style.other}>
-          Tôi muốn khám phá thêm
-        </Link>
       </View>
+      <Link href={'/(tabs)'} style={style.other}>
+        Tôi muốn khám phá thêm
+      </Link>
     </SafeAreaView>
   )
 }
