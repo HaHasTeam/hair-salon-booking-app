@@ -26,7 +26,7 @@ const ReceiptCard = ({
           <View style={styles.cardBody}>
             <View style={styles.cardHeader}>
               <Text style={styles.cardTitle} numberOfLines={2}>
-                {item.branch.name}
+                {item?.branch?.name}
               </Text>
             </View>
 
