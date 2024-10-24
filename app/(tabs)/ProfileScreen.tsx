@@ -12,12 +12,12 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { useAuth } from '@/provider/AuthProvider'
 import { ThemedText } from '@/components/ThemedText'
 const ProfileScreen = () => {
   const { profile, loading, accessToken } = useAuth()
-  const navigation = useNavigation()
+
   const router = useRouter()
 
   // if (loading) {
@@ -77,14 +77,14 @@ const ProfileScreen = () => {
           <View className='px-5 my-4'>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
-              onPress={() => navigation.navigate('(profile)/EditProfile')}
+              onPress={() => router.push('/(profile)/EditProfile')}
             >
               <FontAwesome name='edit' size={24} color='gray' className='items-center' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center mt-4'
-              onPress={() => navigation.navigate('(profile)/ChangePassword')}
+              className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center my-4'
+              onPress={() => router.push('/(profile)/ChangePassword')}
             >
               <FontAwesome name='expeditedssl' size={24} color='gray' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Change Password</Text>
@@ -101,9 +101,9 @@ const ProfileScreen = () => {
               onPress={() => {
                 // await AsyncStorage.removeItem('accessToken')
                 // await AsyncStorage.removeItem('refreshToken')
-
-                navigation.navigate('(tabs)')
+                router.navigate('/(tabs)/LoginRegisterScreen')
               }}
+              // href={'/'}
             >
               <AntDesign name='logout' size={24} color='red' className='mr-2' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Log out</Text>

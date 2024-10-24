@@ -35,9 +35,11 @@ export default function RootLayout() {
         <QueryProvider>
           <AuthProvider>
             <Stack>
+              <Stack.Screen name='index' key={1} options={{ headerShown: false }} />
+
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
               <Stack.Screen name='checkout' options={{ headerShown: false }} />
-              <Stack.Screen name='LoginRegisterScreen' options={{ headerShown: false }} />
+              {/* <Stack.Screen name='LoginRegisterScreen' options={{ headerShown: false }} /> */}
               <Stack.Screen name='ressult' options={{ headerShown: false }} />
               <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: true, title: 'Sign up' }} />
               <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: true, title: 'Sign in' }} />
