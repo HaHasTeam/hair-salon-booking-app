@@ -73,11 +73,18 @@ const ProfileScreen = () => {
               <Text className='ml-3 text-base font-medium text-gray-700'>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center my-4'
+              className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center mt-4'
               onPress={() => navigation.navigate('(profile)/ChangePassword')}
             >
               <FontAwesome name='expeditedssl' size={24} color='gray' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Change Password</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center my-4'
+              onPress={() => navigation.navigate('faq')}
+            >
+              <AntDesign name='questioncircleo' size={24} color='gray' />
+              <Text className='ml-3 text-base font-medium text-gray-700'>Help Desk</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
