@@ -17,9 +17,9 @@ export const request = (
   method: Method,
   headers: object = {},
   params: object = {},
-  body: object = {},
+  body: object = {}
 ): Promise<AxiosResponse> => {
- const API_URL = process.env.EXPO_PUBLIC_API_URL
+  const API_URL = process.env.EXPO_PUBLIC_API_URL
   log.debug('requestUrl: ', API_URL + endpoint)
 
   return axios({
@@ -27,13 +27,13 @@ export const request = (
     method: method,
     headers: Object.assign({}, headers),
     params: Object.assign(params),
-    data: body,
-    transformRequest:(data, headers) => {
-      if (data instanceof FormData) {
-        return data
-      }
-      return JSON.stringify(data)
-    }
+    data: body
+    // transformRequest:(data, headers) => {
+    //   if (data instanceof FormData) {
+    //     return data
+    //   }
+    //   return JSON.stringify(data)
+    // }
   })
 }
 /**

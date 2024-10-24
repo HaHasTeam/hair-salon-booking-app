@@ -12,27 +12,21 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import { Link, useRouter } from 'expo-router'
+import { useAuth } from '@/provider/AuthProvider'
 const ProfileScreen = () => {
-  const { data: profile, error, isLoading } = useUserProfile()
-  const navigation = useNavigation()
-  const queryClient = useQueryClient()
+  const { profile, loading, accessToken } = useAuth()
 
-  useFocusEffect(
-    useCallback(() => {
-      queryClient.invalidateQueries(['profile'])
-    }, [queryClient])
-  )
+  const router = useRouter()
 
-  if (isLoading) {
-    return <ActivityIndicator size='large' color='#00ff00' />
+  // if (loading) {
+  //   return <ActivityIndicator size='large' color='#00ff00' />
+  // }
+
+  if (!accessToken) {
+    router.push('/LoginRegisterScreen')
   }
-
-  if (error) {
-    console.log(error)
-    return <Text className='mt-28'>{error.message}</Text>
-  }
-  console.log('profile', profile)
+  console.log('profile screen', profile)
 
   return (
     <ParallaxScrollView
@@ -73,14 +67,14 @@ const ProfileScreen = () => {
           <View className='px-5 my-4'>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
-              onPress={() => navigation.navigate('(profile)/EditProfile')}
+              onPress={() => router.push('/(profile)/EditProfile')}
             >
               <FontAwesome name='edit' size={24} color='gray' className='items-center' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Edit Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center my-4'
-              onPress={() => navigation.navigate('(profile)/ChangePassword')}
+              onPress={() => router.push('/(profile)/ChangePassword')}
             >
               <FontAwesome name='expeditedssl' size={24} color='gray' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Change Password</Text>
@@ -90,9 +84,9 @@ const ProfileScreen = () => {
               onPress={() => {
                 // await AsyncStorage.removeItem('accessToken')
                 // await AsyncStorage.removeItem('refreshToken')
-
-                navigation.navigate('(tabs)')
+                router.navigate('/(tabs)/LoginRegisterScreen')
               }}
+              // href={'/'}
             >
               <AntDesign name='logout' size={24} color='red' className='mr-2' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Log out</Text>

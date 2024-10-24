@@ -1,6 +1,6 @@
 import { Button } from 'native-base'
 import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { useNavigation } from '@react-navigation/native'
 const LoginRegisterScreen = () => {
   const navigation = useNavigation()
@@ -34,6 +34,9 @@ const LoginRegisterScreen = () => {
           Sign in
         </Button>
       </View>
+      <Link href={'/(tabs)'} style={style.other}>
+        Tôi muốn khám phá thêm
+      </Link>
     </SafeAreaView>
   )
 }
@@ -79,6 +82,11 @@ const style = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
     textAlign: 'center'
+  },
+  other: {
+    fontSize: 16,
+    color: 'gray',
+    padding: 16
   }
 })
 
