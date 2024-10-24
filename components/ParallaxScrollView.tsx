@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView'
 import { HEADER_HEIGHT } from '@/utils/utils'
 
 type Props = PropsWithChildren<{
-  headerImage: ReactElement
+  headerImage?: ReactElement
   headerBackgroundColor: { dark: string; light: string }
 }>
 
@@ -35,11 +35,13 @@ export default function ParallaxScrollView({ children, headerImage, headerBackgr
   return (
     <ThemedView style={styles.container}>
       <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-        <Animated.View
-          style={[styles.header, { backgroundColor: headerBackgroundColor[colorScheme] }, headerAnimatedStyle]}
-        >
-          {headerImage}
-        </Animated.View>
+        {headerImage && (
+          <Animated.View
+            style={[styles.header, { backgroundColor: headerBackgroundColor[colorScheme] }, headerAnimatedStyle]}
+          >
+            {headerImage}
+          </Animated.View>
+        )}
         <ThemedView style={styles.content}>{children}</ThemedView>
       </Animated.ScrollView>
     </ThemedView>

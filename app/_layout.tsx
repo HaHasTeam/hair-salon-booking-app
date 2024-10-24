@@ -44,7 +44,8 @@ export default function RootLayout() {
               <Stack.Screen name='(authentication)/RegisterScreen' options={{ headerShown: true, title: 'Sign up' }} />
               <Stack.Screen name='(authentication)/LoginScreen' options={{ headerShown: true, title: 'Sign in' }} />
               <Stack.Screen name='(profile)/EditProfile' options={{ headerShown: true, title: 'Edit profile' }} />
-              <Stack.Screen name='(profile)/ChangePassword' options={{ headerShown: true, title: 'Change password' }} />
+              <Stack.Screen name='faq' options={{ headerShown: false, title: 'Help Desk' }} />
+              <Stack.Screen name='contact' options={{ headerShown: false, title: 'Contact' }} />
               <Stack.Screen
                 name='(modal)/feedbackModal'
                 options={{

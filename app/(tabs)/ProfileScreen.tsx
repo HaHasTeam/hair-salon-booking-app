@@ -14,6 +14,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Link, useRouter } from 'expo-router'
 import { useAuth } from '@/provider/AuthProvider'
+import { ThemedText } from '@/components/ThemedText'
 const ProfileScreen = () => {
   const { profile, loading, accessToken } = useAuth()
 
@@ -27,7 +28,12 @@ const ProfileScreen = () => {
     router.push('/LoginRegisterScreen')
   }
   console.log('profile screen', profile)
-
+  function getRandomNumber() {
+    const min = 5000000
+    const max = 7000000
+    const number = Math.floor(Math.random() * (max - min + 1)) + min
+    return max.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -62,7 +68,11 @@ const ProfileScreen = () => {
             </Text>
           )}
 
-          <Text className='mt-2 text-center text-gray-500'>@{profile?.email}</Text>
+          {profile?.email && profile?.email !== '' && (
+            <Text className='mt-2 text-center text-gray-500'>@{profile?.email}</Text>
+          )}
+
+          <ThemedText className='text-center'>Salary: {getRandomNumber()}</ThemedText>
 
           <View className='px-5 my-4'>
             <TouchableOpacity
@@ -78,6 +88,13 @@ const ProfileScreen = () => {
             >
               <FontAwesome name='expeditedssl' size={24} color='gray' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Change Password</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center my-4'
+              onPress={() => navigation.navigate('faq')}
+            >
+              <AntDesign name='questioncircleo' size={24} color='gray' />
+              <Text className='ml-3 text-base font-medium text-gray-700'>Help Desk</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
