@@ -1,5 +1,6 @@
 import { useBookingDetail } from "@/api/booking";
 import { useLocalSearchParams } from "expo-router";
+import { ScrollView } from "native-base";
 import { ActivityIndicator, Image, Text, View, StyleSheet } from "react-native";
 
 const ReceiptDetail = () => {
@@ -51,34 +52,35 @@ const ReceiptDetail = () => {
 //     );
 
 return (
+    <ScrollView>
     <View style={styles.container}>
       <Text style={styles.headerText}>Order Details</Text>
 
       <View style={styles.section}>
         <Text style={styles.sectionHeader}>Customer Information</Text>
-        <Text style={styles.infoText}>Username: {order.booking.customer.username}</Text>
-        <Text style={styles.infoText}>Email: {order.booking.customer.email}</Text>
+        <Text style={styles.infoText}>Username: {order?.booking?.customer?.username}</Text>
+        <Text style={styles.infoText}>Email: {order?.booking?.customer?.email}</Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionHeader}>Appointment Details</Text>
         <Text style={styles.infoText}>Date: {new Date(order.date).toLocaleDateString()}</Text>
         <View style={styles.row}>
-          <Text style={styles.infoText}>Start Time: {order.startTime}</Text>
-          <Text style={styles.infoText}>End Time: {order.endTime}</Text>
+          <Text style={styles.infoText}>Start Time: {order?.startTime}</Text>
+          <Text style={styles.infoText}>End Time: {order?.endTime}</Text>
         </View>
         
         
         <View style={styles.row}>
-          <Text style={styles.highlightText}>Status: {order.status}</Text>
-          <Text style={styles.highlightText}>Type: {order.booking.type}</Text>
+          <Text style={styles.highlightText}>Status: {order?.status}</Text>
+          <Text style={styles.highlightText}>Type: {order?.booking?.type}</Text>
         </View>
 
         <Text style={styles.subHeader}>Service Names:</Text>
         <View style={styles.servicesContainer}>
-          {order.court.map((service) => (
-            <Text key={service.name} style={styles.serviceItem}>
-              {service.name}
+          {order?.court.map((service) => (
+            <Text key={service?.name} style={styles.serviceItem}>
+              {service?.name}
             </Text>
           ))}
         </View>
@@ -86,17 +88,18 @@ return (
 
       <View style={styles.section}>
         <Text style={styles.sectionHeader}>Branch Information</Text>
-        <Text style={styles.highlightText}>{order.court[0].branch.name}</Text>
-        <Text style={styles.infoText}>Address: {order.court[0].branch.address}</Text>
+        <Text style={styles.highlightText}>{order?.court[0]?.branch?.name}</Text>
+        <Text style={styles.infoText}>Address: {order?.court[0]?.branch?.address}</Text>
       </View>
 
       {order.booking.imageQR && (
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>QR Code</Text>
-          <Image source={{ uri: order.booking.imageQR }} style={styles.qrImage} />
+          <Image source={{ uri: order?.booking?.imageQR }} style={styles.qrImage} />
         </View>
       )}
     </View>
+    </ScrollView>
   );
 }
 
@@ -105,13 +108,13 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#f5f5f5',
     flex: 1,
-    alignItems: 'center', // Center content horizontally
+    alignItems: 'center',
   },
   headerText: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center', // Center align text
+    textAlign: 'center',
   },
   section: {
     backgroundColor: '#fff',
@@ -139,12 +142,12 @@ const styles = StyleSheet.create({
   highlightText: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#ff6347', // Highlight color
+    color: '#ff6347',
     fontWeight: 'bold',
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Space fields in a single row
+    justifyContent: 'space-between',
     marginBottom: 5,
   },
   subHeader: {
@@ -160,17 +163,17 @@ const styles = StyleSheet.create({
   },
   serviceItem: {
     marginRight: 10,
-    backgroundColor: '#fff', // Background white to match section
+    backgroundColor: '#fff',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
-    borderWidth: 1, // Add border to highlight services
-    borderColor: '#007BFF', // Border color for highlight
+    borderWidth: 1,
+    borderColor: '#007BFF',
     marginBottom: 5,
   },
   qrImage: {
-    width: 120,
-    height: 120,
+    width: 250,
+    height: 250,
     marginTop: 10,
     alignSelf: 'center',
   },
