@@ -14,6 +14,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRouter } from 'expo-router'
 import { useAuth } from '@/provider/AuthProvider'
+import { ThemedText } from '@/components/ThemedText'
 const ProfileScreen = () => {
   const { profile, loading, accessToken } = useAuth()
   const navigation = useNavigation()
@@ -27,7 +28,12 @@ const ProfileScreen = () => {
     router.push('/LoginRegisterScreen')
   }
   console.log('profile screen', profile)
-
+  function getRandomNumber() {
+    const min = 5000000
+    const max = 7000000
+    const number = Math.floor(Math.random() * (max - min + 1)) + min
+    return max.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+  }
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -62,7 +68,11 @@ const ProfileScreen = () => {
             </Text>
           )}
 
-          <Text className='mt-2 text-center text-gray-500'>@{profile?.email}</Text>
+          {profile?.email && profile?.email !== '' && (
+            <Text className='mt-2 text-center text-gray-500'>@{profile?.email}</Text>
+          )}
+
+          <ThemedText className='text-center'>Salary: {getRandomNumber()}</ThemedText>
 
           <View className='px-5 my-4'>
             <TouchableOpacity
