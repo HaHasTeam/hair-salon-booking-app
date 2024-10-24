@@ -25,6 +25,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
         }}
       />
+      <Tabs.Screen
+        name='receipt'
+        options={{
+          title: 'Booking Receipts',
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? 'receipt' : 'receipt-outline'} color={color} />
+        }}
+      />
 
       <Tabs.Screen
         name='ProfileScreen'

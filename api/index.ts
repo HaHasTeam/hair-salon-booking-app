@@ -6,11 +6,13 @@ export const ENDPOINT = {
   changePassword: '/user/reset-password',
   getAllBranch: '/branch',
   postBooking: '/booking',
+  getMyBooking: '/booking/MyBooking',
   getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
+  getBookingDetail: (id: string) => `/schedule/GetScheduleByBooking/${id}`,
   getCourtAvailable: '/court/get-court-available',
   getPaymentInfo: '/payment/create-payment-url-for-booking',
-  uploadImages:"/file/upload",
+  uploadImages: '/file/upload',
   postFeedback: '/feedback',
   getFeedbackByBranchId: (id: string) => `/feedback/get-of-branch/${id}`,
-  getFeedbackById: (id: string) => `/feedback/get-by-id/${id}`,
+  getFeedbackById: (id: string) => `/feedback/get-by-id/${id}`
 }
