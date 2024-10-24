@@ -28,6 +28,7 @@ export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void })
 }
 
 export const useMyBookingList = () => {
+  const { accessToken } = useAuth()
   return useQuery({
     queryKey: ['receipt'],
     queryFn: async () => {
@@ -35,9 +36,7 @@ export const useMyBookingList = () => {
         ENDPOINT.getMyBooking,
         {},
         {
-          authorization:
-            'Bearer ' +
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE2MDk0YWIzYzc4ZjkxYzA3MTcyMjciLCJpYXQiOjE3Mjk2MTY4MzksImV4cCI6MTcyOTcwMzIzOX0.MkTiEOSuTEm1W_SRSseZQtNzVnenU_jDrHuwcA3YllM'
+          authorization: 'Bearer ' + accessToken
         }
       )
 
