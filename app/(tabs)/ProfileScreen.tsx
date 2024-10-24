@@ -32,7 +32,7 @@ const ProfileScreen = () => {
     const min = 5000000
     const max = 7000000
     const number = Math.floor(Math.random() * (max - min + 1)) + min
-    return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+    return max.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
   }
   return (
     <ParallaxScrollView
