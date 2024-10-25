@@ -5,7 +5,7 @@ import Entypo from '@expo/vector-icons/Entypo'
 import { useRouter } from 'expo-router'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Calendar, CalendarUtils } from 'react-native-calendars'
+import { Calendar, CalendarUtils, DateData } from 'react-native-calendars'
 import { useGetCourtAvailable } from '@/api/courts'
 import { TimeSlot } from '@/components/TimeSlot'
 import { ISlot, ITimeSlot } from '@/types/Slot'
@@ -13,25 +13,25 @@ import { ICourt } from '@/types/Court'
 import { useBranchDetail } from '@/api/branchs'
 import { format } from 'date-fns'
 import { getThu } from '@/utils/utils'
+import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 
 const BookingService = () => {
   const router = useRouter()
+  const { bookingData } = useCheckoutStore()
+  console.log('bookingData', bookingData)
+
+  const { data: branchDetail } = useBranchDetail({ id: bookingData.selectedBrach?._id })
   const { isOpen, onOpen, onClose } = useDisclose()
   const [selectDay, setSelectDay] = useState(new Date())
-  const [currentMonth, setCurrentMonth] = useState(new Date())
   const [startSlot, setStartSlot] = useState<ITimeSlot | null>(null)
   const [endSlot, setEndSlot] = useState<ITimeSlot | null>(null)
   const [selectedSlots, setSelectedSlots] = useState<ITimeSlot[] | []>([])
-  const [selectedCourts, setSelectedCourts] = useState<[]>([])
+
   const [selectedCourt, setSelectedCourt] = useState<ICourt | null>(null)
-  console.log('selectedSlots', selectedSlots)
-  const {
-    data: branchDetail,
-    isLoading: isBranchDetailLoading,
-    isError: isBranchError
-  } = useBranchDetail({ id: '6716907cc3514a38667e6235' })
-  const { mutate: getCourtAvailable, data: CourtData, isPending: isCourtPending } = useGetCourtAvailable()
-  console.log('selectedSlots', branchDetail)
+  const [selectedServices, setSelectedServices] = useState<ICourt[] | null>([])
+  console.log('branchDetail', branchDetail)
+
+  const { mutate: getCourtAvailable } = useGetCourtAvailable()
 
   const getDate = (count: number) => {
     const date = new Date()
@@ -39,16 +39,20 @@ const BookingService = () => {
     return CalendarUtils.getCalendarDateString(newDate)
   }
 
-  const onDayPress = useCallback((day) => {
-    setSelectDay(day.dateString)
+  const onDayPress = useCallback((day: DateData) => {
+    setSelectDay(new Date(day.dateString))
   }, [])
   const timeSlots = useMemo(() => {
-    const slotArray = branchDetail?.slots?.filter((el: ISlot) => el.weekDay.includes(getThu(selectDay)))
-    return slotArray
-  }, [branchDetail.slots, selectDay])
+    if (branchDetail) {
+      const slotArray = branchDetail?.slots?.filter((el: ISlot) => el.weekDay.includes(getThu(new Date(selectDay))))
+      return slotArray
+    } else {
+      return []
+    }
+  }, [branchDetail?.slots, selectDay])
   const marked = useMemo(() => {
     return {
-      [selectDay]: {
+      [selectDay.toISOString().split('T')[0]]: {
         selected: true,
         disableTouchEvent: true,
         selectedColor: 'orange',
@@ -141,7 +145,7 @@ const BookingService = () => {
               <HStack justifyContent={'flex-start'} alignItems={'flex-start'} space={2}>
                 <TabBarIcon size={22} name={'calendar-sharp'} color={'#989595'} />
                 <Text fontSize={'sm'} color={'gray.700'}>
-                  {new Date().toLocaleDateString('vi-VN', {
+                  {selectDay.toLocaleDateString('vi-VN', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
@@ -153,7 +157,7 @@ const BookingService = () => {
             </HStack>
           </Pressable>
           <TimeSlot
-            title='Choose Time to play'
+            title='Chọn thời gian cắt'
             selectedSlots={selectedSlots}
             setSelectedSlots={setSelectedSlots}
             timeSlotData={timeSlots}

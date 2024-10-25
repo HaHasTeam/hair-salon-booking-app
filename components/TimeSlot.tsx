@@ -54,8 +54,9 @@ export const TimeSlot = ({
         slots.push({
           ...slot,
           isInThePass: endTime < new Date(),
-          timeDisplay: `${startTimeString} - ${endTimeString}`
+          timeDisplay: `${startTimeString}`
         })
+        // - ${endTimeString}
       }
       return slots
     }
@@ -63,31 +64,32 @@ export const TimeSlot = ({
     return slots
   }, [selectDay, timeSlotData])
   const toggleSlot = (slot: ITimeSlot) => {
-    console.log('slote', slot)
+    // console.log('slote', slot)
 
-    const slotIndex = timeSlots.indexOf(slot)
-    if (!startSlot) {
-      setStartSlot(slot)
-      setSelectedSlots([slot])
-    } else if (!endSlot) {
-      const startIndex = timeSlots.indexOf(startSlot)
-      const endIndex = slotIndex
-      setEndSlot(slot)
-      setSelectedSlots(timeSlots.slice(startIndex <= endIndex ? startIndex : endIndex, endIndex + 1))
-    } else if (slot === startSlot) {
-      setStartSlot(null)
-      setEndSlot(null)
-      setSelectedSlots([])
-    } else {
-      const startIndex = timeSlots.indexOf(startSlot)
-      const endIndex = timeSlots.indexOf(slot)
-      setEndSlot(slot)
-      setSelectedSlots(timeSlots.slice(startIndex <= endIndex ? startIndex : endIndex, endIndex + 1))
-    }
+    // const slotIndex = timeSlots.indexOf(slot)
+    setSelectedSlots([slot])
+    // if (!startSlot) {
+    //   setStartSlot(slot)
+    //   setSelectedSlots([slot])
+    // } else if (!endSlot) {
+    //   const startIndex = timeSlots.indexOf(startSlot)
+    //   const endIndex = slotIndex
+    //   setEndSlot(slot)
+    //   setSelectedSlots(timeSlots.slice(startIndex <= endIndex ? startIndex : endIndex, endIndex + 1))
+    // } else if (slot === startSlot) {
+    //   setStartSlot(null)
+    //   setEndSlot(null)
+    //   setSelectedSlots([])
+    // } else {
+    //   const startIndex = timeSlots.indexOf(startSlot)
+    //   const endIndex = timeSlots.indexOf(slot)
+    //   setEndSlot(slot)
+    //   setSelectedSlots(timeSlots.slice(startIndex <= endIndex ? startIndex : endIndex, endIndex + 1))
+    // }
   }
 
   return (
-    <VStack alignItems={'center'} justifyContent={'center'} className='border-t-2 border-t-green-300'>
+    <VStack alignItems={'center'} justifyContent={'center'} className=''>
       <Text className='my-3 text-2xl font-bold'>{title}</Text>
 
       <HStack flexWrap={'wrap'} alignItems={'center'} justifyContent={'center'} space={2}>
@@ -113,7 +115,7 @@ export const TimeSlot = ({
                     ? 'outline'
                     : 'outline'
               }
-              className={`h-12 w-fit  text-xs  rounded-md mb-2 ${slot.isInThePass && 'bg-slate-300'} ${
+              className={` text-xs  rounded-md mb-2 ${slot.isInThePass && 'bg-slate-300'} ${
                 selectedSlots.includes(slot)
                   ? 'bg-green-400 text-green-200'
                   : startSlot === slot ||

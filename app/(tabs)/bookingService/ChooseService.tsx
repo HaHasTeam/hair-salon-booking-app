@@ -5,19 +5,20 @@ import CustomFlatList from '@/components/CustomFlatList'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import SearchBar from '@/components/SearchBar'
 import { IBranch } from '@/types/Branch'
-import { useSegments } from 'expo-router'
-import { Center, Text, View } from 'native-base'
+import { router, useSegments } from 'expo-router'
+import { Button, Center, HStack, Text, View, VStack } from 'native-base'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { useGetCourtQuery } from '../../../api/courts/index'
 import { ICourt } from '@/types/Court'
+import { useCheckoutStore } from '@/hooks/useCheckoutStore'
+import { formatToVND } from '../../../utils/utils'
 
 const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
-
+  const { setSelectedService, bookingData } = useCheckoutStore()
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
-  console.log('data', data)
 
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
@@ -29,13 +30,24 @@ const ChooseService = () => {
       //   name: ''
     })
   }, [])
-  // 6716907cc3514a38667e6235
-  const renderItem = ({ item }: { item: ICourt }) => {
-    const images = (item.images && item.images[0]) ?? ImagePlace
 
+  const renderItem = ({ item }: { item: ICourt }) => {
     return (
       <View padding={2}>
-        <CourtCard court={item} key={item._id} />
+        <CourtCard
+          court={item}
+          key={item._id}
+          isSelected={bookingData?.service?.includes(item)}
+          onPressCard={() => {
+            const existItem = bookingData?.service?.includes(item)
+            if (existItem) {
+              setSelectedService(bookingData.service?.filter((el) => el._id !== item._id))
+            } else {
+              setSelectedService([...bookingData.service, item])
+              console.log('check service', bookingData?.service?.length)
+            }
+          }}
+        />
       </View>
     )
   }
@@ -44,29 +56,54 @@ const ChooseService = () => {
   }
 
   return (
-    <CustomFlatList
-      data={data}
-      style={styles.list}
-      renderItem={renderItem}
-      StickyElementComponent={
-        <View style={styles.sticky}>
-          <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} onSubmitSearch={onSubmitSearch} />
-        </View>
-      }
-      ListEmptyComponent={
-        <Center flex={1} mt={5}>
-          <Text fontSize='lg' color='gray.500'>
-            No items to display
-          </Text>
-        </Center>
-      }
-      // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}
-    />
+    <>
+      <CustomFlatList
+        data={data}
+        style={styles.list}
+        renderItem={renderItem}
+        StickyElementComponent={
+          <View style={styles.sticky}>
+            <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} onSubmitSearch={onSubmitSearch} />
+          </View>
+        }
+        ListEmptyComponent={
+          <Center flex={1} mt={5}>
+            <Text fontSize='lg' color='gray.500'>
+              No items to display
+            </Text>
+          </Center>
+        }
+        // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}
+      />
+      <View position={'absolute'} bottom={0} background={'blue.200'} w={'full'} padding={5}>
+        <HStack justifyContent={'space-between'} w={'full'}>
+          <Button variant={'link'}>
+            Đã chọn <Text display={'inline'}>{bookingData.service?.length}</Text>
+            dịch vụ
+          </Button>
+          <HStack space={2} alignItems={'center'}>
+            <VStack justifyContent={'flex-end'} alignItems={'flex-end'}>
+              <Text>Tổng Thanh toán</Text>
+              <Text></Text>
+            </VStack>
+            <Button
+              size={'sm'}
+              onPress={() => {
+                router.dismiss()
+              }}
+            >
+              Xong
+            </Button>
+          </HStack>
+        </HStack>
+      </View>
+    </>
   )
 }
 
 export default ChooseService
 const styles = StyleSheet.create({
+  billingContainer: {},
   container: {
     flex: 1,
     backgroundColor: '#ffffff',

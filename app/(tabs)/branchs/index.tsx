@@ -17,6 +17,7 @@ const BranchScreen = () => {
     const searchKey = search.trim().toLocaleLowerCase()
     console.log('onSubmitSearch', searchKey)
   }
+  console.log('data', data)
 
   const renderItem = ({ item }: { item: IBranch }) => {
     return (

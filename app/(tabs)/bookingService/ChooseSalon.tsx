@@ -3,8 +3,9 @@ import BranchListItem from '@/components/branch/BranchListItem'
 import CustomFlatList from '@/components/CustomFlatList'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import SearchBar from '@/components/SearchBar'
+import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 import { IBranch } from '@/types/Branch'
-import { useSegments } from 'expo-router'
+import { useRouter, useSegments } from 'expo-router'
 import { Text, View } from 'native-base'
 import { useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native'
@@ -13,6 +14,8 @@ const ChooseSalon = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { data, isLoading } = useBranchList()
+  const { setSelectedBranch } = useCheckoutStore()
+  const router = useRouter()
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
     console.log('onSubmitSearch', searchKey)
@@ -25,7 +28,8 @@ const ChooseSalon = () => {
         key={item._id}
         style={styles.card}
         onPress={() => {
-          console.log('Minh')
+          setSelectedBranch(item)
+          router.back()
         }}
       >
         <View>
