@@ -1,104 +1,109 @@
 import { useBranchList } from '@/api/branchs'
 import BranchListItem from '@/components/branch/BranchListItem'
+import CourtCard from '@/components/court/CourtCard'
 import CustomFlatList from '@/components/CustomFlatList'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import SearchBar from '@/components/SearchBar'
-import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 import { IBranch } from '@/types/Branch'
-import { useRouter, useSegments } from 'expo-router'
-import { Text, View } from 'native-base'
-import { useState } from 'react'
+import { router, useSegments } from 'expo-router'
+import { Button, Center, HStack, Text, View, VStack } from 'native-base'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { useGetCourtQuery } from '../../../api/courts/index'
+import { ICourt } from '@/types/Court'
+import { useCheckoutStore } from '@/hooks/useCheckoutStore'
+import { formatToVND } from '../../../utils/utils'
 
-const ChooseSalon = () => {
+const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
+  const { setSelectedService, bookingData } = useCheckoutStore()
   const ImagePlace = require('@/assets/images/placeholder.png')
-  const { data, isLoading } = useBranchList()
-  const { setSelectedBranch } = useCheckoutStore()
-  const router = useRouter()
+  const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
+
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
     console.log('onSubmitSearch', searchKey)
   }
+  useEffect(() => {
+    getCourtQuery({
+      branch: '6716907cc3514a38667e6235'
+      //   name: ''
+    })
+  }, [])
 
-  const renderItem = ({ item }: { item: IBranch }) => {
-    const images = (item.images && item.images[0]) ?? ImagePlace
+  const renderItem = ({ item }: { item: ICourt }) => {
     return (
-      <TouchableOpacity
-        key={item._id}
-        style={styles.card}
-        onPress={() => {
-          setSelectedBranch(item)
-          router.back()
-        }}
-      >
-        <View>
-          <View style={styles.cardTop}>
-            <Image alt={item.name} resizeMode='cover' style={styles.cardImg} src={images} />
-          </View>
-
-          <View style={styles.cardBody}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-            </View>
-
-            <View style={styles.cardStats}>
-              <View style={styles.cardStatsItem}>
-                <TabBarIcon name='location' size={14} color={'#2d2d2d'} />
-                <Text style={styles.cardStatsItemText} numberOfLines={1}>
-                  {item.address}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.cardFooter}>
-              <View style={styles.centerItem}>
-                <TabBarIcon name='time-outline' size={14} color={'#000'} />
-                <Text style={styles.cardFooterText}>{item.availableTime}</Text>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'flex-end'
-                }}
-              >
-                <Text
-                  style={{
-                    marginHorizontal: 5,
-                    verticalAlign: 'bottom',
-                    marginTop: 'auto'
-                  }}
-                >
-                  schedule
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <View padding={2}>
+        <CourtCard
+          court={item}
+          key={item._id}
+          isSelected={bookingData?.service?.includes(item)}
+          onPressCard={() => {
+            const existItem = bookingData?.service?.includes(item)
+            if (existItem) {
+              setSelectedService(bookingData.service?.filter((el) => el._id !== item._id))
+            } else {
+              setSelectedService([...bookingData.service, item])
+              console.log('check service', bookingData?.service?.length)
+            }
+          }}
+        />
+      </View>
     )
   }
-  if (isLoading) {
+  if (isPending) {
     return <ActivityIndicator size='large' />
   }
+
   return (
-    <CustomFlatList
-      data={data}
-      style={styles.list}
-      renderItem={renderItem}
-      StickyElementComponent={
-        <View style={styles.sticky}>
-          <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} onSubmitSearch={onSubmitSearch} />
-        </View>
-      }
-      // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}
-    />
+    <>
+      <CustomFlatList
+        data={data}
+        style={styles.list}
+        renderItem={renderItem}
+        StickyElementComponent={
+          <View style={styles.sticky}>
+            <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} onSubmitSearch={onSubmitSearch} />
+          </View>
+        }
+        ListEmptyComponent={
+          <Center flex={1} mt={5}>
+            <Text fontSize='lg' color='gray.500'>
+              No items to display
+            </Text>
+          </Center>
+        }
+        // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}
+      />
+      <View position={'absolute'} bottom={0} background={'blue.200'} w={'full'} padding={5}>
+        <HStack justifyContent={'space-between'} w={'full'}>
+          <Button variant={'link'}>
+            Đã chọn <Text display={'inline'}>{bookingData.service?.length}</Text>
+            dịch vụ
+          </Button>
+          <HStack space={2} alignItems={'center'}>
+            <VStack justifyContent={'flex-end'} alignItems={'flex-end'}>
+              <Text>Tổng Thanh toán</Text>
+              <Text></Text>
+            </VStack>
+            <Button
+              size={'sm'}
+              onPress={() => {
+                router.dismiss()
+              }}
+            >
+              Xong
+            </Button>
+          </HStack>
+        </HStack>
+      </View>
+    </>
   )
 }
 
-export default ChooseSalon
+export default ChooseService
 const styles = StyleSheet.create({
+  billingContainer: {},
   container: {
     flex: 1,
     backgroundColor: '#ffffff',

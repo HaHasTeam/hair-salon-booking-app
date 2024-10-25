@@ -70,6 +70,41 @@ export default function MenuStack() {
           headerShadowVisible: false
         }}
       />
+      <Stack.Screen
+        name='ChooseService'
+        options={{
+          // title: 'Chọn Salon',
+          // headerTitleAlign: 'center',
+          // headerTitleStyle: {
+          //   color: 'green.600'
+          // },
+          // headerBackVisible: false,
+          headerTitle: () => {
+            return (
+              <View width={'full'} display={'flex'}>
+                {/* <Link href={'/(tabs)/branchs'}> */}
+                {/* <TouchableOpacity
+                  // position={'absolute'}
+                  // zIndex={10}
+
+                  onPress={() => {
+                    // router.navigate('/(tabs)/branchs')
+                    router.dismissAll()
+                  }}
+                >
+                  <TabBarIcon name={'arrow-back'} color={'#989595'} />
+                </TouchableOpacity> */}
+                {/* </Link> */}
+                <Text fontSize={'xl'} fontWeight={'bold'} color={'green.400'}>
+                  Chọn dịch vụ
+                </Text>
+              </View>
+            )
+          },
+
+          headerShadowVisible: false
+        }}
+      />
     </Stack>
   )
 }

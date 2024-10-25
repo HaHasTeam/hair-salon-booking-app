@@ -12,6 +12,8 @@ export const ENDPOINT = {
   getBookingDetailById: (id: string) => `/booking/${id}`,
   doneBooking: (id: string) => `/booking/done/${id}`,
   getCourtAvailable: '/court/get-court-available',
+  getCourtQuery: '/court/search',
+
   getPaymentInfo: '/payment/create-payment-url-for-booking',
   uploadImages: '/file/upload',
   postFeedback: '/feedback',

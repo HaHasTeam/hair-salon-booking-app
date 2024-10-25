@@ -14,7 +14,6 @@ const BranchListItem = ({
   onPressBranchCard: (branchId: string | null) => any
   onPressBooking: (item: IBranch) => any
 }) => {
-  const segment = useSegments()
   const images = (item.images && item.images[0]) ?? ImagePlace
 
   return (

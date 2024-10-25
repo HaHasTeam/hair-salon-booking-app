@@ -17,3 +17,17 @@ export const useGetCourtAvailable = () => {
     }
   })
 }
+export const useGetCourtQuery = () => {
+  const { accessToken } = useAuth()
+  return useMutation({
+    mutationFn: async (data: { branch?: string; name?: string }) => {
+      const response = await POST(ENDPOINT.getCourtQuery, data, {}, { authorization: 'Bearer ' + accessToken })
+
+      if (response.status !== 200) {
+        throw new Error(`Failed to fetch getCourtAvalableMutatue: ${response.statusText}`)
+      }
+
+      return response.data.data
+    }
+  })
+}
