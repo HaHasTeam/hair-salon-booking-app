@@ -9,6 +9,8 @@ export const ENDPOINT = {
   getMyBooking: '/booking/MyBooking',
   getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
   getBookingDetail: (id: string) => `/schedule/GetScheduleByBooking/${id}`,
+  getBookingDetailById: (id: string) => `/booking/${id}`,
+  doneBooking: (id: string) => `/booking/done/${id}`,
   getCourtAvailable: '/court/get-court-available',
   getPaymentInfo: '/payment/create-payment-url-for-booking',
   uploadImages: '/file/upload',
