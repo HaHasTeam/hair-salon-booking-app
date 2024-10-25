@@ -10,6 +10,8 @@ export const ENDPOINT = {
   getBranchDetail: (id: string) => `/branch/get-by-id/${id}`,
   getBookingDetail: (id: string) => `/schedule/GetScheduleByBooking/${id}`,
   getCourtAvailable: '/court/get-court-available',
+  getCourtQuery: '/court/search',
+
   getPaymentInfo: '/payment/create-payment-url-for-booking',
   uploadImages: '/file/upload',
   postFeedback: '/feedback',

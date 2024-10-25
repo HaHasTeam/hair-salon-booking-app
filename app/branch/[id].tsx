@@ -16,7 +16,7 @@ import FeedBackSection from '@/components/FeedBackSection'
 const BranchDetail = () => {
   const { id: branchId } = useLocalSearchParams<{ id: string }>()
   const { data, isLoading } = useBranchDetail({ id: branchId })
-  // log.debug('branchId', data)
+
   if (isLoading) {
     return <ActivityIndicator size='large' />
   }

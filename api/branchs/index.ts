@@ -21,6 +21,7 @@ export const useBranchList = () => {
 export const useBranchDetail = ({ id }: { id: string }) => {
   return useQuery({
     queryKey: ['branches', id],
+    enabled: !!id,
     queryFn: async () => {
       const response = await GET(ENDPOINT.getBranchDetail(id), {})
 

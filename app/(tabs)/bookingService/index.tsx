@@ -1,10 +1,74 @@
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
-import { Button, HStack, Pressable, Text, View } from 'native-base'
+import { Actionsheet, Button, HStack, Pressable, Text, useDisclose, View, Box } from 'native-base'
 import { StyleSheet } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import { useRouter } from 'expo-router'
+
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Calendar, CalendarUtils, DateData } from 'react-native-calendars'
+import { useGetCourtAvailable } from '@/api/courts'
+import { TimeSlot } from '@/components/TimeSlot'
+import { ISlot, ITimeSlot } from '@/types/Slot'
+import { ICourt } from '@/types/Court'
+import { useBranchDetail } from '@/api/branchs'
+import { format } from 'date-fns'
+import { getThu } from '@/utils/utils'
+import { useCheckoutStore } from '@/hooks/useCheckoutStore'
+
 const BookingService = () => {
   const router = useRouter()
+  const { bookingData } = useCheckoutStore()
+  console.log('bookingData', bookingData)
+
+  const { data: branchDetail } = useBranchDetail({ id: bookingData.selectedBrach?._id })
+  const { isOpen, onOpen, onClose } = useDisclose()
+  const [selectDay, setSelectDay] = useState(new Date())
+  const [startSlot, setStartSlot] = useState<ITimeSlot | null>(null)
+  const [endSlot, setEndSlot] = useState<ITimeSlot | null>(null)
+  const [selectedSlots, setSelectedSlots] = useState<ITimeSlot[] | []>([])
+
+  const [selectedCourt, setSelectedCourt] = useState<ICourt | null>(null)
+  const [selectedServices, setSelectedServices] = useState<ICourt[] | null>([])
+  console.log('branchDetail', branchDetail)
+
+  const { mutate: getCourtAvailable } = useGetCourtAvailable()
+
+  const getDate = (count: number) => {
+    const date = new Date()
+    const newDate = date.setDate(date.getDate() + count)
+    return CalendarUtils.getCalendarDateString(newDate)
+  }
+
+  const onDayPress = useCallback((day: DateData) => {
+    setSelectDay(new Date(day.dateString))
+  }, [])
+  const timeSlots = useMemo(() => {
+    if (branchDetail) {
+      const slotArray = branchDetail?.slots?.filter((el: ISlot) => el.weekDay.includes(getThu(new Date(selectDay))))
+      return slotArray
+    } else {
+      return []
+    }
+  }, [branchDetail?.slots, selectDay])
+  const marked = useMemo(() => {
+    return {
+      [selectDay.toISOString().split('T')[0]]: {
+        selected: true,
+        disableTouchEvent: true,
+        selectedColor: 'orange',
+        selectedTextColor: 'red'
+      }
+    }
+  }, [selectDay])
+  useEffect(() => {
+    if (selectDay && selectedSlots.length !== 0) {
+      getCourtAvailable({
+        branch: '6716907cc3514a38667e6235',
+        slots: selectedSlots.map((el) => el._id),
+        date: format(selectDay?.toString(), 'yyyy-MM-dd')
+      })
+    }
+  }, [getCourtAvailable, selectDay, selectedSlots])
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -43,7 +107,11 @@ const BookingService = () => {
           <Text fontSize={'xl'} color={'green.700'}>
             2. Chọn dịch vụ
           </Text>
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              router.push('/(tabs)/bookingService/ChooseService')
+            }}
+          >
             <HStack
               justifyContent={'space-between'}
               space={3}
@@ -66,7 +134,7 @@ const BookingService = () => {
           <Text fontSize={'xl'} color={'green.700'}>
             3. Chọn ngày, giờ & stylist
           </Text>
-          <Pressable>
+          <Pressable onPress={onOpen}>
             <HStack
               justifyContent={'space-between'}
               space={3}
@@ -77,7 +145,7 @@ const BookingService = () => {
               <HStack justifyContent={'flex-start'} alignItems={'flex-start'} space={2}>
                 <TabBarIcon size={22} name={'calendar-sharp'} color={'#989595'} />
                 <Text fontSize={'sm'} color={'gray.700'}>
-                  {new Date().toLocaleDateString('vi-VN', {
+                  {selectDay.toLocaleDateString('vi-VN', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
@@ -88,6 +156,17 @@ const BookingService = () => {
               <TabBarIcon size={20} name={'arrow-forward'} color={'#989595'} />
             </HStack>
           </Pressable>
+          <TimeSlot
+            title='Chọn thời gian cắt'
+            selectedSlots={selectedSlots}
+            setSelectedSlots={setSelectedSlots}
+            timeSlotData={timeSlots}
+            selectDay={selectDay}
+            endSlot={endSlot}
+            startSlot={startSlot}
+            setEndSlot={setEndSlot}
+            setStartSlot={setStartSlot}
+          />
         </View>
 
         <Button colorScheme={'green'} isDisabled>
@@ -96,12 +175,80 @@ const BookingService = () => {
         <Text textAlign={'center'} color={'gray.400'}>
           Cắt xong trả tiền, hủy lịch không sao
         </Text>
+        <Actionsheet isOpen={isOpen} onClose={onClose}>
+          <Actionsheet.Content>
+            <Box w='100%' px={4} justifyContent='center'>
+              <Text>Chọn ngày bạn muốn </Text>
+              <Calendar
+                // testID={'first_calendar'}
+                enableSwipeMonths
+                current={new Date().toJSON()}
+                style={stylesCalendar.calendar}
+                onDayPress={onDayPress}
+                markedDates={marked}
+                minDate={getDate(0)}
+                maxDate={getDate(30)}
+              />
+            </Box>
+          </Actionsheet.Content>
+        </Actionsheet>
       </View>
     </View>
   )
 }
 
 export default BookingService
+const stylesCalendar = StyleSheet.create({
+  calendar: {
+    marginBottom: 10
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    margin: 10,
+    alignItems: 'center'
+  },
+  switchText: {
+    margin: 10,
+    fontSize: 16
+  },
+  text: {
+    textAlign: 'center',
+    padding: 10,
+    backgroundColor: 'lightgrey',
+    fontSize: 16
+  },
+  disabledText: {
+    color: 'grey'
+  },
+  defaultText: {
+    color: 'purple'
+  },
+  customCalendar: {
+    height: 250,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgrey'
+  },
+  customDay: {
+    textAlign: 'center'
+  },
+  customHeader: {
+    backgroundColor: '#FCC',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginHorizontal: -4,
+    padding: 8
+  },
+  customTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10
+  },
+  customTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#00BBF2'
+  }
+})
 const styles = StyleSheet.create({
   homeIcon: { position: 'relative', zIndex: 1 },
   dotIcon: {

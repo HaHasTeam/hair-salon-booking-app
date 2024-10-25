@@ -4,13 +4,28 @@ import { View, StyleSheet, Pressable } from 'react-native'
 import BadgeCustom from '../BadgeCustom'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { formatToVND } from '@/utils/utils'
+import { TabBarIcon } from '../navigation/TabBarIcon'
 
-const CourtCard = ({ court }: { court: ICourt }) => {
+const CourtCard = ({
+  court,
+  onPressCard,
+  isSelected = false
+}: {
+  court: ICourt
+  onPressCard?: () => void
+  isSelected?: boolean
+}) => {
   return (
-    <Pressable style={styles.container} className='border my-2'>
+    <Pressable
+      style={isSelected ? styles.containerSelected : styles.container}
+      className='border my-2'
+      onPress={() => {
+        onPressCard?.()
+      }}
+    >
       <View>
         <HStack space={1} justifyContent='start' alignItems={'center'}>
-          <MaterialCommunityIcons name='soccer-field' size={24} color={'#2d2d2d'} />
+          <TabBarIcon name='cut' size={24} color={'#2d2d2d'} />
           <Text style={styles.title}> {court.name}</Text>
         </HStack>
         <Text style={styles.time} numberOfLines={2}>
@@ -32,6 +47,14 @@ const CourtCard = ({ court }: { court: ICourt }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
+    padding: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  containerSelected: {
+    backgroundColor: '#bfc8d1',
     padding: 10,
     borderRadius: 10,
     flexDirection: 'row',

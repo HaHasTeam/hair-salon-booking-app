@@ -11,18 +11,20 @@ const SearchBar = ({
   setSearchPhrase: any
   onSubmitSearch: (search: string) => any
 }) => {
+  console.log('searchPhrase', searchPhrase)
+
   return (
     <View style={styles.search}>
       <View style={styles.searchInput}>
         <View style={styles.inputWrapper}>
           <TextInput
-            // onTextInput={() => {
-            //   onSubmitSearch(searchPhrase);
-            // }}
+            onTextInput={() => {
+              onSubmitSearch(searchPhrase)
+            }}
             placeholder='tìm kiếm'
             placeholderTextColor='#9eadba'
             value={searchPhrase}
-            onChangeText={setSearchPhrase}
+            // onChangeText={setSearchPhrase}
             style={styles.input}
           />
 
@@ -31,7 +33,7 @@ const SearchBar = ({
           </View>
         </View>
       </View>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           onSubmitSearch(searchPhrase)
           Keyboard.dismiss()
@@ -40,7 +42,7 @@ const SearchBar = ({
         <View style={styles.btn}>
           <Text style={styles.btnText}>Search</Text>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   )
 }
