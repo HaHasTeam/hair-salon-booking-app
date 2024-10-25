@@ -50,6 +50,7 @@ export const useMyBookingList = () => {
 }
 
 export const useBookingDetail = ({ id }: { id: string }) => {
+  const { accessToken } = useAuth()
   return useQuery({
     queryKey: ['booking', id],
     queryFn: async () => {
@@ -59,9 +60,7 @@ export const useBookingDetail = ({ id }: { id: string }) => {
         ENDPOINT.getBookingDetail(id),
         {},
         {
-          authorization:
-            'Bearer ' +
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE2MDk0YWIzYzc4ZjkxYzA3MTcyMjciLCJpYXQiOjE3Mjk2MTY4MzksImV4cCI6MTcyOTcwMzIzOX0.MkTiEOSuTEm1W_SRSseZQtNzVnenU_jDrHuwcA3YllM'
+          authorization: 'Bearer ' + accessToken
         }
       )
 

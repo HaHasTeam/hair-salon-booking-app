@@ -1,83 +1,48 @@
 import { useBranchList } from '@/api/branchs'
 import BranchListItem from '@/components/branch/BranchListItem'
+import CourtCard from '@/components/court/CourtCard'
 import CustomFlatList from '@/components/CustomFlatList'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import SearchBar from '@/components/SearchBar'
 import { IBranch } from '@/types/Branch'
 import { useSegments } from 'expo-router'
-import { Text, View } from 'native-base'
-import { useState } from 'react'
+import { Center, Text, View } from 'native-base'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { useGetCourtQuery } from '../../../api/courts/index'
+import { ICourt } from '@/types/Court'
 
-const ChooseSalon = () => {
+const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
+
   const ImagePlace = require('@/assets/images/placeholder.png')
-  const { data, isLoading } = useBranchList()
+  const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
+  console.log('data', data)
+
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
     console.log('onSubmitSearch', searchKey)
   }
-
-  const renderItem = ({ item }: { item: IBranch }) => {
+  useEffect(() => {
+    getCourtQuery({
+      branch: '6716907cc3514a38667e6235'
+      //   name: ''
+    })
+  }, [])
+  // 6716907cc3514a38667e6235
+  const renderItem = ({ item }: { item: ICourt }) => {
     const images = (item.images && item.images[0]) ?? ImagePlace
+
     return (
-      <TouchableOpacity
-        key={item._id}
-        style={styles.card}
-        onPress={() => {
-          console.log('Minh')
-        }}
-      >
-        <View>
-          <View style={styles.cardTop}>
-            <Image alt={item.name} resizeMode='cover' style={styles.cardImg} src={images} />
-          </View>
-
-          <View style={styles.cardBody}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-            </View>
-
-            <View style={styles.cardStats}>
-              <View style={styles.cardStatsItem}>
-                <TabBarIcon name='location' size={14} color={'#2d2d2d'} />
-                <Text style={styles.cardStatsItemText} numberOfLines={1}>
-                  {item.address}
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.cardFooter}>
-              <View style={styles.centerItem}>
-                <TabBarIcon name='time-outline' size={14} color={'#000'} />
-                <Text style={styles.cardFooterText}>{item.availableTime}</Text>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'flex-end'
-                }}
-              >
-                <Text
-                  style={{
-                    marginHorizontal: 5,
-                    verticalAlign: 'bottom',
-                    marginTop: 'auto'
-                  }}
-                >
-                  schedule
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <View padding={2}>
+        <CourtCard court={item} key={item._id} />
+      </View>
     )
   }
-  if (isLoading) {
+  if (isPending) {
     return <ActivityIndicator size='large' />
   }
+
   return (
     <CustomFlatList
       data={data}
@@ -88,12 +53,19 @@ const ChooseSalon = () => {
           <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} onSubmitSearch={onSubmitSearch} />
         </View>
       }
+      ListEmptyComponent={
+        <Center flex={1} mt={5}>
+          <Text fontSize='lg' color='gray.500'>
+            No items to display
+          </Text>
+        </Center>
+      }
       // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}
     />
   )
 }
 
-export default ChooseSalon
+export default ChooseService
 const styles = StyleSheet.create({
   container: {
     flex: 1,

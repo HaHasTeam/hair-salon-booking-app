@@ -5,9 +5,15 @@ import BadgeCustom from '../BadgeCustom'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { formatToVND } from '@/utils/utils'
 
-const CourtCard = ({ court }: { court: ICourt }) => {
+const CourtCard = ({ court, onPressCard }: { court: ICourt; onPressCard?: () => void }) => {
   return (
-    <Pressable style={styles.container} className='border my-2'>
+    <Pressable
+      style={styles.container}
+      className='border my-2'
+      onPress={() => {
+        onPressCard?.()
+      }}
+    >
       <View>
         <HStack space={1} justifyContent='start' alignItems={'center'}>
           <MaterialCommunityIcons name='soccer-field' size={24} color={'#2d2d2d'} />

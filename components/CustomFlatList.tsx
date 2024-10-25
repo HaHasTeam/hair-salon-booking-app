@@ -6,6 +6,7 @@ type CustomFlatListProps<T> = Omit<FlatListProps<T>, 'ListHeaderComponent'> & {
   HeaderComponent?: JSX.Element
   StickyElementComponent: JSX.Element
   TopListElementComponent?: JSX.Element
+  ListEmptyComponent?: JSX.Element
 }
 
 function CustomFlatList<T>({ style, ...props }: CustomFlatListProps<T>): React.ReactElement {
@@ -29,6 +30,7 @@ function CustomFlatList<T>({ style, ...props }: CustomFlatListProps<T>): React.R
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
           useNativeDriver: true
         })}
+        ListEmptyComponent={<Animated.View>{props.ListEmptyComponent}</Animated.View>}
       />
     </View>
   )
