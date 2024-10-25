@@ -37,9 +37,7 @@ const ReceiptList = () => {
       </View>
     )
   }
-  useFocusEffect(() => {
-    refetch()
-  })
+
   return (
     <ScrollView>
       <View style={styles.container}>

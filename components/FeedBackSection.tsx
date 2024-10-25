@@ -10,8 +10,6 @@ const FeedBackSection = ({ branchId }: { branchId: string }) => {
 
   const data = useGetFeedbackByBranchId(branchId)
 
-  console.log(data, 'datdsafa')
-
   return (
     <Link href={'/(modal)/feedbackModal?branchId=' + branchId} asChild>
       <TouchableOpacity

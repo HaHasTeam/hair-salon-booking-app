@@ -11,10 +11,6 @@ const ReceiptDetail = () => {
   const parseFeedback = JSON.parse(decodeURIComponent(feedback) as string) || null
   console.log(parseFeedback, 'parseFeedback')
 
-  useFocusEffect(() => {
-    refetch()
-  })
-
   if (isLoading) {
     return <ActivityIndicator size='large' />
   }
