@@ -6,7 +6,7 @@ import { useUploadImgs } from '@/api/images'
 import ImgDisplay from '@/components/ImgDisplay'
 import Loading from '@/components/Loading'
 import { usePostFeedback } from '@/api/feedback'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 const FeedbackCreate = () => {
   const [rating, setRating] = useState(0)
@@ -42,10 +42,12 @@ const FeedbackCreate = () => {
     }
   }
   const params = useLocalSearchParams()
-
+  console.log(params, 'params')
+  const router = useRouter()
   const { mutateAsync: postFeedback, isPending: isPostingFeedback } = usePostFeedback()
   const handleSubmit = async () => {
     // Xử lý gửi form
+
     if (!rating) {
       alert('Vui lòng chọn số sao')
       return
@@ -58,14 +60,20 @@ const FeedbackCreate = () => {
       alert('Vui lòng chọn hình ảnh')
       return
     }
-    if (params.booking && params.branch) {
-      const data = await postFeedback({
-        star: rating,
-        feedback: comment,
-        images,
-        booking: params.booking as string,
-        branch: params.branch as string
-      })
+
+    try {
+      if (params.booking && params.branch) {
+        const data = await postFeedback({
+          star: rating,
+          feedback: comment,
+          images,
+          booking: params.booking as string,
+          branch: params.branch as string
+        })
+      }
+      return router.back()
+    } catch (error) {
+      console.log(error, 'error')
     }
   }
 

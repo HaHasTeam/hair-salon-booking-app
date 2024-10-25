@@ -31,6 +31,12 @@ const LoginScreen = () => {
     login({ email, password })
   }
 
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('accessToken')
+    await AsyncStorage.removeItem('refreshToken')
+    navigation.navigate('LoginRegisterScreen', {})
+  }
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -70,7 +76,7 @@ const LoginScreen = () => {
             <TouchableOpacity className='bg-green-700 rounded-lg py-3 shadow-xl' onPress={handleLogin}>
               <Text className='text-center text-white font-bold text-lg'>Sign in</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('(authentication)/RegisterScreen')}>
+            <TouchableOpacity onPress={() => handleLogout()}>
               <Text className='text-center text-sm text-green-600 mt-4'>
                 Don't have an account? <Text className='text-green-600 underline'>Sign Up</Text>
               </Text>
