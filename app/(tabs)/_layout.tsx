@@ -82,6 +82,17 @@ export default function TabLayout() {
           )
         }}
       />
+
+      <Tabs.Screen
+        name='QrCode'
+        options={{
+          title: 'QrCode',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'tennisball-outline' : 'tennisball-outline'} color={color} />
+          )
+        }}
+      />
+      
     </Tabs>
   )
 }
