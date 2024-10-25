@@ -61,18 +61,19 @@ const ReceiptDetail = () => {
           <Text style={styles.infoText}>Email: {order?.booking?.customer?.email}</Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Appointment Details</Text>
-          <Text style={styles.infoText}>Date: {new Date(order.date).toLocaleDateString()}</Text>
-          <View style={styles.row}>
-            <Text style={styles.infoText}>Start Time: {order?.startTime}</Text>
-            <Text style={styles.infoText}>End Time: {order?.endTime}</Text>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.highlightText}>Status: {order?.status}</Text>
-            <Text style={styles.highlightText}>Type: {order?.booking?.type}</Text>
-          </View>
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>Appointment Details</Text>
+        <Text style={styles.infoText}>Date: {new Date(order?.date).toLocaleDateString()}</Text>
+        <View style={styles.row}>
+          <Text style={styles.infoText}>Start Time: {order?.startTime}</Text>
+          <Text style={styles.infoText}>End Time: {order?.endTime}</Text>
+        </View>
+        
+        
+        <View style={styles.row}>
+          <Text style={styles.highlightText}>Status: {order?.status}</Text>
+          <Text style={styles.highlightText}>Type: {order?.booking?.type}</Text>
+        </View>
 
           <Text style={styles.subHeader}>Service Names:</Text>
           <View style={styles.servicesContainer}>
