@@ -67,11 +67,11 @@ const BranchDetail = () => {
         {/* Footer */}
         <Pressable className='  flex-row items-center justify-between border-y-2 border-gray-300 p-5 '>
           <Link href={`/booking/${data._id}`} className='rounded-md bg-green-500 p-5 px-8 w-full text-center'>
-            <Text className='text-lg font-bold text-white'>Đặt Sân ngay</Text>
+            <Text className='text-lg font-bold text-white'>Đặt chỗ ngay</Text>
           </Link>
         </Pressable>
         <View>
-          <Text className='text-lg font-bold'>Our Courts</Text>
+          <Text className='text-lg font-bold'>Our services</Text>
           {data.courts.map((item: ICourt) => {
             return <CourtCard court={item} key={item._id} />
           })}
