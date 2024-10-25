@@ -70,8 +70,8 @@ const FeedbackCreate = () => {
           booking: params.booking as string,
           branch: params.branch as string
         })
+        return await router.back()
       }
-      return router.back()
     } catch (error) {
       console.log(error, 'error')
     }

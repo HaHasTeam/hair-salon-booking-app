@@ -5,6 +5,7 @@ import { POST } from '../apiCaller'
 import { ENDPOINT } from '..'
 import { log } from '@/utils/logger.util'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRefetch } from '../utils'
 
 export const useLogin = ({
   onLoginSuccess,
@@ -27,7 +28,7 @@ export const useLogin = ({
     onSuccess: async (res: AxiosResponse) => {
       if (res.data.data.accessToken) {
         console.log('accessToken', res.data.data.accessToken)
-        console.log('refreshToken', res.data.data.refreshToken)
+
 
         await AsyncStorage.setItem('accessToken', res.data.data.accessToken)
         await AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)

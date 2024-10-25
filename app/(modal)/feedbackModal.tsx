@@ -2,8 +2,13 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { FlatList } from 'native-base'
 import FeedBackItem from '@/components/FeedBackItem'
+import { useLocalSearchParams } from 'expo-router'
+import { useGetFeedbackByBranchId } from '@/api/feedback'
 
 const feedbackmodal = () => {
+  const params = useLocalSearchParams()
+  const data = useGetFeedbackByBranchId(params.branchId as string)
+
   return (
     <View
       style={{
@@ -51,14 +56,32 @@ const feedbackmodal = () => {
           flex: 1
         }}
       >
-        <FlatList
-          style={{
-            paddingRight: 10
-          }}
-          data={new Array(10).fill(0)}
-          renderItem={() => <FeedBackItem />}
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        />
+        {data.isLoading && <Text> Loading... </Text>}
+        {!!!data?.data?.length ? (
+          <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>Chưa có đánh giá nào</Text>
+        ) : (
+          <FlatList
+            data={data?.data}
+            renderItem={({
+              item
+            }: {
+              item: {
+                feedback: string
+                images: string[]
+                star: number
+                name: string
+              }
+            }) => (
+              <FeedBackItem
+                feedback={item.feedback}
+                images={item.images}
+                star={item.star}
+                name={item.name || 'Người dùng'}
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        )}
       </View>
     </View>
   )

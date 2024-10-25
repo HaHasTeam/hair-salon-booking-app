@@ -1,28 +1,26 @@
-import CustomFlatList from "@/components/CustomFlatList";
-import { ActivityIndicator, Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useMyBookingList } from "@/api/booking";
-import ReceiptCard from "@/components/ReceiptCard";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { ScrollView } from "native-base";
+import CustomFlatList from '@/components/CustomFlatList'
+import { ActivityIndicator, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useMyBookingList } from '@/api/booking'
+import ReceiptCard from '@/components/ReceiptCard'
+import { useFocusEffect, useRouter } from 'expo-router'
+import { useState } from 'react'
+import { ScrollView } from 'native-base'
 
 const ReceiptList = () => {
-  const { data, isLoading } = useMyBookingList()
+  const { data, refetch, isLoading } = useMyBookingList()
   const router = useRouter()
   const [filterStatus, setFilterStatus] = useState('All')
-  console.log(data, 'ASDF')
 
-     if (isLoading) {
+  if (isLoading) {
     return <ActivityIndicator size='large' />
   }
-    const getFilteredData = () => {
-        if (filterStatus === 'All') {
-            return data;
-        }
-        return data.filter(item => item.status === filterStatus.toLowerCase());
+  const getFilteredData = () => {
+    if (filterStatus === 'All') {
+      return data
     }
-    console.log(data);
-    
+    return data.filter((item) => item.status === filterStatus.toLowerCase())
+  }
+  console.log(data)
 
   const onFilterChange = (status) => {
     setFilterStatus(status)
@@ -39,6 +37,9 @@ const ReceiptList = () => {
       </View>
     )
   }
+  useFocusEffect(() => {
+    refetch()
+  })
   return (
     <ScrollView>
       <View style={styles.container}>

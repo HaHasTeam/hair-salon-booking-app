@@ -76,7 +76,7 @@ const BranchDetail = () => {
             return <CourtCard court={item} key={item._id} />
           })}
         </View>
-        <FeedBackSection />
+        <FeedBackSection branchId={branchId} />
       </ParallaxScrollView>
     </>
   )

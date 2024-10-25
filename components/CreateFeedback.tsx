@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons'
 const CreateFeedback = () => {
   return (
     <>
-      <Link href={'/(modal)/feedbackCreate'} asChild>
+      <Link href={'/(tabs)/receipt'} asChild>
         <TouchableOpacity
           style={{
             flexDirection: 'row',

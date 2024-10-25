@@ -1,12 +1,19 @@
 import { useBookingDetail } from '@/api/booking'
-import { useLocalSearchParams } from 'expo-router'
+import FeedBackItem from '@/components/FeedBackItem'
+import { useFocusEffect, useLocalSearchParams } from 'expo-router'
 import { ScrollView } from 'native-base'
 import { ActivityIndicator, Image, Text, View, StyleSheet } from 'react-native'
 
 const ReceiptDetail = () => {
-  const { id: bookingId } = useLocalSearchParams<{ id: string }>()
-  console.log('bookingId ', bookingId)
-  const { data: order, isLoading } = useBookingDetail({ id: bookingId })
+  const { id: bookingId, feedback } = useLocalSearchParams<{ id: string; feedback: any }>()
+
+  const { data: order, isLoading, error, refetch } = useBookingDetail({ id: bookingId })
+  const parseFeedback = JSON.parse(decodeURIComponent(feedback) as string) || null
+  console.log(parseFeedback, 'parseFeedback')
+
+  useFocusEffect(() => {
+    refetch()
+  })
 
   if (isLoading) {
     return <ActivityIndicator size='large' />
@@ -50,6 +57,8 @@ const ReceiptDetail = () => {
   //     </View>
   //     );
 
+  console.log(order, 'oeradsf')
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -61,19 +70,18 @@ const ReceiptDetail = () => {
           <Text style={styles.infoText}>Email: {order?.booking?.customer?.email}</Text>
         </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionHeader}>Appointment Details</Text>
-        <Text style={styles.infoText}>Date: {new Date(order?.date).toLocaleDateString()}</Text>
-        <View style={styles.row}>
-          <Text style={styles.infoText}>Start Time: {order?.startTime}</Text>
-          <Text style={styles.infoText}>End Time: {order?.endTime}</Text>
-        </View>
-        
-        
-        <View style={styles.row}>
-          <Text style={styles.highlightText}>Status: {order?.status}</Text>
-          <Text style={styles.highlightText}>Type: {order?.booking?.type}</Text>
-        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionHeader}>Appointment Details</Text>
+          <Text style={styles.infoText}>Date: {new Date(order?.date).toLocaleDateString()}</Text>
+          <View style={styles.row}>
+            <Text style={styles.infoText}>Start Time: {order?.startTime}</Text>
+            <Text style={styles.infoText}>End Time: {order?.endTime}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <Text style={styles.highlightText}>Status: {order?.status}</Text>
+            <Text style={styles.highlightText}>Type: {order?.booking?.type}</Text>
+          </View>
 
           <Text style={styles.subHeader}>Service Names:</Text>
           <View style={styles.servicesContainer}>
@@ -95,6 +103,35 @@ const ReceiptDetail = () => {
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>QR Code</Text>
             <Image source={{ uri: order?.booking?.imageQR }} style={styles.qrImage} />
+          </View>
+        )}
+        {!!parseFeedback && (
+          <View
+            style={{
+              backgroundColor: '#f0f0f0',
+              padding: 10,
+              borderRadius: 5,
+              alignSelf: 'flex-start',
+              marginTop: 5,
+              width: '100%',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2
+              },
+              shadowOpacity: 0.23,
+              shadowRadius: 2.62,
+              elevation: 4,
+              gap: 10
+            }}
+          >
+            <Text style={styles.subHeader}>Your feedback</Text>
+            <FeedBackItem
+              name='ME'
+              feedback={parseFeedback.feedback}
+              star={parseFeedback.star}
+              images={parseFeedback.images}
+            />
           </View>
         )}
       </View>

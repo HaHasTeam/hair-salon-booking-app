@@ -5,16 +5,23 @@ import { useLogin } from '@/api/auth'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AxiosResponse } from 'axios'
+
+import { useQueryClient } from '@tanstack/react-query'
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigation = useNavigation()
-
+  const queryClient = useQueryClient()
   const { login } = useLogin({ onLoginSuccess, onLoginFailed })
   async function onLoginSuccess(res: AxiosResponse) {
     console.log(res.data.data)
     await AsyncStorage.setItem('accessToken', res.data.data.accessToken)
+    console.log('accessToken', res.data.data.accessToken)
+
     await AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
+    await queryClient.invalidateQueries({
+      queryKey: ['refetch']
+    })
     Alert.alert('Success', 'Logged in successfully')
     setEmail('')
     setPassword('')

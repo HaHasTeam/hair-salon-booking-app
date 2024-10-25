@@ -8,7 +8,7 @@ import { ENDPOINT } from '..'
 export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void }) => {
   const { accessToken } = useAuth()
   return useMutation({
-    mutationKey: ['postBooking'],
+    mutationKey: ['postBooking',accessToken],
     mutationFn: async (bookingReq: {
       booking: Omit<IBooking, 'status'>
       schedule: Omit<ISchedule, 'status'>
@@ -30,7 +30,7 @@ export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void })
 export const useMyBookingList = () => {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ['receipt'],
+    queryKey: ['receipt',accessToken],
     queryFn: async () => {
       const response = await GET(
         ENDPOINT.getMyBooking,
@@ -51,10 +51,8 @@ export const useMyBookingList = () => {
 
 export const useBookingDetail = ({ id }: { id: string }) => {
   const { accessToken } = useAuth()
-  console.log('accessToken', accessToken)
-
   return useQuery({
-    queryKey: ['booking', id],
+    queryKey: ['booking', id, accessToken],
     queryFn: async () => {
       console.log('id: ', id)
 
@@ -62,7 +60,9 @@ export const useBookingDetail = ({ id }: { id: string }) => {
         ENDPOINT.getBookingDetail(id),
         {},
         {
-          authorization: 'Bearer ' + accessToken
+          authorization:
+            'Bearer ' +
+            accessToken
         }
       )
 
