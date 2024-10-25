@@ -7,5 +7,5 @@ export const Icons = {
   branchs: ({ ...props }) => <TabBarIcon name={'tennisball-outline'} size={26} {...props} />,
   ProfileScreen: ({ ...props }) => <AntDesign name='user' size={26} {...props} />,
   receipt: ({ ...props }) => <AntDesign name='barcode' size={26} {...props} />,
-  QrCode: ({ ...props }) => <AntDesign name='user' size={26} {...props} />
+  QrCode: ({ ...props }) => <AntDesign name='qrcode' size={26} {...props} />
 }
