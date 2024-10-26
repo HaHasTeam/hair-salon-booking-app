@@ -111,6 +111,7 @@ const BookingService = () => {
             onPress={() => {
               router.push('/(tabs)/bookingService/ChooseService')
             }}
+            isDisabled={branchDetail ? true : false}
           >
             <HStack
               justifyContent={'space-between'}
@@ -134,7 +135,7 @@ const BookingService = () => {
           <Text fontSize={'xl'} color={'green.700'}>
             3. Chọn ngày, giờ & stylist
           </Text>
-          <Pressable onPress={onOpen}>
+          <Pressable onPress={onOpen} isDisabled={branchDetail ? true : false}>
             <HStack
               justifyContent={'space-between'}
               space={3}
@@ -156,17 +157,19 @@ const BookingService = () => {
               <TabBarIcon size={20} name={'arrow-forward'} color={'#989595'} />
             </HStack>
           </Pressable>
-          <TimeSlot
-            title='Chọn thời gian cắt'
-            selectedSlots={selectedSlots}
-            setSelectedSlots={setSelectedSlots}
-            timeSlotData={timeSlots}
-            selectDay={selectDay}
-            endSlot={endSlot}
-            startSlot={startSlot}
-            setEndSlot={setEndSlot}
-            setStartSlot={setStartSlot}
-          />
+          {branchDetail && (
+            <TimeSlot
+              title='Chọn thời gian cắt'
+              selectedSlots={selectedSlots}
+              setSelectedSlots={setSelectedSlots}
+              timeSlotData={timeSlots}
+              selectDay={selectDay}
+              endSlot={endSlot}
+              startSlot={startSlot}
+              setEndSlot={setEndSlot}
+              setStartSlot={setStartSlot}
+            />
+          )}
         </View>
 
         <Button colorScheme={'green'} isDisabled>
