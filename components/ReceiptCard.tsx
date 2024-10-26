@@ -3,6 +3,8 @@ import React, { Fragment } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import FeedBackItem from './FeedBackItem'
+import Rating from './Rating'
 const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: string) => any }) => {
   console.log(item, 'item')
 
@@ -15,14 +17,18 @@ const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: st
     }
     return false
   }
+
   const onClickFeedback = (e: any) => {
-    router.push('/(modal)/feedbackCreate?booking=' + item._id + '&branch=' + item.branch._id)
+    router.push('/(modal)/feedbackCreate?booking=' + item._id + '&branch=' + item.branch)
+  }
+  const onPressReceiptCard2 = (id: string) => {
+    router.push(`/(tabs)/receipt/${id}` + '?feedback=' + encodeURIComponent(JSON.stringify(item.feedback)))
   }
   return (
     <TouchableOpacity
       key={item._id}
       onPress={() => {
-        onPressReceiptCard(item._id)
+        onPressReceiptCard2(item._id)
       }}
       style={styles.card}
     >
@@ -74,6 +80,41 @@ const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: st
             </View>
           </View>
         </View>
+        {item?.feedback && (
+          <View
+            style={{
+              backgroundColor: '#f0f0f0',
+              padding: 10,
+              borderRadius: 5,
+              alignSelf: 'flex-start',
+              marginTop: 5,
+              width: '100%',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2
+              },
+              shadowOpacity: 0.23,
+              shadowRadius: 2.62,
+              elevation: 4,
+              gap: 5
+            }}
+          >
+            <Rating star={item.feedback.star} />
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: '500',
+                borderTopColor: 'black',
+                borderTopWidth: 1,
+                fontSize: 16,
+                padding: 5
+              }}
+            >
+              {item.feedback?.feedback.slice(0, 100) + '...'}
+            </Text>
+          </View>
+        )}
         {canFeedback() && (
           <TouchableOpacity onPress={onClickFeedback}>
             <View

@@ -76,7 +76,7 @@ export default function HomeScreen() {
       </ThemedView>
       <ThemedView>
         <View display={'flex'} alignItems={'center'} alignContent={'center'} flexDirection={'row'}>
-          <ThemedText className='text-green-600 '>Sân nổi bật</ThemedText>
+          <ThemedText className='text-green-600 '>Shop nổi bật</ThemedText>
           <TabBarIcon name='arrow-forward-circle-outline' className='text-green-600 ' />
         </View>
         <Parallax

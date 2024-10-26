@@ -2,11 +2,16 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import FeedBackItem from './FeedBackItem'
-import { Link } from 'expo-router'
+import { Link, useFocusEffect } from 'expo-router'
+import { useGetFeedbackByBranchId } from '@/api/feedback'
 
-const FeedBackSection = () => {
+const FeedBackSection = ({ branchId }: { branchId: string }) => {
+  console.log(branchId, 'ASdfsd')
+
+  const data = useGetFeedbackByBranchId(branchId)
+
   return (
-    <Link href={'/(modal)/feedbackModal'} asChild>
+    <Link href={'/(modal)/feedbackModal?branchId=' + branchId} asChild>
       <TouchableOpacity
         style={{
           flexDirection: 'row',
@@ -48,8 +53,21 @@ const FeedBackSection = () => {
               gap: 10
             }}
           >
-            <FeedBackItem />
-            <FeedBackItem />
+            {!!!data?.data?.length ? (
+              <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>Chưa có đánh giá nào</Text>
+            ) : (
+              data?.data?.map((item, index) =>
+                index <= 1 ? (
+                  <FeedBackItem
+                    key={index}
+                    feedback={item.feedback}
+                    images={item.images}
+                    star={item.star}
+                    name={item.name || 'Người dùng'}
+                  />
+                ) : undefined
+              )
+            )}
           </View>
           <View
             style={{

@@ -36,7 +36,6 @@ export default function RootLayout() {
           <AuthProvider>
             <Stack>
               <Stack.Screen name='index' key={1} options={{ headerShown: false }} />
-
               <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
               <Stack.Screen name='checkout' options={{ headerShown: false }} />
               {/* <Stack.Screen name='LoginRegisterScreen' options={{ headerShown: false }} /> */}
@@ -63,6 +62,7 @@ export default function RootLayout() {
                   presentation: 'containedModal'
                 }}
               />
+              <Stack.Screen name='checking/index' options={{ headerShown: true, title: 'checking' }} />
               <Stack.Screen name='+not-found' />
             </Stack>
           </AuthProvider>

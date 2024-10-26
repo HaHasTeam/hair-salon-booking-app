@@ -15,7 +15,7 @@ export const usePostFeedback = () => {
         branch:string
       }) => {
         const response = await POST(ENDPOINT.postFeedback, data, {}, { authorization: 'Bearer ' + accessToken })
-        if (response.status !== 200) {
+        if (response.status !== 201) {
           throw new Error(`Failed to post feedback: ${response}`)
         }
   
@@ -31,9 +31,11 @@ export const usePostFeedback = () => {
         queryKey: ['feedback', 'branch', branchId],
       queryFn: async () => {
         const response = await GET(ENDPOINT.getFeedbackByBranchId(branchId), {}, { authorization: 'Bearer ' + accessToken })
-        if (response.status !== 200) {
-          throw new Error(`Failed to get feedback by branch ${branchId}: ${response}`)
-        }
+        // if (response.status !== 304) {
+        //   console.log(response);
+          
+        //   throw new Error(`Failed to get feedback by branch ${branchId}: ${response}`)
+        // }
         return response.data.data
       }
     })

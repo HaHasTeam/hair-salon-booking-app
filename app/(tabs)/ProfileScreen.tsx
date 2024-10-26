@@ -17,6 +17,7 @@ import { useAuth } from '@/provider/AuthProvider'
 import { ThemedText } from '@/components/ThemedText'
 const ProfileScreen = () => {
   const { profile, loading, accessToken } = useAuth()
+  const queryClient = useQueryClient()
 
   const router = useRouter()
 
@@ -27,6 +28,7 @@ const ProfileScreen = () => {
   if (!accessToken) {
     router.push('/LoginRegisterScreen')
   }
+
   console.log('profile screen', profile)
   function getRandomNumber() {
     const min = 5000000

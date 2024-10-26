@@ -2,13 +2,13 @@ import { useAuth } from '@/provider/AuthProvider'
 import { IBooking } from '@/types/Booking'
 import { ISchedule } from '@/types/ISchedule'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { GET, POST } from '../apiCaller'
+import { GET, POST, PUT } from '../apiCaller'
 import { ENDPOINT } from '..'
 
 export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void }) => {
   const { accessToken } = useAuth()
   return useMutation({
-    mutationKey: ['postBooking'],
+    mutationKey: ['postBooking',accessToken],
     mutationFn: async (bookingReq: {
       booking: Omit<IBooking, 'status'>
       schedule: Omit<ISchedule, 'status'>
@@ -30,7 +30,7 @@ export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void })
 export const useMyBookingList = () => {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ['receipt'],
+    queryKey: ['receipt',accessToken],
     queryFn: async () => {
       const response = await GET(
         ENDPOINT.getMyBooking,
@@ -52,7 +52,7 @@ export const useMyBookingList = () => {
 export const useBookingDetail = ({ id }: { id: string }) => {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ['booking', id],
+    queryKey: ['booking', id, accessToken],
     queryFn: async () => {
       console.log('id: ', id)
 
@@ -60,7 +60,9 @@ export const useBookingDetail = ({ id }: { id: string }) => {
         ENDPOINT.getBookingDetail(id),
         {},
         {
-          authorization: 'Bearer ' + accessToken
+          authorization:
+            'Bearer ' +
+            accessToken
         }
       )
 
@@ -69,6 +71,54 @@ export const useBookingDetail = ({ id }: { id: string }) => {
       }
 
       return response.data.data[0]
+    }
+  })
+}
+
+export const useBookingDetailById = () => {
+  const { accessToken } = useAuth()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await GET(
+        ENDPOINT.getBookingDetailById(id),
+        {},
+        {
+          authorization:
+            'Bearer ' +
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE2MDk0YWIzYzc4ZjkxYzA3MTcyMjciLCJpYXQiOjE3Mjk4NzgwMzMsImV4cCI6MTcyOTk2NDQzM30.ae5SeMgFKYnI6NIwlHZr1cUXY-OyEbvTBM6kmkQEsSA'
+        }
+      )
+      if (response.status !== 200) {
+        throw new Error(`Failed to get data: ${response}`)
+      }
+
+      return response.data.data
+    }
+  })
+}
+
+export const useDoneBooking = () => {
+  const { accessToken } = useAuth()
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await PUT(
+        ENDPOINT.doneBooking(id),
+        {},
+        {},
+        {
+          authorization:
+            'Bearer ' +
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE2MDk0YWIzYzc4ZjkxYzA3MTcyMjciLCJpYXQiOjE3Mjk4ODUxNTV9.4PJk2pNrAjXOyAyiOVY-z82jskMwrJ10BjbpjE9UYu0'
+        }
+      )
+
+      if (response.status !== 200) {
+        console.log(response);
+        throw new Error(`Failed: ${response}`)
+      }
+
+      return response.data.data
     }
   })
 }

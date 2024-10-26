@@ -33,10 +33,10 @@ const LoginRegisterScreen = () => {
         >
           Sign in
         </Button>
-        <Link href={'/(tabs)'} style={style.other}>
-          Tôi muốn khám phá thêm
-        </Link>
       </View>
+      <Link href={'/(tabs)'} style={style.other}>
+        Tôi muốn khám phá thêm
+      </Link>
     </SafeAreaView>
   )
 }

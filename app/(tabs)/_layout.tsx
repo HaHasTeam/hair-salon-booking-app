@@ -29,7 +29,9 @@ export default function TabLayout() {
         name='receipt'
         options={{
           title: 'Booking Receipts',
-          tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? 'receipt' : 'receipt-outline'} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'receipt' : 'receipt-outline'} color={color} />
+          )
         }}
       />
 
@@ -79,6 +81,16 @@ export default function TabLayout() {
           title: 'Branch',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'tennisball-outline' : 'tennisball-outline'} color={color} />
+          )
+        }}
+      />
+
+      <Tabs.Screen
+        name='QrCode'
+        options={{
+          title: 'QrCode',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'qr-code-outline' : 'qr-code'} color={color} />
           )
         }}
       />

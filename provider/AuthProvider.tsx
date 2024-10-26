@@ -7,6 +7,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 
 import { GET } from '@/api/apiCaller'
 import { ENDPOINT } from '@/api'
+import { useResgistRefetch } from '@/api/utils'
 type AuthData = {
   accessToken: string | null
   refreshToken: string | null
@@ -29,15 +30,21 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [profile, setProfile] = useState<any | IUser.IModel>(null)
   const [loading, setLoading] = useState(true)
   const navigation = useNavigation()
+  const data = useResgistRefetch()
 
   useEffect(() => {
+    console.log('refresh auth token')
+
     const fetchSession = async () => {
+      console.log('fetch session')
+
       try {
         const storedToken = await Promise.all([
           AsyncStorage.getItem('accessToken'),
           AsyncStorage.getItem('refreshToken')
         ])
-        log.debug('Stored token', storedToken)
+        console.log('storedTokendsafm: ', storedToken[0])
+
         if (storedToken[0] && storedToken[1]) {
           setAccessToken(storedToken[0]), setRefreshToken(storedToken[1])
           const decodedToken = jwtDecode(storedToken[0])
@@ -64,7 +71,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     }
 
     fetchSession()
-  }, [])
+  }, [data])
 
   return <AuthContext.Provider value={{ accessToken, refreshToken, loading, profile }}>{children}</AuthContext.Provider>
 }
