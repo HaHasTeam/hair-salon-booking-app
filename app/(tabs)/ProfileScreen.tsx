@@ -101,8 +101,8 @@ const ProfileScreen = () => {
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
               onPress={() => {
-                // await AsyncStorage.removeItem('accessToken')
-                // await AsyncStorage.removeItem('refreshToken')
+                AsyncStorage.removeItem('accessToken')
+                AsyncStorage.removeItem('refreshToken')
                 router.navigate('/(tabs)/LoginRegisterScreen')
               }}
               // href={'/'}

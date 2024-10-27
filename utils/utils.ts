@@ -1,3 +1,5 @@
+import { TonalColorsInput } from './../node_modules/canvaskit-wasm/types/index.d'
+import { ICourt } from '@/types/Court'
 import { ISlot } from '@/types/Slot'
 
 export const HEADER_HEIGHT = 250
@@ -10,6 +12,12 @@ export function formatToVND(amount: number): string {
   })
 
   return formatter.format(amount)
+}
+export function calculateTotalServicePrice(products: ICourt[]): string {
+  const total = products.reduce((total, product) => {
+    return total + product.price
+  }, 0)
+  return formatToVND(total)
 }
 export function getThu(date: Date | undefined): string {
   const day = date?.getDay()

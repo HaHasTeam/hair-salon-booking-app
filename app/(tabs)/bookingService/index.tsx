@@ -1,5 +1,5 @@
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
-import { Actionsheet, Button, HStack, Pressable, Text, useDisclose, View, Box } from 'native-base'
+import { Actionsheet, Button, HStack, Pressable, Text, useDisclose, View, Box, Flex, Badge } from 'native-base'
 import { StyleSheet } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import { useRouter } from 'expo-router'
@@ -12,13 +12,13 @@ import { ISlot, ITimeSlot } from '@/types/Slot'
 import { ICourt } from '@/types/Court'
 import { useBranchDetail } from '@/api/branchs'
 import { format } from 'date-fns'
-import { getThu } from '@/utils/utils'
+import { calculateTotalServicePrice, getThu } from '@/utils/utils'
 import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 
 const BookingService = () => {
   const router = useRouter()
   const { bookingData } = useCheckoutStore()
-  console.log('bookingData', bookingData)
+  console.log('bookingData', bookingData.selectedBrach?._id)
 
   const { data: branchDetail } = useBranchDetail({ id: bookingData.selectedBrach?._id })
   const { isOpen, onOpen, onClose } = useDisclose()
@@ -29,9 +29,9 @@ const BookingService = () => {
 
   const [selectedCourt, setSelectedCourt] = useState<ICourt | null>(null)
   const [selectedServices, setSelectedServices] = useState<ICourt[] | null>([])
-  console.log('branchDetail', branchDetail)
+  // console.log('branchDetail', branchDetail)
 
-  const { mutate: getCourtAvailable } = useGetCourtAvailable()
+  const { mutate: getCourtAvailable, data: StylistData } = useGetCourtAvailable()
 
   const getDate = (count: number) => {
     const date = new Date()
@@ -60,10 +60,12 @@ const BookingService = () => {
       }
     }
   }, [selectDay])
+  console.log('stylist ', StylistData)
+
   useEffect(() => {
     if (selectDay && selectedSlots.length !== 0) {
       getCourtAvailable({
-        branch: '6716907cc3514a38667e6235',
+        branch: branchDetail?._id,
         slots: selectedSlots.map((el) => el._id),
         date: format(selectDay?.toString(), 'yyyy-MM-dd')
       })
@@ -91,11 +93,11 @@ const BookingService = () => {
             >
               <HStack justifyContent={'flex-start'} alignItems={'flex-start'} space={2}>
                 <View position={'relative'}>
-                  <Entypo name='dot-single' size={30} color='red' style={styles.dotIcon} />
+                  {!branchDetail && <Entypo name='dot-single' size={30} color='red' style={styles.dotIcon} />}
                   <TabBarIcon size={22} name={'home-sharp'} color={'#989595'} style={styles.homeIcon} />
                 </View>
                 <Text fontSize={'sm'} color={'gray.700'}>
-                  Xem tất cả salon
+                  {branchDetail ? branchDetail.name : 'Xem tất cả salon'}
                 </Text>
               </HStack>
               <TabBarIcon size={20} name={'arrow-forward'} color={'#989595'} />
@@ -111,7 +113,7 @@ const BookingService = () => {
             onPress={() => {
               router.push('/(tabs)/bookingService/ChooseService')
             }}
-            isDisabled={branchDetail ? true : false}
+            isDisabled={branchDetail ? false : true}
           >
             <HStack
               justifyContent={'space-between'}
@@ -121,21 +123,48 @@ const BookingService = () => {
               padding={4}
             >
               <HStack justifyContent={'flex-start'} alignItems={'flex-start'} space={2}>
-                <TabBarIcon size={22} name={'cut'} style={styles.rotate} color={'#989595'} />
+                <View position={'relative'}>
+                  {branchDetail && <Entypo name='dot-single' size={30} color='red' style={styles.dotIcon} />}
+                  <TabBarIcon size={22} name={'cut'} style={styles.rotate} color={'#989595'} />
+                </View>
                 <Text fontSize={'sm'} color={'gray.700'}>
-                  Xem tất cả dịch vụ hấp dẫn
+                  {bookingData.service?.length > 0
+                    ? 'Đã chọn ' + bookingData.service?.length + ' dịch vụ'
+                    : ' Xem tất cả dịch vụ hấp dẫn'}
                 </Text>
               </HStack>
               <TabBarIcon size={20} name={'arrow-forward'} color={'#989595'} />
             </HStack>
           </Pressable>
+
+          {bookingData.service?.length > 0 && (
+            <>
+              <Flex wrap='wrap' direction='row' width={'full'} marginTop={2}>
+                {bookingData?.service?.map((el) => {
+                  return (
+                    <Badge colorScheme={'blue'} width={'1/3'} margin={1}>
+                      {el.name}
+                    </Badge>
+                  )
+                })}
+              </Flex>
+              <View marginTop={1}>
+                <Text>
+                  Tổng Tiền: {calculateTotalServicePrice(bookingData.service)} /{bookingData.service?.length}h
+                </Text>
+              </View>
+            </>
+          )}
         </View>
         {/* Chọn Ngày giờ */}
         <View>
           <Text fontSize={'xl'} color={'green.700'}>
             3. Chọn ngày, giờ & stylist
           </Text>
-          <Pressable onPress={onOpen} isDisabled={branchDetail ? true : false}>
+          <Pressable
+            onPress={() => onOpen}
+            isDisabled={branchDetail?._id && bookingData.service?.length > 0 ? false : true}
+          >
             <HStack
               justifyContent={'space-between'}
               space={3}
@@ -170,6 +199,8 @@ const BookingService = () => {
               setStartSlot={setStartSlot}
             />
           )}
+
+          <View>{StylistData && StylistData.map((el) => <Text>{el._id}</Text>)}</View>
         </View>
 
         <Button colorScheme={'green'} isDisabled>

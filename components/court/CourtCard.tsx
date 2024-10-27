@@ -18,7 +18,7 @@ const CourtCard = ({
   return (
     <Pressable
       style={isSelected ? styles.containerSelected : styles.container}
-      className='border my-2'
+      className='border '
       onPress={() => {
         onPressCard?.()
       }}

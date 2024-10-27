@@ -8,15 +8,17 @@ import { IBranch } from '@/types/Branch'
 import { router, useSegments } from 'expo-router'
 import { Button, Center, HStack, Text, View, VStack } from 'native-base'
 import { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Image, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native'
 import { useGetCourtQuery } from '../../../api/courts/index'
 import { ICourt } from '@/types/Court'
 import { useCheckoutStore } from '@/hooks/useCheckoutStore'
-import { formatToVND } from '../../../utils/utils'
+import { CourtStatusEnum } from '@/types'
+import { calculateTotalServicePrice } from '@/utils/utils'
 
 const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const { setSelectedService, bookingData } = useCheckoutStore()
+  const [services, setServices] = useState([])
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
 
@@ -26,18 +28,22 @@ const ChooseService = () => {
   }
   useEffect(() => {
     getCourtQuery({
-      branch: '6716907cc3514a38667e6235'
+      branch: bookingData.selectedBrach?._id
       //   name: ''
     })
   }, [])
 
   const renderItem = ({ item }: { item: ICourt }) => {
+    // console.log('bookingData?.service', bookingData?.service)
+
+    const isSelected = bookingData?.service?.find((el) => el._id == item._id)
+    console.log('bookingData?.service?.includes(item)', isSelected)
     return (
-      <View padding={2}>
+      <View padding={3} key={item._id}>
         <CourtCard
           court={item}
           key={item._id}
-          isSelected={bookingData?.service?.includes(item)}
+          isSelected={!!isSelected}
           onPressCard={() => {
             const existItem = bookingData?.service?.includes(item)
             if (existItem) {
@@ -51,14 +57,29 @@ const ChooseService = () => {
       </View>
     )
   }
+
+  // useEffect(() => {
+  //   if (bookingData?.service?.length > 0 && data) {
+  //     const listService = data
+  //       ?.map((el2) => {
+  //         const isSelected = bookingData?.service?.includes(el2)
+  //         console.log('isSelected', isSelected)
+
+  //         return { ...el2, isSelected: isSelected }
+  //       })
+  //       .filter((el) => el.status !== CourtStatusEnum.TERMINATION)
+  //     setServices(listService)
+  //   }
+  // }, [])
+
   if (isPending) {
     return <ActivityIndicator size='large' />
   }
 
   return (
-    <>
+    <SafeAreaView className='flex-1'>
       <CustomFlatList
-        data={data}
+        data={data?.filter((el: ICourt) => el.status !== CourtStatusEnum.TERMINATION)}
         style={styles.list}
         renderItem={renderItem}
         StickyElementComponent={
@@ -73,31 +94,35 @@ const ChooseService = () => {
             </Text>
           </Center>
         }
+        StickyBottomElement={
+          <View position={'absolute'} left={0} right={0} bottom={0} background={'blue.200'} w={'full'} padding={5}>
+            <HStack justifyContent={'space-between'} w={'full'}>
+              <Button variant={'link'}>
+                Đã chọn <Text display={'inline'}>{bookingData.service?.length}</Text>
+                dịch vụ
+              </Button>
+              <HStack space={2} alignItems={'center'}>
+                <VStack justifyContent={'flex-end'} alignItems={'flex-end'}>
+                  <Text>Tổng Thanh toán</Text>
+                  <Text>
+                    {calculateTotalServicePrice(bookingData?.service)}/{bookingData.service?.length}h
+                  </Text>
+                </VStack>
+                <Button
+                  size={'sm'}
+                  onPress={() => {
+                    router.dismiss()
+                  }}
+                >
+                  Xong
+                </Button>
+              </HStack>
+            </HStack>
+          </View>
+        }
         // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}
       />
-      <View position={'absolute'} bottom={0} background={'blue.200'} w={'full'} padding={5}>
-        <HStack justifyContent={'space-between'} w={'full'}>
-          <Button variant={'link'}>
-            Đã chọn <Text display={'inline'}>{bookingData.service?.length}</Text>
-            dịch vụ
-          </Button>
-          <HStack space={2} alignItems={'center'}>
-            <VStack justifyContent={'flex-end'} alignItems={'flex-end'}>
-              <Text>Tổng Thanh toán</Text>
-              <Text></Text>
-            </VStack>
-            <Button
-              size={'sm'}
-              onPress={() => {
-                router.dismiss()
-              }}
-            >
-              Xong
-            </Button>
-          </HStack>
-        </HStack>
-      </View>
-    </>
+    </SafeAreaView>
   )
 }
 

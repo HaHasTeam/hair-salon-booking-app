@@ -13,7 +13,7 @@ export const ENDPOINT = {
   doneBooking: (id: string) => `/booking/done/${id}`,
   getCourtAvailable: '/court/get-court-available',
   getCourtQuery: '/court/search',
-
+  getStylistAvailable: '/stylist/get-stylist-available',
   getPaymentInfo: '/payment/create-payment-url-for-booking',
   uploadImages: '/file/upload',
   postFeedback: '/feedback',

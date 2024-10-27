@@ -1,10 +1,13 @@
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
+import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 import { Stack, useRouter } from 'expo-router'
 
 import { Box, Flex, HStack, Pressable, Text, View } from 'native-base'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 export default function MenuStack() {
   const router = useRouter()
+  const { resetBookingData, setBookingData } = useCheckoutStore()
+
   return (
     <Stack>
       <Stack.Screen
@@ -19,7 +22,14 @@ export default function MenuStack() {
                   // zIndex={10}
                   style={styles.btnHome}
                   onPress={() => {
-                    router.dismiss()
+                    setBookingData({
+                      booking: null,
+                      paymentType: 'full',
+                      schedule: null,
+                      selectedBrach: null,
+                      service: []
+                    })
+                    // router.dismiss()
                     router.navigate('/(tabs)/')
                   }}
                 >
@@ -54,7 +64,7 @@ export default function MenuStack() {
                   style={styles.btnHome}
                   onPress={() => {
                     // router.navigate('/(tabs)/branchs')
-                    router.dismissAll()
+                    router.dismiss()
                   }}
                 >
                   <TabBarIcon name={'arrow-back'} color={'#989595'} />
