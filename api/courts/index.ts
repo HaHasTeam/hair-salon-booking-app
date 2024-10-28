@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 export const useGetCourtAvailable = () => {
   const { accessToken } = useAuth()
   return useMutation({
-    mutationFn: async (data: { slots: (string | undefined)[]; date: string | undefined; branch: string }) => {
+    mutationFn: async (data: { slots: (string | undefined)[]; date: string | undefined; branchId: string }) => {
       const response = await POST(ENDPOINT.getStylistAvailable, data, {}, { authorization: 'Bearer ' + accessToken })
 
       if (response.status !== 200) {
