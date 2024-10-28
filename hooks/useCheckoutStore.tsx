@@ -29,7 +29,6 @@ export const defaultInitState: BookingDataState = {
     booking: null,
     schedule: null,
     selectedBrach: null,
-
     paymentType: 'full',
     service: []
   }
@@ -41,10 +40,19 @@ export const useCheckoutStore = create<BookingDataStore>()((set) => ({
     set((state) => {
       state.bookingData.booking = data.booking
       state.bookingData.schedule = data.schedule
+      state.bookingData.selectedBrach = data.selectedBrach
+      state.bookingData.service = data.service
+      console.log('"setBookingData" called')
 
       return { ...state }
     }),
-  resetBookingData: () => set(defaultInitState),
+  resetBookingData: () => {
+    console.log('"resetBookingData" called')
+
+    return set((state) => {
+      return { ...state, bookingData: { ...defaultInitState.bookingData } }
+    })
+  },
   setPaymentType: (data) =>
     set((state) => {
       return { ...state, paymentType: data }
@@ -52,12 +60,14 @@ export const useCheckoutStore = create<BookingDataStore>()((set) => ({
   setSelectedService: (data) =>
     set((state) => {
       state.bookingData.service = data
+      console.log('"setSelectedService" called')
 
       return { ...state }
     }),
   setSelectedBranch: (data) =>
     set((state) => {
       state.bookingData.selectedBrach = data
+      console.log('"setSelectedBranch" called')
 
       return { ...state }
     })

@@ -28,6 +28,8 @@ const ChooseSalon = () => {
         key={item._id}
         style={styles.card}
         onPress={() => {
+          console.log('salon selected:', item.name)
+
           setSelectedBranch(item)
           router.back()
         }}

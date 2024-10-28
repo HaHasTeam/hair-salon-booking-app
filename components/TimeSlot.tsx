@@ -139,7 +139,7 @@ export const TimeSlot = ({
           ))
         ) : (
           <View>
-            <Text>There is no time to play</Text>
+            <Text>Chưa có thời gian phù hợp</Text>
           </View>
         )}
       </HStack>

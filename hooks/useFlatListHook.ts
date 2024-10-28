@@ -1,17 +1,12 @@
-import { useRef, useState } from "react";
-import {
-  Animated,
-  Dimensions,
-  LayoutChangeEvent,
-  StyleProp,
-  ViewStyle,
-} from "react-native";
+import { useRef, useState } from 'react'
+import { Animated, Dimensions, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
 
 type ICustomFlatListStyles = {
-  header: StyleProp<ViewStyle>;
-  stickyElement: StyleProp<ViewStyle>;
-  topElement?: StyleProp<ViewStyle>;
-};
+  header: StyleProp<ViewStyle>
+  stickyElement: StyleProp<ViewStyle>
+  topElement?: StyleProp<ViewStyle>
+  stickyBottomElement?: StyleProp<ViewStyle>
+}
 
 type TUseCustomFlatListHook = [
   Animated.Value,
@@ -19,79 +14,83 @@ type TUseCustomFlatListHook = [
   (event: LayoutChangeEvent) => void,
   (event: LayoutChangeEvent) => void,
   (event: LayoutChangeEvent) => void
-];
+]
 
-const window = Dimensions.get("window");
+const window = Dimensions.get('window')
 
 export const useFlatListHook = (): TUseCustomFlatListHook => {
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = useRef(new Animated.Value(0)).current
   const [heights, setHeights] = useState({
     header: 0,
     sticky: 0,
-    topList: 0,
-  });
+    topList: 0
+  })
 
   const styles: ICustomFlatListStyles = {
     header: {
-      marginBottom: heights.sticky + heights.topList,
+      marginBottom: heights.sticky + heights.topList
     },
     stickyElement: {
       left: 0,
       marginTop: heights.header,
-      position: "absolute",
+      position: 'absolute',
       right: 0,
       transform: [
         {
           translateY: scrollY.interpolate({
-            extrapolate: "clamp",
+            extrapolate: 'clamp',
             inputRange: [-window.height, heights.header],
-            outputRange: [window.height, -heights.header],
-          }),
-        },
+            outputRange: [window.height, -heights.header]
+          })
+        }
       ],
-      zIndex: 2,
+      zIndex: 2
+    },
+    stickyBottomElement: {
+      left: 0,
+      bottom: 0,
+      position: 'absolute',
+      right: 0,
+      // transform: [
+      //   {
+      //     translateY: scrollY.interpolate({
+      //       extrapolate: 'clamp',
+      //       inputRange: [-window.height, heights.header],
+      //       outputRange: [window.height, -heights.header]
+      //     })
+      //   }
+      // ],
+      zIndex: 2
     },
     topElement: {
       left: 0,
       marginTop: heights.header + heights.sticky,
-      position: "absolute",
+      position: 'absolute',
       right: 0,
       transform: [
         {
           translateY: scrollY.interpolate({
-            extrapolate: "clamp",
-            inputRange: [
-              -window.height,
-              heights.header + heights.sticky + heights.topList,
-            ],
-            outputRange: [
-              window.height,
-              -(heights.header + heights.sticky + heights.topList),
-            ],
-          }),
-        },
+            extrapolate: 'clamp',
+            inputRange: [-window.height, heights.header + heights.sticky + heights.topList],
+            outputRange: [window.height, -(heights.header + heights.sticky + heights.topList)]
+          })
+        }
       ],
-      zIndex: 1,
-    },
-  };
+      zIndex: 1
+    }
+  }
 
   const onLayoutHeaderElement = (event: LayoutChangeEvent): void => {
-    setHeights({ ...heights, header: event.nativeEvent.layout.height });
-  };
+    setHeights({ ...heights, header: event.nativeEvent.layout.height })
+  }
 
   const onLayoutTopListElement = (event: LayoutChangeEvent): void => {
-    setHeights({ ...heights, topList: event.nativeEvent.layout.height });
-  };
+    setHeights({ ...heights, topList: event.nativeEvent.layout.height })
+  }
 
   const onLayoutTopStickyElement = (event: LayoutChangeEvent): void => {
-    setHeights({ ...heights, sticky: event.nativeEvent.layout.height });
-  };
+    setHeights({ ...heights, sticky: event.nativeEvent.layout.height })
+  }
 
-  return [
-    scrollY,
-    styles,
-    onLayoutHeaderElement,
-    onLayoutTopListElement,
-    onLayoutTopStickyElement,
-  ];
-};
+  return [scrollY, styles, onLayoutHeaderElement, onLayoutTopListElement, onLayoutTopStickyElement]
+}

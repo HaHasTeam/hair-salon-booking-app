@@ -7,6 +7,7 @@ type CustomFlatListProps<T> = Omit<FlatListProps<T>, 'ListHeaderComponent'> & {
   StickyElementComponent: JSX.Element
   TopListElementComponent?: JSX.Element
   ListEmptyComponent?: JSX.Element
+  StickyBottomElement?: JSX.Element
 }
 
 function CustomFlatList<T>({ style, ...props }: CustomFlatListProps<T>): React.ReactElement {
@@ -25,6 +26,10 @@ function CustomFlatList<T>({ style, ...props }: CustomFlatListProps<T>): React.R
       <Animated.FlatList<any>
         showsVerticalScrollIndicator={false}
         {...props}
+        contentContainerStyle={{
+          paddingBottom: 120,
+          paddingTop: 80
+        }}
         ListHeaderComponent={<Animated.View onLayout={onLayoutHeaderElement}>{props.HeaderComponent}</Animated.View>}
         ListHeaderComponentStyle={[props.ListHeaderComponentStyle, styles.header]}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
@@ -32,6 +37,9 @@ function CustomFlatList<T>({ style, ...props }: CustomFlatListProps<T>): React.R
         })}
         ListEmptyComponent={<Animated.View>{props.ListEmptyComponent}</Animated.View>}
       />
+      <Animated.View style={styles.stickyBottomElement} onLayout={onLayoutStickyElement}>
+        {props.StickyBottomElement}
+      </Animated.View>
     </View>
   )
 }
