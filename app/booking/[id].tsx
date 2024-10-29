@@ -31,7 +31,6 @@ const BookingPage = () => {
   const [selectedSlots, setSelectedSlots] = useState<ITimeSlot[] | []>([])
   const [selectedCourts, setSelectedCourts] = useState<[]>([])
   const [selectedCourt, setSelectedCourt] = useState<ICourt | null>(null)
-  console.log('selectedSlots', selectedSlots)
 
   const timeSlots = useMemo(() => {
     const slotArray = branchDetail.slots?.filter((el: ISlot) => el.weekDay.includes(getThu(selectDay)))

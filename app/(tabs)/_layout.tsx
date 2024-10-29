@@ -8,7 +8,6 @@ import TabBarCustom from '@/components/TabBarCustom'
 import { useAuth } from '@/provider/AuthProvider'
 export default function TabLayout() {
   const { accessToken } = useAuth()
-  console.log('access token', accessToken)
 
   return (
     <Tabs

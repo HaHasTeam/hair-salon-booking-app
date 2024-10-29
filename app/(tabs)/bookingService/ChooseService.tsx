@@ -18,7 +18,6 @@ import { calculateTotalServicePrice } from '@/utils/utils'
 const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const { setSelectedService, bookingData } = useCheckoutStore()
-  const [services, setServices] = useState([])
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
 
@@ -37,7 +36,6 @@ const ChooseService = () => {
     // console.log('bookingData?.service', bookingData?.service)
 
     const isSelected = bookingData?.service?.find((el) => el._id == item._id)
-    console.log('bookingData?.service?.includes(item)', isSelected)
     return (
       <View padding={3} key={item._id}>
         <CourtCard

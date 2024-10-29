@@ -83,8 +83,6 @@ export default function HomeScreen() {
           autoPlayInterval={2500}
           data={data}
           renderCard={({ item }) => {
-            console.log('item.images[0]', item.images[0])
-
             return <BranchCard branch={item} />
           }}
         />

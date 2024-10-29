@@ -11,6 +11,7 @@ export type BookingData = {
   selectedBrach: IBranch | null
 
   service: ICourt[] | null
+  stylist?: string | null
 }
 export type BookingDataState = {
   bookingData: BookingData
@@ -30,7 +31,8 @@ export const defaultInitState: BookingDataState = {
     schedule: null,
     selectedBrach: null,
     paymentType: 'full',
-    service: []
+    service: [],
+    stylist: null
   }
 }
 
@@ -55,6 +57,8 @@ export const useCheckoutStore = create<BookingDataStore>()((set) => ({
   },
   setPaymentType: (data) =>
     set((state) => {
+      console.log('"setPaymentType" called', data)
+
       return { ...state, paymentType: data }
     }),
   setSelectedService: (data) =>

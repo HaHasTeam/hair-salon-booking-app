@@ -8,8 +8,10 @@ export const useGetPayOsInfo = ({
   totalAmount,
   courtId,
   returnUrl,
+  user,
   onSuccessCB
 }: {
+  user?: string
   totalAmount?: number
   courtId: string
   returnUrl: string
@@ -24,7 +26,7 @@ export const useGetPayOsInfo = ({
           ENDPOINT.getPaymentInfo,
           {
             amount: totalAmount,
-            description: 'Booking PickleBall Court',
+            description: `Đặt lịch cắt tóc cho ${user} `,
             courtId: courtId,
             returnUrl: returnUrl,
             cancelUrl: returnUrl

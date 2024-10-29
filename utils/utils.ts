@@ -66,3 +66,19 @@ export function calculateTotalPrice(slots: ISlot[], courtPrice: number): number 
   }
   return sum
 }
+
+export function calculateTotalPricePerCourt(slots: ISlot[], courts: ICourt[]): number {
+  const results = []
+  for (const court of courts) {
+    let sum = 0
+    const courtPrice = court.price // Replace with your logic to get the price for each court
+
+    for (const slot of slots) {
+      sum += (1 + slot.surcharge) * courtPrice
+    }
+    results.push({ court, totalPrice: sum })
+  }
+  const totalPrice = results.reduce((acc, current) => acc + current.totalPrice, 0)
+
+  return totalPrice
+}
