@@ -24,7 +24,7 @@ const FeedBackItem = ({
         borderWidth: 1,
         borderColor: 'gray',
         padding: 10,
-
+        marginBottom: 10,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: {

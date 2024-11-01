@@ -4,7 +4,7 @@ import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { usePostBooking } from '@/api/booking'
 import { useRoute } from '@react-navigation/native'
-import { Link, useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
 import { Button, Pressable } from 'native-base'
 
 const Result = () => {
@@ -14,7 +14,8 @@ const Result = () => {
     orderCode: 0
   })
   const { bookingData } = useCheckoutStore()
-  // console.log('bookingData 2: ', bookingData)
+  const router = useRouter()
+  console.log('bookingData 4: ', bookingData)
   const route = useRoute()
   let orderCode2 = (route as any).params.orderCode
   let status2 = (route as any).params.status
@@ -45,32 +46,7 @@ const Result = () => {
 
   const handleBooking = async () => {
     if (bookingData?.booking?.type === 'single_schedule' && bookingData.schedule) {
-      // console.log({
-      //   booking: {
-      //     type: bookingData?.booking.type,
-      //     paymentType: bookingData?.paymentType,
-      //     payment: 'tranfer',
-      //     totalPrice: bookingData.booking.totalPrice,
-      //     totalHour: bookingData.booking.totalHour,
-      //     startDate: bookingData.booking.startDate,
-      //     endDate: bookingData.booking.endDate,
-      //     court: bookingData.booking.court._id
-      //   },
-      //   schedule: {
-      //     type: bookingData.schedule.type,
-      //     slots: bookingData.schedule.slots,
-      //     startTime: bookingData.schedule?.startTime,
-      //     endTime: bookingData.schedule?.endTime,
-      //     date: bookingData.schedule?.date,
-      //     court: bookingData.schedule.court._id
-      //   },
-      //   transaction: {
-      //     amount: bookingData.booking.totalPrice,
-      //     payment: '123123'
-      //   }
-      // })
-
-      await bookingMutation({
+      console.log('result: ', {
         booking: {
           type: bookingData.booking.type,
           paymentType: bookingData.paymentType,
@@ -79,7 +55,7 @@ const Result = () => {
           totalHour: bookingData.booking.totalHour,
           startDate: bookingData.booking.startDate,
           endDate: bookingData.booking.endDate,
-          court: bookingData.booking.court._id
+          court: bookingData.schedule.services.map((el) => el._id)
         },
         schedule: {
           type: bookingData.schedule.type,
@@ -87,13 +63,43 @@ const Result = () => {
           startTime: bookingData.schedule?.startTime,
           endTime: bookingData.schedule?.endTime,
           date: bookingData.schedule?.date,
-          court: bookingData.schedule.court._id
+          court: bookingData.schedule.services.map((el) => el._id),
+          stylist: bookingData.schedule.stylist
         },
 
         transaction: {
           amount:
             bookingData.paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2,
           payment: '123123'
+        }
+      })
+
+      await bookingMutation({
+        booking: {
+          branch: bookingData.booking.branch._id,
+          type: bookingData.booking.type,
+          paymentType: bookingData.paymentType,
+          paymentMethod: 'tranfer',
+          totalPrice: bookingData.booking.totalPrice,
+          totalHour: bookingData.booking.totalHour,
+          startDate: bookingData.booking.startDate,
+          endDate: bookingData.booking.endDate,
+          court: bookingData.schedule.services.map((el) => el._id)
+        },
+        schedule: {
+          type: bookingData.schedule.type,
+          slots: bookingData.schedule.slots,
+          startTime: bookingData.schedule?.startTime,
+          endTime: bookingData.schedule?.endTime,
+          date: bookingData.schedule?.date,
+          court: bookingData.schedule.services.map((el) => el._id),
+          stylist: bookingData.schedule.stylist
+        },
+
+        transaction: {
+          amount:
+            bookingData.paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2,
+          payment: 'fsdafsadfasfd'
         }
       })
     }
@@ -132,19 +138,20 @@ const Result = () => {
       <View style={styles.orderDetails}>
         <Text>Order ID: {orderCode2}</Text>
         <Text>
-          {status2 === 'PAID' ? 'Please view your schedule to be on time' : 'The payment failed please email to ..... '}
+          {status2 === 'PAID'
+            ? 'Please view your schedule to be on time'
+            : 'The payment failed please email to\n  support@hairharmony.com'}
         </Text>
+
         <Button
-          variant={'solid'}
           onPress={() => {
-            Linking.openURL('https://pickleballhaha.vercel.app/')
+            router.dismiss()
+            router.push('/(tabs)/receipt')
           }}
+          marginTop={4}
         >
-          Access Platform Pickleball URL: https://pickleballhaha.vercel.app/
+          Go Home
         </Button>
-        <Link href={'/(tabs)'}>
-          <Text>GO Home</Text>
-        </Link>
 
         {/* Render order items, total amount, payment method, and order status */}
       </View>

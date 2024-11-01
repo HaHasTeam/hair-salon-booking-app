@@ -59,7 +59,7 @@ export default function HomeScreen() {
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={<Image source={require('@/assets/images/mock2.png')} className='w-full h-full object-cover' />}
+      // headerImage={<Image source={require('@/assets/images/mock2.png')} className='w-full h-full object-cover' />}
     >
       <ThemedView style={styles.titleContainer}>
         <Parallax
@@ -83,8 +83,6 @@ export default function HomeScreen() {
           autoPlayInterval={2500}
           data={data}
           renderCard={({ item }) => {
-            console.log('item.images[0]', item.images[0])
-
             return <BranchCard branch={item} />
           }}
         />

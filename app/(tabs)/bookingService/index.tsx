@@ -1,18 +1,6 @@
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
-import {
-  Actionsheet,
-  Button,
-  HStack,
-  Pressable,
-  Text,
-  useDisclose,
-  View,
-  Box,
-  Flex,
-  Badge,
-  ScrollView
-} from 'native-base'
-import { StyleSheet } from 'react-native'
+import { Actionsheet, Button, HStack, Pressable, Text, useDisclose, View, Box, Flex, Badge } from 'native-base'
+import { ActivityIndicator, Image, ScrollView, StyleSheet } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
 import { useRouter } from 'expo-router'
 
@@ -24,26 +12,29 @@ import { ISlot, ITimeSlot } from '@/types/Slot'
 import { ICourt } from '@/types/Court'
 import { useBranchDetail } from '@/api/branchs'
 import { format } from 'date-fns'
-import { calculateTotalServicePrice, getThu } from '@/utils/utils'
+import { calculateTotalPricePerCourt, calculateTotalServicePrice, getThu } from '@/utils/utils'
 import { useCheckoutStore } from '@/hooks/useCheckoutStore'
-
+const mockImgae = require('@/assets/images/splash.jpg')
 const BookingService = () => {
   const router = useRouter()
-  const { bookingData } = useCheckoutStore()
+  const { bookingData, setBookingData } = useCheckoutStore()
   console.log('bookingData', bookingData.selectedBrach?._id)
 
-  const { data: branchDetail } = useBranchDetail({ id: bookingData.selectedBrach?._id })
+  const { data: branchDetail, isLoading } = useBranchDetail({ id: bookingData.selectedBrach?._id })
   const { isOpen, onOpen, onClose } = useDisclose()
   const [selectDay, setSelectDay] = useState(new Date())
   const [startSlot, setStartSlot] = useState<ITimeSlot | null>(null)
   const [endSlot, setEndSlot] = useState<ITimeSlot | null>(null)
   const [selectedSlots, setSelectedSlots] = useState<ITimeSlot[] | []>([])
+  const [selectedSlotDurations, setSelectedSlotDurations] = useState<ITimeSlot[] | []>([])
+  const [selectedStylist, setSelectedStylist] = useState<string | null>(null)
 
-  const [selectedCourt, setSelectedCourt] = useState<ICourt | null>(null)
-  const [selectedServices, setSelectedServices] = useState<ICourt[] | null>([])
-  // console.log('branchDetail', branchDetail)
+  const handleSelectStylist = (stylistId: string) => {
+    console.log('stylistId', stylistId)
 
-  const { mutate: getCourtAvailable, data: StylistData } = useGetCourtAvailable()
+    setSelectedStylist(stylistId)
+  }
+  const { mutate: getCourtAvailable, data: StylistData, isPending: isStylistPending } = useGetCourtAvailable()
 
   const getDate = (count: number) => {
     const date = new Date()
@@ -72,7 +63,61 @@ const BookingService = () => {
       }
     }
   }, [selectDay])
-  // console.log('stylist ', StylistData)
+
+  const handleBooking = async () => {
+    if (bookingData.selectedBrach && bookingData?.service && bookingData?.service?.length > 0 && selectedStylist) {
+      console.log('data format', {
+        booking: {
+          type: 'single_schedule',
+          paymentType: 'haft',
+          paymentMethod: 'vnpay',
+          totalPrice: calculateTotalServicePrice(bookingData?.service),
+          totalHour: bookingData.service?.length,
+          startDate: format(selectDay.toString(), 'yyyy-MM-dd'),
+          endDate: format(selectDay.toString(), 'yyyy-MM-dd'),
+          court: bookingData.service[0] ?? '',
+          branch: bookingData.selectedBrach
+        },
+        schedule: {
+          type: 'booking',
+          slots: selectedSlotDurations.map((el) => el._id),
+          startTime: selectedSlotDurations[0].startTime,
+          endTime: selectedSlotDurations[selectedSlotDurations.length - 1].endTime,
+          date: format(selectDay.toString(), 'yyyy-MM-dd'),
+          court: bookingData.service[0],
+          stylist: selectedStylist,
+          services: bookingData.service
+        }
+      })
+
+      setBookingData({
+        booking: {
+          type: 'single_schedule',
+          paymentType: 'partial',
+          paymentMethod: 'vnpay',
+          totalPrice: bookingData?.service?.reduce((total, product) => {
+            return total + product.price
+          }, 0),
+          totalHour: bookingData.service?.length,
+          startDate: format(selectDay.toString(), 'yyyy-MM-dd'),
+          endDate: format(selectDay.toString(), 'yyyy-MM-dd'),
+          court: bookingData.service[0] ?? '',
+          branch: bookingData.selectedBrach
+        },
+        schedule: {
+          type: 'booking',
+          slots: selectedSlotDurations.map((el) => el._id),
+          startTime: selectedSlotDurations[0].startTime,
+          endTime: selectedSlotDurations[selectedSlotDurations.length - 1].endTime,
+          date: format(selectDay.toString(), 'yyyy-MM-dd'),
+          court: bookingData.service[0],
+          stylist: selectedStylist,
+          services: bookingData.service
+        }
+      })
+      router.push('/checkout')
+    }
+  }
 
   useEffect(() => {
     if (selectDay && selectedSlots.length !== 0) {
@@ -84,11 +129,12 @@ const BookingService = () => {
 
       getCourtAvailable({
         branchId: branchDetail?._id,
-        slots: selectedSlots.map((el) => el._id),
+        slots: selectedSlotDurations.map((el) => el._id),
         date: format(selectDay?.toString(), 'yyyy-MM-dd')
       })
     }
   }, [getCourtAvailable, selectDay, selectedSlots])
+  if (isLoading) return <ActivityIndicator />
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -161,16 +207,14 @@ const BookingService = () => {
                 <Flex wrap='wrap' direction='row' width={'full'} marginTop={2}>
                   {bookingData?.service?.map((el) => {
                     return (
-                      <Badge colorScheme={'blue'} width={'1/3'} margin={1}>
+                      <Badge colorScheme={'blue'} width={'1/3'} margin={1} key={el._id}>
                         {el.name}
                       </Badge>
                     )
                   })}
                 </Flex>
                 <View marginTop={1}>
-                  <Text>
-                    Tổng Tiền: {calculateTotalServicePrice(bookingData.service)} /{bookingData.service?.length}h
-                  </Text>
+                  <Text>Tổng Tiền: {calculateTotalServicePrice(bookingData.service)}</Text>
                 </View>
               </>
             )}
@@ -178,10 +222,10 @@ const BookingService = () => {
           {/* Chọn Ngày giờ */}
           <View>
             <Text fontSize={'xl'} color={'green.700'}>
-              3. Chọn ngày, giờ & stylist
+              3. Chọn ngày, giờ
             </Text>
             <Pressable
-              onPress={() => onOpen}
+              onPress={onOpen}
               isDisabled={branchDetail?._id && bookingData.service?.length > 0 ? false : true}
             >
               <HStack
@@ -216,22 +260,74 @@ const BookingService = () => {
                 startSlot={startSlot}
                 setEndSlot={setEndSlot}
                 setStartSlot={setStartSlot}
+                setSelectedSlotDurations={setSelectedSlotDurations}
+                totalHour={bookingData.service?.length}
               />
             )}
 
             <View>
-              <ScrollView>
-                {StylistData &&
-                  StylistData.map((el) => (
-                    <View>
-                      <Text>{el.firstName + el.lastName}</Text>
-                    </View>
-                  ))}
-              </ScrollView>
+              <Text fontSize={'xl'} color={'green.700'}>
+                4. Chọn stylist
+              </Text>
+
+              {isStylistPending ? (
+                <ActivityIndicator size='large' />
+              ) : (
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {StylistData &&
+                    branchDetail?._id &&
+                    bookingData.service?.length > 0 &&
+                    StylistData.map((el) => {
+                      const isSelected = selectedStylist === el._id
+
+                      return (
+                        <Pressable
+                          key={el._id}
+                          width={150}
+                          height={200}
+                          borderWidth={2}
+                          borderColor={isSelected ? 'blue.600' : 'blue.200'}
+                          overflow={'hidden'}
+                          borderRadius={5}
+                          margin={2}
+                          position={'relative'}
+                          onPress={() => handleSelectStylist(el._id)}
+                          backgroundColor={isSelected ? 'blue.100' : 'white'}
+                        >
+                          <Image
+                            blurRadius={1}
+                            resizeMode='cover'
+                            source={mockImgae}
+                            style={{
+                              position: 'absolute',
+                              width: '100%',
+                              height: '100%',
+                              aspectRatio: '3/2'
+                            }}
+                          />
+                          <Text
+                            numberOfLines={1}
+                            paddingX={2}
+                            position={'absolute'}
+                            bottom={3}
+                            textAlign={'center'}
+                            w={'full'}
+                          >
+                            {el.firstName + el.lastName}
+                          </Text>
+                        </Pressable>
+                      )
+                    })}
+                </ScrollView>
+              )}
             </View>
           </View>
 
-          <Button colorScheme={'green'} isDisabled>
+          <Button
+            colorScheme={'green'}
+            onPress={handleBooking}
+            isDisabled={bookingData.selectedBrach && bookingData.service?.length > 0 && selectedStylist ? false : true}
+          >
             Chốt Giờ Cắt
           </Button>
           <Text textAlign={'center'} color={'gray.400'}>
@@ -242,7 +338,6 @@ const BookingService = () => {
               <Box w='100%' px={4} justifyContent='center'>
                 <Text>Chọn ngày bạn muốn </Text>
                 <Calendar
-                  // testID={'first_calendar'}
                   enableSwipeMonths
                   current={new Date().toJSON()}
                   style={stylesCalendar.calendar}

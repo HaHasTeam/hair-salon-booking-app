@@ -8,7 +8,7 @@ const ReceiptDetail = () => {
   const { id: bookingId, feedback } = useLocalSearchParams<{ id: string; feedback: any }>()
 
   const { data: order, isLoading, error, refetch } = useBookingDetail({ id: bookingId })
-  const parseFeedback = JSON.parse(decodeURIComponent(feedback) as string) || null
+  const parseFeedback = JSON.parse(decodeURIComponent(feedback) as string) || ''
   console.log(parseFeedback, 'parseFeedback')
 
   if (isLoading) {

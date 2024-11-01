@@ -29,7 +29,7 @@ export default function MenuStack() {
                       selectedBrach: null,
                       service: []
                     })
-                    // router.dismiss()
+                    router.dismiss()
                     router.navigate('/(tabs)/')
                   }}
                 >

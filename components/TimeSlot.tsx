@@ -12,7 +12,9 @@ export const TimeSlot = ({
   setSelectedSlots,
   selectedSlots,
   selectDay,
-  title = 'Book a Court'
+  title = 'Book a Court',
+  setSelectedSlotDurations,
+  totalHour
 }: {
   timeSlotData: ISlot[]
   setStartSlot: Dispatch<SetStateAction<ITimeSlot | null>>
@@ -23,6 +25,8 @@ export const TimeSlot = ({
   title: string
   setEndSlot: Dispatch<SetStateAction<ITimeSlot | null>>
   setSelectedSlots: Dispatch<SetStateAction<ITimeSlot[] | []>>
+  setSelectedSlotDurations?: Dispatch<SetStateAction<ITimeSlot[] | []>>
+  totalHour?: string
 }) => {
   // const [date, setDate] = useState(new Date());
 
@@ -66,8 +70,11 @@ export const TimeSlot = ({
   const toggleSlot = (slot: ITimeSlot) => {
     // console.log('slote', slot)
 
-    // const slotIndex = timeSlots.indexOf(slot)
+    const slotIndex = timeSlots.indexOf(slot)
     setSelectedSlots([slot])
+    const durationSlot = slotIndex + parseInt(totalHour)
+    // console.log('slotDuration', timeSlots.slice(slotIndex, durationSlot))
+    setSelectedSlotDurations(timeSlots.slice(slotIndex, durationSlot))
     // if (!startSlot) {
     //   setStartSlot(slot)
     //   setSelectedSlots([slot])

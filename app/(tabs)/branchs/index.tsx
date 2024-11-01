@@ -6,13 +6,30 @@ import SearchBar from '@/components/SearchBar'
 import { IBranch } from '@/types/Branch'
 import { Link, useSegments } from 'expo-router'
 import { View } from 'native-base'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ActivityIndicator, Image, SafeAreaView, StyleSheet } from 'react-native'
 
 const BranchScreen = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
-  const segments = useSegments()
   const { data, isLoading } = useBranchList()
+  // const [search, setSearch] = useState('')
+  const searchData = useMemo(() => {
+    let result = [...data]
+    if (searchPhrase) {
+      result = result.filter((item) => {
+        if (
+          item.name.toUpperCase().includes(searchPhrase.toUpperCase()) ||
+          item.address.toUpperCase().includes(searchPhrase.toUpperCase())
+        ) {
+          console.log('item received', item)
+          return true
+        } else false
+      })
+    }
+    return result
+  }, [searchPhrase])
+  console.log('searchData', searchData)
+
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
     console.log('onSubmitSearch', searchKey)
@@ -35,12 +52,12 @@ const BranchScreen = () => {
   }
   return (
     <CustomFlatList
-      data={data}
+      data={searchData}
       style={styles.list}
       renderItem={renderItem}
       StickyElementComponent={
         <View style={styles.sticky}>
-          <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} onSubmitSearch={onSubmitSearch} />
+          <SearchBar searchPhrase={searchPhrase} setSearchPhrase={setSearchPhrase} />
         </View>
       }
       // TopListElementComponent={<CarouselCards setSelectedBrand={setSelectedBrand} />}

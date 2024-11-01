@@ -33,8 +33,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const data = useResgistRefetch()
 
   useEffect(() => {
-    console.log('refresh auth token')
-
     const fetchSession = async () => {
       console.log('fetch session')
 
@@ -43,7 +41,6 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           AsyncStorage.getItem('accessToken'),
           AsyncStorage.getItem('refreshToken')
         ])
-        console.log('storedTokendsafm: ', storedToken[0])
 
         if (storedToken[0] && storedToken[1]) {
           setAccessToken(storedToken[0]), setRefreshToken(storedToken[1])

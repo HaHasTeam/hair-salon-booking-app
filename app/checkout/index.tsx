@@ -1,4 +1,4 @@
-import { Button, CheckIcon, HStack, Select, Text, View, VStack } from 'native-base'
+import { Alert, Button, CheckIcon, HStack, Select, Text, View, VStack } from 'native-base'
 import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 import CourtCard from '@/components/court/CourtCard'
 import { formatToVND } from '@/utils/utils'
@@ -6,16 +6,16 @@ import { useEffect, useMemo, useState } from 'react'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { useGetPayOsInfo } from '@/api/payment'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
 import * as Linking from 'expo-linking'
-import { useRoute } from '@react-navigation/native'
-import { usePostBooking } from '@/api/booking'
-import { Alert } from 'react-native'
+import { useAuth } from '@/provider/AuthProvider'
+import { ActivityIndicator } from 'react-native'
 const CheckoutPage = () => {
-  const navigate = useNavigation()
+  const navigate = useRouter()
   const { bookingData, setPaymentType } = useCheckoutStore()
-  // const [paymentType, setPaymentType] = useState('full')
+  const { profile } = useAuth()
   const url = Linking.createURL('ressult')
+  console.log('bookingData checkout', bookingData)
 
   const totalAmount = useMemo(() => {
     if (bookingData?.booking)
@@ -23,7 +23,8 @@ const CheckoutPage = () => {
     return undefined
   }, [bookingData.paymentType])
 
-  const { mutateAsync } = useGetPayOsInfo({
+  const { mutateAsync, isPending } = useGetPayOsInfo({
+    user: profile?.firstName || 'yêu quý',
     courtId: bookingData.booking?.court._id ?? '',
     totalAmount: totalAmount,
     returnUrl: url,
@@ -32,17 +33,20 @@ const CheckoutPage = () => {
         if (supported) {
           Linking.openURL(data.url)
         } else {
-          console.log("Don't know how to openew URI: " + data.url)
+          Alert("Don't know how to openew URI: " + data.url)
         }
       })
     }
   })
 
+  if (isPending) {
+    return <ActivityIndicator />
+  }
   return (
     <>
       <View className={'flex-1 p-4 mt-10 bg-white'}>
-        <Text className='text-2xl font-bold  text-center'>Confirm Booking</Text>
-        <Text className='text-xl text-center text-slate-500 mb-6'>Review your pickleball court booking details.</Text>
+        <Text className='text-2xl font-bold  text-center'>Order</Text>
+        <Text className='text-xl text-center text-slate-500 mb-6'>Review your order</Text>
 
         <HStack space={2} justifyContent={'space-between'}>
           <HStack className='mb-4' alignItems={'center'} space={2}>
@@ -60,15 +64,17 @@ const CheckoutPage = () => {
             <Text>
               {bookingData.schedule?.startTime} - {bookingData.schedule?.endTime}
             </Text>
-            <Text>{bookingData?.booking?.totalHour}hr</Text>
+            {/* <Text>{bookingData?.booking?.totalHour}hr</Text> */}
           </HStack>
         </HStack>
 
         <VStack>
-          <Text className='text-lg font-semibold '>Court</Text>
-          <View>
-            <CourtCard court={bookingData.booking?.court} />
-          </View>
+          <Text className='text-lg font-semibold '>Services: </Text>
+          <VStack space={4}>
+            {bookingData?.schedule?.services?.map((el) => {
+              return <CourtCard court={el} key={el._id} />
+            })}
+          </VStack>
         </VStack>
         <VStack space={3} justifyContent={'space-between'}>
           <HStack alignItems={'center'} justifyContent={'space-between'} space={2}>
@@ -102,7 +108,11 @@ const CheckoutPage = () => {
               endIcon: <CheckIcon size='5' />
             }}
             mt={1}
-            onValueChange={(itemValue) => setPaymentType(itemValue)}
+            onValueChange={(itemValue) => {
+              console.log('setPaymentType', itemValue)
+
+              setPaymentType(itemValue)
+            }}
           >
             <Select.Item label='Partial' value='partial' />
             <Select.Item label='Full' value='full' />
@@ -139,7 +149,7 @@ const CheckoutPage = () => {
           variant={'outline'}
           colorScheme={'danger'}
           onPress={() => {
-            navigate.navigate('(tabs)')
+            navigate.dismiss()
           }}
         >
           Cancel

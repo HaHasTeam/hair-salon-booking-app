@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
 import React, { useState } from 'react'
 import { Alert, Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useLogin } from '@/api/auth'
@@ -7,10 +6,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AxiosResponse } from 'axios'
 
 import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'expo-router'
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const navigation = useNavigation()
+  const navigation = useRouter()
   const queryClient = useQueryClient()
   const { login } = useLogin({ onLoginSuccess, onLoginFailed })
   async function onLoginSuccess(res: AxiosResponse) {
@@ -25,7 +25,7 @@ const LoginScreen = () => {
     Alert.alert('Success', 'Logged in successfully')
     setEmail('')
     setPassword('')
-    navigation.navigate('(tabs)')
+    navigation.navigate('/(tabs)/')
   }
   function onLoginFailed() {
     Alert.alert('Error', 'Login failed')
@@ -39,9 +39,9 @@ const LoginScreen = () => {
   }
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('accessToken')
-    await AsyncStorage.removeItem('refreshToken')
-    navigation.navigate('LoginRegisterScreen', {})
+    // await AsyncStorage.removeItem('accessToken')
+    // await AsyncStorage.removeItem('refreshToken')
+    navigation.navigate('/(authentication)/RegisterScreen')
   }
 
   return (

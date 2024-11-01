@@ -14,7 +14,7 @@ export function formatToVND(amount: number): string {
   return formatter.format(amount)
 }
 export function calculateTotalServicePrice(products: ICourt[]): string {
-  const total = products.reduce((total, product) => {
+  const total = products?.reduce((total, product) => {
     return total + product.price
   }, 0)
   return formatToVND(total)
@@ -65,4 +65,20 @@ export function calculateTotalPrice(slots: ISlot[], courtPrice: number): number 
     sum += (1 + slot.surcharge) * courtPrice
   }
   return sum
+}
+
+export function calculateTotalPricePerCourt(slots: ISlot[], courts: ICourt[]): number {
+  const results = []
+  for (const court of courts) {
+    let sum = 0
+    const courtPrice = court.price // Replace with your logic to get the price for each court
+
+    for (const slot of slots) {
+      sum += (1 + slot.surcharge) * courtPrice
+    }
+    results.push({ court, totalPrice: sum })
+  }
+  const totalPrice = results.reduce((acc, current) => acc + current.totalPrice, 0)
+
+  return totalPrice
 }

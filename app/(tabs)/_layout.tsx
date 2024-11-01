@@ -8,7 +8,6 @@ import TabBarCustom from '@/components/TabBarCustom'
 import { useAuth } from '@/provider/AuthProvider'
 export default function TabLayout() {
   const { accessToken } = useAuth()
-  console.log('access token', accessToken)
 
   return (
     <Tabs
@@ -65,7 +64,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name='bookingService'
         options={{
-          title: 'Đặt lịch giữ chỗ',
+          title: 'Booking',
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={'calendar'} color={color} />,
           tabBarItemStyle: {
             display: accessToken ? 'flex' : 'none'
@@ -78,9 +77,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name='branchs'
         options={{
-          title: 'Branch',
+          title: 'Shop',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'tennisball-outline' : 'tennisball-outline'} color={color} />
+            <TabBarIcon name={focused ? 'location' : 'location-outline'} color={color} />
           )
         }}
       />

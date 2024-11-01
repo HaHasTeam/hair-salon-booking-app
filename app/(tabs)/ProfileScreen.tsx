@@ -93,7 +93,7 @@ const ProfileScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center my-4'
-              onPress={() => navigation.navigate('faq')}
+              onPress={() => router.navigate('/faq')}
             >
               <AntDesign name='questioncircleo' size={24} color='gray' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Help Desk</Text>
@@ -103,9 +103,8 @@ const ProfileScreen = () => {
               onPress={() => {
                 AsyncStorage.removeItem('accessToken')
                 AsyncStorage.removeItem('refreshToken')
-                router.navigate('/(tabs)/LoginRegisterScreen')
+                router.dismissAll()
               }}
-              // href={'/'}
             >
               <AntDesign name='logout' size={24} color='red' className='mr-2' />
               <Text className='ml-3 text-base font-medium text-gray-700'>Log out</Text>

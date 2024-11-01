@@ -18,7 +18,6 @@ import { calculateTotalServicePrice } from '@/utils/utils'
 const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const { setSelectedService, bookingData } = useCheckoutStore()
-  const [services, setServices] = useState([])
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
 
@@ -37,7 +36,6 @@ const ChooseService = () => {
     // console.log('bookingData?.service', bookingData?.service)
 
     const isSelected = bookingData?.service?.find((el) => el._id == item._id)
-    console.log('bookingData?.service?.includes(item)', isSelected)
     return (
       <View padding={3} key={item._id}>
         <CourtCard
@@ -45,11 +43,13 @@ const ChooseService = () => {
           key={item._id}
           isSelected={!!isSelected}
           onPressCard={() => {
-            const existItem = bookingData?.service?.includes(item)
-            if (existItem) {
-              setSelectedService(bookingData.service?.filter((el) => el._id !== item._id))
+            console.log('checked', bookingData.service)
+
+            // const existItem = bookingData?.service?.find((el) => el._id == item._id)
+            if (isSelected) {
+              setSelectedService(bookingData?.service?.filter((el) => el._id !== item._id))
             } else {
-              setSelectedService([...bookingData.service, item])
+              setSelectedService([...bookingData?.service, item])
               console.log('check service', bookingData?.service?.length)
             }
           }}
@@ -104,9 +104,7 @@ const ChooseService = () => {
               <HStack space={2} alignItems={'center'}>
                 <VStack justifyContent={'flex-end'} alignItems={'flex-end'}>
                   <Text>Tổng Thanh toán</Text>
-                  <Text>
-                    {calculateTotalServicePrice(bookingData?.service)}/{bookingData.service?.length}h
-                  </Text>
+                  <Text>{bookingData?.service && calculateTotalServicePrice(bookingData?.service)}</Text>
                 </VStack>
                 <Button
                   size={'sm'}

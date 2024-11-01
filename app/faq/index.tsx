@@ -7,6 +7,7 @@ import { Colors } from '@/constants/Colors'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { useRouter } from 'expo-router'
 import SearchFAQ from '@/components/SearchFAQ'
+import { View } from 'native-base'
 
 const faqs = [
   {
@@ -179,8 +180,8 @@ const Faq = () => {
           <ThemedText type='subtitle' className='mb-3'>
             FAQ
           </ThemedText>
-          {filteredFaqs.map((faq) => (
-            <>
+          {filteredFaqs.map((faq, index) => (
+            <View key={index}>
               <ThemedView
                 className='w-full'
                 style={styles.divider}
@@ -192,7 +193,7 @@ const Faq = () => {
                   <ThemedText>{faq.description}</ThemedText>
                 </Collapsible>
               </ThemedView>
-            </>
+            </View>
           ))}
           <ThemedView
             className='w-full'

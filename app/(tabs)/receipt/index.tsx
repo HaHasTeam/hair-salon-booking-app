@@ -31,44 +31,53 @@ const ReceiptList = () => {
   }
 
   const renderItem = ({ item }) => {
-    return (
-      <View>
-        <ReceiptCard item={item} onPressReceiptCard={onReceiptCard} />
-      </View>
-    )
+    return <ReceiptCard item={item} onPressReceiptCard={onReceiptCard} />
   }
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.filterContainer}>
-          {['All', 'Pending', 'Booked', 'Cancelled', 'Done'].map((status) => (
-            <TouchableOpacity
-              key={status}
-              style={[styles.filterButton, filterStatus === status && styles.activeFilterButton]}
-              onPress={() => onFilterChange(status)}
-            >
-              <Text style={[styles.filterButtonText, filterStatus === status && styles.activeFilterText]}>
-                {status}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+    <View style={styles.container}>
+      <View style={styles.filterContainer}>
+        {['All', 'Pending', 'Booked', 'Cancelled', 'Done'].map((status) => (
+          <TouchableOpacity
+            key={status}
+            style={[styles.filterButton, filterStatus === status && styles.activeFilterButton]}
+            onPress={() => onFilterChange(status)}
+          >
+            <Text style={[styles.filterButtonText, filterStatus === status && styles.activeFilterText]}>{status}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
+      <View
+        style={{
+          maxHeight: '70%',
+          backgroundColor: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
         <CustomFlatList
           data={getFilteredData()}
           style={styles.list}
           renderItem={renderItem}
-          StickyElementComponent={<View style={styles.sticky}></View>}
+          StickyElementComponent={null}
+          ListEmptyComponent={
+            <View>
+              <Text>Empty order</Text>
+            </View>
+          }
         />
       </View>
-    </ScrollView>
+    </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10
+    backgroundColor: '#fff',
+    flex: 1
+    // padding: 10
   },
   list: {
     overflow: 'hidden'
@@ -79,6 +88,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   filterContainer: {
+    backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 5,
