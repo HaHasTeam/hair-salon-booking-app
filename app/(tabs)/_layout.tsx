@@ -7,7 +7,8 @@ import { useColorScheme } from '@/hooks/useColorScheme'
 import TabBarCustom from '@/components/TabBarCustom'
 import { useAuth } from '@/provider/AuthProvider'
 export default function TabLayout() {
-  const { accessToken } = useAuth()
+  const { accessToken, profile } = useAuth()
+  console.log('profile 11', profile)
 
   return (
     <Tabs
@@ -30,10 +31,25 @@ export default function TabLayout() {
           title: 'Booking Receipts',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'receipt' : 'receipt-outline'} color={color} />
-          )
+          ),
+          tabBarItemStyle: {
+            display: ['Customer'].includes(profile?.role) ? 'flex' : 'none'
+          }
         }}
       />
-
+      <Tabs.Screen
+        name='bookingService'
+        options={{
+          title: 'Booking',
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={'calendar'} color={color} />,
+          tabBarItemStyle: {
+            display: ['Customer'].includes(profile?.role) ? 'flex' : 'none'
+          },
+          tabBarStyle: {
+            display: 'none'
+          }
+        }}
+      />
       <Tabs.Screen
         name='ProfileScreen'
         options={{
@@ -61,19 +77,7 @@ export default function TabLayout() {
           }
         }}
       />
-      <Tabs.Screen
-        name='bookingService'
-        options={{
-          title: 'Booking',
-          tabBarIcon: ({ color, focused }) => <TabBarIcon name={'calendar'} color={color} />,
-          tabBarItemStyle: {
-            display: accessToken ? 'flex' : 'none'
-          },
-          tabBarStyle: {
-            display: 'none'
-          }
-        }}
-      />
+
       <Tabs.Screen
         name='branchs'
         options={{
@@ -90,7 +94,10 @@ export default function TabLayout() {
           title: 'QrCode',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'qr-code-outline' : 'qr-code'} color={color} />
-          )
+          ),
+          tabBarItemStyle: {
+            display: ['Staff'].includes(profile?.role) ? 'flex' : 'none'
+          }
         }}
       />
     </Tabs>

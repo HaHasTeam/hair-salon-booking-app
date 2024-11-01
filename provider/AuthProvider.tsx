@@ -41,28 +41,32 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           AsyncStorage.getItem('accessToken'),
           AsyncStorage.getItem('refreshToken')
         ])
-        console.log('accessToken line 11', accessToken)
+        console.log('accessToken line 11', accessToken, storedToken)
 
         if (storedToken[0] && storedToken[1]) {
           setAccessToken(storedToken[0]), setRefreshToken(storedToken[1])
-          const decodedToken = jwtDecode(storedToken[0])
-          if (decodedToken.exp && decodedToken.exp * 1000 > Date.now()) {
-            const response = await GET(
-              ENDPOINT.me,
-              {},
-              {
-                authorization: 'Bearer ' + storedToken[0]
-              }
-            )
 
-            if (response.status === 200) {
-              setProfile(response.data.data)
+          const response = await GET(
+            ENDPOINT.me,
+            {},
+            {
+              authorization: 'Bearer ' + storedToken[0]
             }
+          )
+
+          console.log('response 57', response.data.data)
+          if (response.status === 200) {
+            setProfile(response.data.data)
           }
+
           return
+        } else {
+          setAccessToken(null)
+          setRefreshToken(null)
+          setProfile(null)
         }
       } catch (error) {
-        log.error(error)
+        console.log('errror authenticating', error)
       }
 
       setLoading(false)

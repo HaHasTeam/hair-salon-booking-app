@@ -18,7 +18,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { removeItem } from '@/utils/asyncStorage'
 const ProfileScreen = () => {
   const { profile, loading, accessToken } = useAuth()
-
+  const queryClient = useQueryClient()
   const router = useRouter()
 
   // if (loading) {
@@ -102,6 +102,10 @@ const ProfileScreen = () => {
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
               onPress={async () => {
                 await Promise.all([removeItem('accessToken'), removeItem('refreshToken')])
+                queryClient.invalidateQueries({
+                  queryKey: ['refetch']
+                })
+
                 router.dismissAll()
               }}
             >

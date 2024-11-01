@@ -5,12 +5,13 @@ import { ActivityIndicator, Alert, Image, SafeAreaView, Text, TextInput, Touchab
 import { useRegister } from '@/api/auth'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRouter } from 'expo-router'
 const RegisterScreen = () => {
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const navigation = useNavigation()
+  const navigation = useRouter()
 
   const { register, isPending, isSuccess } = useRegister({
     onRegisterSuccess,
@@ -23,7 +24,7 @@ const RegisterScreen = () => {
     setUsername('')
     setPassword('')
     setConfirmPassword('')
-    navigation.navigate('(tabs)')
+    navigation.navigate('/LoginScreen')
   }
   function onRegisterFailed() {
     Alert.alert('Error', 'Register failed')

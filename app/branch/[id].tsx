@@ -13,11 +13,12 @@ import CourtCard from '@/components/court/CourtCard'
 import { ICourt } from '@/types/Court'
 import FeedBackSection from '@/components/FeedBackSection'
 import { Collapsible } from '@/components/Collapsible'
+import { useAuth } from '@/provider/AuthProvider'
 
 const BranchDetail = () => {
   const { id: branchId } = useLocalSearchParams<{ id: string }>()
   const { data, isLoading } = useBranchDetail({ id: branchId })
-
+  const { profile } = useAuth()
   if (isLoading) {
     return <ActivityIndicator size='large' />
   }
@@ -60,17 +61,23 @@ const BranchDetail = () => {
           <Text className='text-lg font-bold ml-2 '>{data.address}</Text>
         </View>
         <View flexDirection={'row'} alignItems={'center'}>
-          <MaterialCommunityIcons name='soccer-field' size={24} color={'#2d2d2d'} />
-          <Text className='text-lg font-bold ml-2 '>{data.courts.length} sân</Text>
+          <MaterialCommunityIcons name='hair-dryer' size={24} color={'#2d2d2d'} />
+          <Text className='text-lg font-bold ml-2 '>{data.courts.length} Services</Text>
         </View>
         <Text className='text-lg'>{data.description}</Text>
 
         {/* Footer */}
-        <Pressable className='  flex-row items-center justify-between border-y-2 border-gray-300 p-5 '>
-          <Link href={`/booking/${data._id}`} className='rounded-md bg-green-500 p-5 px-8 w-full text-center'>
-            <Text className='text-lg font-bold text-white'>Đặt chỗ ngay</Text>
-          </Link>
-        </Pressable>
+
+        {profile.role === 'Customer' && (
+          <Pressable className='  flex-row items-center justify-between border-y-2 border-gray-300 p-5 '>
+            <Link
+              href={`/(tabs)/bookingService?branchId=${data._id}`}
+              className='rounded-md bg-green-500 p-5 px-8 w-full text-center'
+            >
+              <Text className='text-lg font-bold text-white'>Đặt chỗ ngay</Text>
+            </Link>
+          </Pressable>
+        )}
 
         <Text className='text-lg font-bold'>Our services</Text>
         <View>
