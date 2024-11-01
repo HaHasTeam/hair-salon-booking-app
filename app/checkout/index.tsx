@@ -12,9 +12,10 @@ import { useAuth } from '@/provider/AuthProvider'
 import { ActivityIndicator } from 'react-native'
 const CheckoutPage = () => {
   const navigate = useRouter()
-  const { bookingData, setPaymentType, paymentType } = useCheckoutStore()
+  const { bookingData, setPaymentType } = useCheckoutStore()
   const { profile } = useAuth()
   const url = Linking.createURL('ressult')
+  console.log('bookingData checkout', bookingData)
 
   const totalAmount = useMemo(() => {
     if (bookingData?.booking)
@@ -23,7 +24,7 @@ const CheckoutPage = () => {
   }, [bookingData.paymentType])
 
   const { mutateAsync, isPending } = useGetPayOsInfo({
-    user: profile?.firstName || '0348485167',
+    user: profile?.firstName || 'yêu quý',
     courtId: bookingData.booking?.court._id ?? '',
     totalAmount: totalAmount,
     returnUrl: url,
@@ -44,13 +45,13 @@ const CheckoutPage = () => {
   return (
     <>
       <View className={'flex-1 p-4 mt-10 bg-white'}>
-        <Text className='text-2xl font-bold  text-center'>Hóa đơn</Text>
-        <Text className='text-xl text-center text-slate-500 mb-6'>Xem lại hóa đơn của bạn.</Text>
+        <Text className='text-2xl font-bold  text-center'>Order</Text>
+        <Text className='text-xl text-center text-slate-500 mb-6'>Review your order</Text>
 
         <HStack space={2} justifyContent={'space-between'}>
           <HStack className='mb-4' alignItems={'center'} space={2}>
             <FontAwesome5 name='calendar' size={18} color='green' />
-            <Text className='text-lg font-semibold'>Ngày:</Text>
+            <Text className='text-lg font-semibold'>Date:</Text>
             <Text>{bookingData.booking?.startDate}</Text>
           </HStack>
           {/* <HStack className='mb-4' alignItems={'center'} space={2}>
@@ -59,16 +60,16 @@ const CheckoutPage = () => {
           </HStack> */}
           <HStack className='mb-4' alignItems={'center'} space={2}>
             <FontAwesome6 name='clock-four' size={18} color='green' />
-            <Text className='text-lg font-semibold '>Thời gian:</Text>
+            <Text className='text-lg font-semibold '>Time:</Text>
             <Text>
               {bookingData.schedule?.startTime} - {bookingData.schedule?.endTime}
             </Text>
-            <Text>{bookingData?.booking?.totalHour}hr</Text>
+            {/* <Text>{bookingData?.booking?.totalHour}hr</Text> */}
           </HStack>
         </HStack>
 
         <VStack>
-          <Text className='text-lg font-semibold '>Dịch vụ: </Text>
+          <Text className='text-lg font-semibold '>Services: </Text>
           <VStack space={4}>
             {bookingData?.schedule?.services?.map((el) => {
               return <CourtCard court={el} key={el._id} />
@@ -83,7 +84,7 @@ const CheckoutPage = () => {
           <HStack alignItems={'center'} justifyContent={'space-between'} space={2}>
             <Text className='text-lg font-semibold '>Amount:</Text>
             <Text>
-              {paymentType === 'full'
+              {bookingData.paymentType === 'full'
                 ? formatToVND(bookingData?.booking?.totalPrice)
                 : formatToVND(bookingData?.booking?.totalPrice / 2)}
             </Text>
@@ -148,7 +149,7 @@ const CheckoutPage = () => {
           variant={'outline'}
           colorScheme={'danger'}
           onPress={() => {
-            navigate.dismissAll()
+            navigate.dismiss()
           }}
         >
           Cancel

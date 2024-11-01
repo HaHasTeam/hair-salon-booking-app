@@ -65,7 +65,7 @@ const BookingService = () => {
   }, [selectDay])
 
   const handleBooking = async () => {
-    if (bookingData.selectedBrach && bookingData?.service?.length > 0 && selectedStylist) {
+    if (bookingData.selectedBrach && bookingData?.service && bookingData?.service?.length > 0 && selectedStylist) {
       console.log('data format', {
         booking: {
           type: 'single_schedule',
@@ -75,7 +75,8 @@ const BookingService = () => {
           totalHour: bookingData.service?.length,
           startDate: format(selectDay.toString(), 'yyyy-MM-dd'),
           endDate: format(selectDay.toString(), 'yyyy-MM-dd'),
-          court: bookingData.service[0] ?? ''
+          court: bookingData.service[0] ?? '',
+          branch: bookingData.selectedBrach
         },
         schedule: {
           type: 'booking',
@@ -92,7 +93,7 @@ const BookingService = () => {
       setBookingData({
         booking: {
           type: 'single_schedule',
-          paymentType: 'haft',
+          paymentType: 'partial',
           paymentMethod: 'vnpay',
           totalPrice: bookingData?.service?.reduce((total, product) => {
             return total + product.price
@@ -100,7 +101,8 @@ const BookingService = () => {
           totalHour: bookingData.service?.length,
           startDate: format(selectDay.toString(), 'yyyy-MM-dd'),
           endDate: format(selectDay.toString(), 'yyyy-MM-dd'),
-          court: bookingData.service[0] ?? ''
+          court: bookingData.service[0] ?? '',
+          branch: bookingData.selectedBrach
         },
         schedule: {
           type: 'booking',
@@ -212,9 +214,7 @@ const BookingService = () => {
                   })}
                 </Flex>
                 <View marginTop={1}>
-                  <Text>
-                    Tổng Tiền: {calculateTotalServicePrice(bookingData.service)} /{bookingData.service?.length}h
-                  </Text>
+                  <Text>Tổng Tiền: {calculateTotalServicePrice(bookingData.service)}</Text>
                 </View>
               </>
             )}

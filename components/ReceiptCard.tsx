@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import FeedBackItem from './FeedBackItem'
 import Rating from './Rating'
+import { format } from 'date-fns'
+import { formatToVND } from '../utils/utils'
 const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: string) => any }) => {
   console.log(item, 'item')
 
@@ -22,7 +24,10 @@ const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: st
     router.push('/(modal)/feedbackCreate?booking=' + item._id + '&branch=' + item.branch)
   }
   const onPressReceiptCard2 = (id: string) => {
-    router.push(`/(tabs)/receipt/${id}` + '?feedback=' + encodeURIComponent(JSON.stringify(item.feedback)))
+    if (item.feedback) {
+      router.push(`/(tabs)/receipt/${id}` + '?feedback=' + encodeURIComponent(JSON.stringify(item.feedback)))
+    }
+    router.push(`/(tabs)/receipt/${id}`)
   }
   return (
     <TouchableOpacity
@@ -32,122 +37,120 @@ const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: st
       }}
       style={styles.card}
     >
-      <View>
-        <View style={styles.cardColumn}>
-          <View style={styles.cardTop}>
-            <Icon name='ticket-confirmation' size={50} color='#000' />
+      <View style={styles.cardColumn}>
+        <View style={styles.cardTop}>
+          <Icon name='ticket-confirmation' size={50} color='#000' />
+        </View>
+
+        <View style={styles.cardBody}>
+          <View style={styles.cardHeader}>
+            <Text style={styles.cardTitle} numberOfLines={2}>
+              {item?.court[0]?.branch?.name}
+            </Text>
           </View>
 
-          <View style={styles.cardBody}>
-            <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle} numberOfLines={2}>
-                {item?.branch?.name}
-              </Text>
+          <View style={styles.cardStats}>
+            <View style={styles.cardStatsItem}>
+              <Text style={styles.cardStatsItemText}>{item.paymentType}</Text>
+            </View>
+            <View>
+              <Text style={styles.cardPrice}>{formatToVND(Number(item.totalPrice))}</Text>
             </View>
 
-            <View style={styles.cardStats}>
-              <View style={styles.cardStatsItem}>
-                <Text style={styles.cardStatsItemText}>{item.type}</Text>
-              </View>
-              <View>
-                <Text style={styles.cardPrice}>${item.totalPrice.toLocaleString('en-US')}</Text>
-              </View>
-
-              {/* <View style={styles.cardStatsItem}>
+            {/* <View style={styles.cardStatsItem}>
                   <Text style={styles.cardStatsItemText}>{item.branch.name}</Text>
                 </View> */}
-            </View>
+          </View>
 
-            <View style={styles.cardFooter}>
-              <Text style={styles.cardFooterText}>{item.createdAt}</Text>
+          <View style={styles.cardFooter}>
+            <Text style={styles.cardFooterText}>{format(item.startDate, 'yyyy-MM-dd')}</Text>
 
-              <View
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-end'
+              }}
+            >
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'flex-end'
+                  marginHorizontal: 5,
+                  verticalAlign: 'bottom',
+                  marginTop: 'auto'
                 }}
               >
-                <Text
-                  style={{
-                    marginHorizontal: 5,
-                    verticalAlign: 'bottom',
-                    marginTop: 'auto'
-                  }}
-                >
-                  {item.status}
-                </Text>
-              </View>
+                {item.status}
+              </Text>
             </View>
           </View>
         </View>
-        {item?.feedback && (
+      </View>
+      {item?.feedback && (
+        <View
+          style={{
+            backgroundColor: '#f0f0f0',
+            padding: 10,
+            borderRadius: 5,
+            alignSelf: 'flex-start',
+            marginTop: 5,
+            width: '100%',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2
+            },
+            shadowOpacity: 0.23,
+            shadowRadius: 2.62,
+            elevation: 4,
+            gap: 5
+          }}
+        >
+          <Rating star={item.feedback.star} />
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: '500',
+              borderTopColor: 'black',
+              borderTopWidth: 1,
+              fontSize: 16,
+              padding: 5
+            }}
+          >
+            {item.feedback?.feedback.slice(0, 100) + '...'}
+          </Text>
+        </View>
+      )}
+      {canFeedback() && (
+        <TouchableOpacity onPress={onClickFeedback}>
           <View
             style={{
-              backgroundColor: '#f0f0f0',
-              padding: 10,
+              backgroundColor: 'green',
+              padding: 5,
               borderRadius: 5,
               alignSelf: 'flex-start',
               marginTop: 5,
+
               width: '100%',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2
-              },
-              shadowOpacity: 0.23,
-              shadowRadius: 2.62,
-              elevation: 4,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
               gap: 5
             }}
           >
-            <Rating star={item.feedback.star} />
+            <Ionicons name='star' size={20} color='white' />
+
             <Text
               style={{
-                color: 'black',
-                fontWeight: '500',
-                borderTopColor: 'black',
-                borderTopWidth: 1,
-                fontSize: 16,
-                padding: 5
+                color: 'white',
+                fontWeight: '700',
+                textAlign: 'center',
+                fontSize: 16
               }}
             >
-              {item.feedback?.feedback.slice(0, 100) + '...'}
+              Rating service
             </Text>
           </View>
-        )}
-        {canFeedback() && (
-          <TouchableOpacity onPress={onClickFeedback}>
-            <View
-              style={{
-                backgroundColor: 'green',
-                padding: 5,
-                borderRadius: 5,
-                alignSelf: 'flex-start',
-                marginTop: 5,
-
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: 5
-              }}
-            >
-              <Ionicons name='star' size={20} color='white' />
-
-              <Text
-                style={{
-                  color: 'white',
-                  fontWeight: '700',
-                  textAlign: 'center',
-                  fontSize: 16
-                }}
-              >
-                Rating service
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
+        </TouchableOpacity>
+      )}
     </TouchableOpacity>
   )
 }
@@ -157,7 +160,7 @@ export default ReceiptCard
 const styles = StyleSheet.create({
   /** Card */
   card: {
-    width: '88%',
+    width: '90%',
     alignSelf: 'center',
     borderColor: '#fff',
     borderWidth: 2,

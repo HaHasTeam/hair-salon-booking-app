@@ -58,8 +58,8 @@ export const useCheckoutStore = create<BookingDataStore>()((set) => ({
   setPaymentType: (data) =>
     set((state) => {
       console.log('"setPaymentType" called', data)
-
-      return { ...state, paymentType: data }
+      state.bookingData.paymentType = data
+      return { ...state }
     }),
   setSelectedService: (data) =>
     set((state) => {

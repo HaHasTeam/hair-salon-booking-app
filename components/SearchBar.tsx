@@ -18,13 +18,13 @@ const SearchBar = ({
       <View style={styles.searchInput}>
         <View style={styles.inputWrapper}>
           <TextInput
-            onTextInput={() => {
-              onSubmitSearch(searchPhrase)
-            }}
+            // onTextInput={() => {
+            //   setSearchPhrase(searchPhrase)
+            // }}
             placeholder='tìm kiếm'
             placeholderTextColor='#9eadba'
             value={searchPhrase}
-            // onChangeText={setSearchPhrase}
+            onChangeText={setSearchPhrase}
             style={styles.input}
           />
 

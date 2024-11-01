@@ -7,8 +7,8 @@ const LoginRegisterScreen = () => {
   return (
     <SafeAreaView style={style.view}>
       <Image style={style.image} source={require('../assets/images/illustration.png')} />
-      <Text style={style.header}>Fill your imagination</Text>
-      <Text style={style.description}>Interesting courses are waiting for you, feel free to be creative</Text>
+      <Text style={style.header}>Schedule to have hair cut</Text>
+      <Text style={style.description}>Interesting hair are waiting for you, feel free to schedule</Text>
       <View style={style.buttonWrapper}>
         <Button
           style={style.signupButton}
@@ -34,9 +34,9 @@ const LoginRegisterScreen = () => {
           Sign in
         </Button>
       </View>
-      <Link href={'/(tabs)'} style={style.other}>
-        Tôi muốn khám phá thêm
-      </Link>
+      {/* <Link href={'/(tabs)'} style={style.other}>
+        Continue without user account
+      </Link> */}
     </SafeAreaView>
   )
 }

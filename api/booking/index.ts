@@ -8,12 +8,13 @@ import { ENDPOINT } from '..'
 export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void }) => {
   const { accessToken } = useAuth()
   return useMutation({
-    mutationKey: ['postBooking',accessToken],
+    mutationKey: ['postBooking', accessToken],
     mutationFn: async (bookingReq: {
       booking: Omit<IBooking, 'status'>
       schedule: Omit<ISchedule, 'status'>
       transaction: { amount: number; payment: string }
     }) => {
+      console.log('usePostBooking', bookingReq)
       const response = await POST(ENDPOINT.postBooking, bookingReq, {}, { authorization: 'Bearer ' + accessToken })
 
       if (response.status !== 200) {
@@ -30,7 +31,7 @@ export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void })
 export const useMyBookingList = () => {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ['receipt',accessToken],
+    queryKey: ['receipt', accessToken],
     queryFn: async () => {
       const response = await GET(
         ENDPOINT.getMyBooking,
@@ -60,9 +61,7 @@ export const useBookingDetail = ({ id }: { id: string }) => {
         ENDPOINT.getBookingDetail(id),
         {},
         {
-          authorization:
-            'Bearer ' +
-            accessToken
+          authorization: 'Bearer ' + accessToken
         }
       )
 
@@ -114,7 +113,7 @@ export const useDoneBooking = () => {
       )
 
       if (response.status !== 200) {
-        console.log(response);
+        console.log(response)
         throw new Error(`Failed: ${response}`)
       }
 

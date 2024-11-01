@@ -12,6 +12,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import CourtCard from '@/components/court/CourtCard'
 import { ICourt } from '@/types/Court'
 import FeedBackSection from '@/components/FeedBackSection'
+import { Collapsible } from '@/components/Collapsible'
 
 const BranchDetail = () => {
   const { id: branchId } = useLocalSearchParams<{ id: string }>()
@@ -28,7 +29,7 @@ const BranchDetail = () => {
             return (
               <Link href={'/(tabs)/branchs'}>
                 <Text fontSize={'2xl'} fontWeight={'bold'} color={'green.400'} padding={2}>
-                  Branch
+                  Shops
                 </Text>
               </Link>
             )
@@ -70,9 +71,10 @@ const BranchDetail = () => {
             <Text className='text-lg font-bold text-white'>Đặt chỗ ngay</Text>
           </Link>
         </Pressable>
+
+        <Text className='text-lg font-bold'>Our services</Text>
         <View>
-          <Text className='text-lg font-bold'>Our services</Text>
-          {data.courts.map((item: ICourt) => {
+          {data.courts.slice(0, 3).map((item: ICourt) => {
             return <CourtCard court={item} key={item._id} />
           })}
         </View>

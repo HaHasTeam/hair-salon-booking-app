@@ -14,7 +14,7 @@ export function formatToVND(amount: number): string {
   return formatter.format(amount)
 }
 export function calculateTotalServicePrice(products: ICourt[]): string {
-  const total = products.reduce((total, product) => {
+  const total = products?.reduce((total, product) => {
     return total + product.price
   }, 0)
   return formatToVND(total)

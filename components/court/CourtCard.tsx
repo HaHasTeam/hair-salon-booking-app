@@ -18,7 +18,7 @@ const CourtCard = ({
   return (
     <Pressable
       style={isSelected ? styles.containerSelected : styles.container}
-      className='border '
+      className='border mb-4'
       onPress={() => {
         onPressCard?.()
       }}
@@ -38,7 +38,7 @@ const CourtCard = ({
           </View>
         </HStack>
         <View>
-          <Text className='text-lg text-slate-500 font-light'>{formatToVND(court.price)}/hr</Text>
+          <Text className='text-lg text-slate-500 font-light'>{formatToVND(court.price)}</Text>
         </View>
       </View>
     </Pressable>

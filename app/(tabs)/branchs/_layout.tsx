@@ -19,7 +19,7 @@ export default function MenuStack() {
                 // }}
                 >
                   <Text fontSize={'2xl'} fontWeight={'bold'} color={'green.400'} padding={2}>
-                    See branchs
+                    Address
                   </Text>
                 </Pressable>
               </Link>

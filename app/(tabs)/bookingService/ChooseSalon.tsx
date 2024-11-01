@@ -14,7 +14,7 @@ const ChooseSalon = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { data, isLoading } = useBranchList()
-  const { setSelectedBranch } = useCheckoutStore()
+  const { setSelectedBranch, setSelectedService } = useCheckoutStore()
   const router = useRouter()
   const onSubmitSearch = async (search: string) => {
     const searchKey = search.trim().toLocaleLowerCase()
@@ -31,6 +31,8 @@ const ChooseSalon = () => {
           console.log('salon selected:', item.name)
 
           setSelectedBranch(item)
+
+          setSelectedService([])
           router.back()
         }}
       >
