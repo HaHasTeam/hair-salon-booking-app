@@ -5,7 +5,7 @@ import CustomFlatList from '@/components/CustomFlatList'
 import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import SearchBar from '@/components/SearchBar'
 import { IBranch } from '@/types/Branch'
-import { router, useSegments } from 'expo-router'
+import { router, useLocalSearchParams, useSegments } from 'expo-router'
 import { Button, Center, HStack, Text, View, VStack } from 'native-base'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, Image, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native'
@@ -17,6 +17,7 @@ import { calculateTotalServicePrice } from '@/utils/utils'
 
 const ChooseService = () => {
   const [searchPhrase, setSearchPhrase] = useState('')
+  const { branchId } = useLocalSearchParams()
   const { setSelectedService, bookingData } = useCheckoutStore()
   const ImagePlace = require('@/assets/images/placeholder.png')
   const { mutateAsync: getCourtQuery, isPending, data } = useGetCourtQuery()
@@ -27,7 +28,7 @@ const ChooseService = () => {
   }
   useEffect(() => {
     getCourtQuery({
-      branch: bookingData.selectedBrach?._id
+      branch: bookingData.selectedBrach?._id || branchId
       //   name: ''
     })
   }, [])
@@ -43,7 +44,7 @@ const ChooseService = () => {
           key={item._id}
           isSelected={!!isSelected}
           onPressCard={() => {
-            console.log('checked', bookingData.service)
+            console.log('checked', bookingData)
 
             // const existItem = bookingData?.service?.find((el) => el._id == item._id)
             if (isSelected) {
