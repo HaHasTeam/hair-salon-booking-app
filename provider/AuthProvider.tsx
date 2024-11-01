@@ -41,6 +41,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           AsyncStorage.getItem('accessToken'),
           AsyncStorage.getItem('refreshToken')
         ])
+        console.log('accessToken line 11', accessToken)
 
         if (storedToken[0] && storedToken[1]) {
           setAccessToken(storedToken[0]), setRefreshToken(storedToken[1])

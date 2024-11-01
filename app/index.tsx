@@ -34,9 +34,9 @@ const LoginRegisterScreen = () => {
           Sign in
         </Button>
       </View>
-      {/* <Link href={'/(tabs)'} style={style.other}>
+      <Link href={'/(tabs)'} style={style.other}>
         Continue without user account
-      </Link> */}
+      </Link>
     </SafeAreaView>
   )
 }
