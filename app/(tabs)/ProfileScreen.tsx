@@ -15,9 +15,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Link, useRouter } from 'expo-router'
 import { useAuth } from '@/provider/AuthProvider'
 import { ThemedText } from '@/components/ThemedText'
+import { removeItem } from '@/utils/asyncStorage'
 const ProfileScreen = () => {
   const { profile, loading, accessToken } = useAuth()
-  const queryClient = useQueryClient()
 
   const router = useRouter()
 
@@ -100,9 +100,8 @@ const ProfileScreen = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className='bg-green-100 rounded-lg p-4 shadow-xl flex flex-row items-center'
-              onPress={() => {
-                AsyncStorage.removeItem('accessToken')
-                AsyncStorage.removeItem('refreshToken')
+              onPress={async () => {
+                await Promise.all([removeItem('accessToken'), removeItem('refreshToken')])
                 router.dismissAll()
               }}
             >

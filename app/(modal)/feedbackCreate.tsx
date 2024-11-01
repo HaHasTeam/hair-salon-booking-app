@@ -7,11 +7,13 @@ import ImgDisplay from '@/components/ImgDisplay'
 import Loading from '@/components/Loading'
 import { usePostFeedback } from '@/api/feedback'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useQueryClient } from '@tanstack/react-query'
 
 const FeedbackCreate = () => {
   const [rating, setRating] = useState(0)
   const [comment, setComment] = useState('')
   const [images, setImages] = useState<string[]>([])
+  const queryClient = useQueryClient()
   const { mutateAsync, isPending: isUploadingImages, error } = useUploadImgs()
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -70,7 +72,10 @@ const FeedbackCreate = () => {
           booking: params.booking as string,
           branch: params.branch as string
         })
-        return await router.back()
+        queryClient.invalidateQueries({
+          queryKey: ['receipt']
+        })
+        return router.back()
       }
     } catch (error) {
       console.log(error, 'error')
