@@ -8,16 +8,9 @@ const Checking = () => {
   const { data } = route.params || {}
   const info = data.split('/')
   const id = info[info.length - 1]
-  const [booking, setBooking] = useState([])
-  const { mutateAsync: mutateDoneBooking} = useDoneBooking()
-  const { mutateAsync: mutateGetBookingById} = useBookingDetailById()
-  useEffect(() => {
-    const getData = async () => {
-      const order = await mutateGetBookingById('671607fb3d29e9cfd51e805e')
-      setBooking(order.booking)
-    }
-    getData();
-  }, [])
+  const { mutateAsync: mutateDoneBooking } = useDoneBooking()
+  const { data: booking, refetch } = useBookingDetailById(id)
+
   const renderCourtItem = ({ item }) => (
     <View style={styles.courtContainer}>
       <Text style={styles.courtName}>{item.name}</Text>
@@ -27,17 +20,18 @@ const Checking = () => {
   )
   const handleDoneBooking = async () => {
     try {
-      await mutateDoneBooking(booking._id)
+      await mutateDoneBooking(booking?.booking._id)
       Alert.alert('Success', 'Your booking has been completed successfully!')
+      await refetch()
     } catch (error) {
-      console.log(error);
-      
+      console.log(error)
+
       Alert.alert('Error', 'There was an issue completing your booking. Please try again.')
     }
   }
 
   return (
-    booking && (
+    booking?.booking && (
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Booking Details</Text>
@@ -46,55 +40,78 @@ const Checking = () => {
           <View style={styles.infoRow}>
             <Ionicons name='ticket' size={20} color='#007bff' />
             <Text style={styles.infoText}>
-              Type: <Text style={styles.highlight}>{booking.type}</Text>
+              Type: <Text style={styles.highlight}>{booking?.booking.type}</Text>
             </Text>
           </View>
           <View style={styles.infoRow}>
             <Ionicons name='card' size={20} color='#007bff' />
             <Text style={styles.infoText}>
-              Payment Method: <Text style={styles.highlight}>{booking.paymentMethod}</Text>
+              Payment Method: <Text style={styles.highlight}>{booking?.booking.paymentMethod}</Text>
             </Text>
           </View>
           <View style={styles.infoRow}>
             <Ionicons name='cash' size={20} color='#007bff' />
             <Text style={styles.infoText}>
-              Total Price: <Text style={styles.highlight}>{booking.totalPrice} VND</Text>
+              Total Price: <Text style={styles.highlight}>{booking?.booking.totalPrice} VND</Text>
             </Text>
           </View>
           <View style={styles.infoRow}>
             <Ionicons name='checkmark-circle' size={20} color='#007bff' />
             <Text style={styles.infoText}>
-              Status: <Text style={styles.highlight}>{booking.status}</Text>
+              Status: <Text style={styles.highlight}>{booking?.booking.status}</Text>
             </Text>
           </View>
           <View style={styles.infoRow}>
             <Ionicons name='calendar' size={20} color='#007bff' />
             <Text style={styles.infoText}>
-              Start Date: <Text style={styles.highlight}>{new Date(booking.startDate).toLocaleDateString()}</Text>
+              Start Date:{' '}
+              <Text style={styles.highlight}>{new Date(booking?.booking.startDate).toLocaleDateString()}</Text>
             </Text>
           </View>
           <View style={styles.infoRow}>
             <Ionicons name='calendar' size={20} color='#007bff' />
             <Text style={styles.infoText}>
-              End Date: <Text style={styles.highlight}>{new Date(booking.endDate).toLocaleDateString()}</Text>
+              End Date: <Text style={styles.highlight}>{new Date(booking?.booking.endDate).toLocaleDateString()}</Text>
             </Text>
           </View>
         </View>
         <Text style={styles.sectionTitle}>Services</Text>
         <FlatList
-          data={booking.court}
+          data={booking?.booking.court}
           renderItem={renderCourtItem}
           keyExtractor={(court) => court._id}
           style={styles.list}
         />
-        <View style={styles.buttonContainer}>
-          <Button
-            title='Done Booking'
-            onPress={handleDoneBooking}
-            color='#007bff'
-            disabled={booking.status === 'Done'}
-          />
-        </View>
+        {booking?.booking.status === 'Done' ? (
+          <View
+            style={{
+              padding: 10,
+              backgroundColor: '#d4edda',
+              borderRadius: 10,
+              marginBottom: 10
+            }}
+          >
+            <Text
+              style={{
+                color: 'green',
+                textAlign: 'center',
+                fontSize: 20,
+                fontWeight: 'bold'
+              }}
+            >
+              Booking has been completed
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.buttonContainer}>
+            <Button
+              title='Done Booking'
+              onPress={handleDoneBooking}
+              color='#007bff'
+              disabled={booking?.booking.status === 'Done'}
+            />
+          </View>
+        )}
       </ScrollView>
     )
   )
@@ -181,4 +198,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Checking;
+export default Checking
