@@ -74,17 +74,16 @@ export const useBookingDetail = ({ id }: { id: string }) => {
   })
 }
 
-export const useBookingDetailById = () => {
+export const useBookingDetailById = (id:string) => {
   const { accessToken } = useAuth()
-  return useMutation({
-    mutationFn: async (id: string) => {
+  return useQuery({
+    queryKey: ['bookingDetailById',id],
+    queryFn: async () => {
       const response = await GET(
         ENDPOINT.getBookingDetailById(id),
         {},
         {
-          authorization:
-            'Bearer ' +
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE2MDk0YWIzYzc4ZjkxYzA3MTcyMjciLCJpYXQiOjE3Mjk4NzgwMzMsImV4cCI6MTcyOTk2NDQzM30.ae5SeMgFKYnI6NIwlHZr1cUXY-OyEbvTBM6kmkQEsSA'
+          authorization: 'Bearer ' + accessToken
         }
       )
       if (response.status !== 200) {
@@ -106,9 +105,7 @@ export const useDoneBooking = () => {
         {},
         {},
         {
-          authorization:
-            'Bearer ' +
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzE2MDk0YWIzYzc4ZjkxYzA3MTcyMjciLCJpYXQiOjE3Mjk4ODUxNTV9.4PJk2pNrAjXOyAyiOVY-z82jskMwrJ10BjbpjE9UYu0'
+          authorization: 'Bearer ' + accessToken
         }
       )
 
