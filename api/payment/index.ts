@@ -26,7 +26,7 @@ export const useGetPayOsInfo = ({
           ENDPOINT.getPaymentInfo,
           {
             amount: totalAmount,
-            description: `Đặt lịch cắt tóc cho ${user} `,
+            description: `Khách ${user} `,
             courtId: courtId,
             returnUrl: returnUrl,
             cancelUrl: returnUrl

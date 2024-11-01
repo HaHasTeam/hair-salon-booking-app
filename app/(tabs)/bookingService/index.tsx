@@ -275,6 +275,8 @@ const BookingService = () => {
               ) : (
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   {StylistData &&
+                    branchDetail?._id &&
+                    bookingData.service?.length > 0 &&
                     StylistData.map((el) => {
                       const isSelected = selectedStylist === el._id
 

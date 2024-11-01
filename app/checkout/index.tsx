@@ -6,24 +6,24 @@ import { useEffect, useMemo, useState } from 'react'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { useGetPayOsInfo } from '@/api/payment'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
 import * as Linking from 'expo-linking'
 import { useAuth } from '@/provider/AuthProvider'
 import { ActivityIndicator } from 'react-native'
 const CheckoutPage = () => {
-  const navigate = useNavigation()
+  const navigate = useRouter()
   const { bookingData, setPaymentType, paymentType } = useCheckoutStore()
   const { profile } = useAuth()
   const url = Linking.createURL('ressult')
 
   const totalAmount = useMemo(() => {
     if (bookingData?.booking)
-      return paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2
+      return bookingData.paymentType === 'full' ? bookingData.booking.totalPrice : bookingData.booking.totalPrice / 2
     return undefined
   }, [bookingData.paymentType])
 
   const { mutateAsync, isPending } = useGetPayOsInfo({
-    user: profile?.firstName || 'sdt: 0348485167',
+    user: profile?.firstName || '0348485167',
     courtId: bookingData.booking?.court._id ?? '',
     totalAmount: totalAmount,
     returnUrl: url,
@@ -98,7 +98,7 @@ const CheckoutPage = () => {
           <Text className='text-lg font-semibold '>Payment Type:</Text>
 
           <Select
-            selectedValue={paymentType}
+            selectedValue={bookingData.paymentType}
             minWidth='100'
             accessibilityLabel='Choose Payment Type'
             placeholder='Choose Payment Type'
@@ -148,7 +148,7 @@ const CheckoutPage = () => {
           variant={'outline'}
           colorScheme={'danger'}
           onPress={() => {
-            navigate.navigate('(tabs)')
+            navigate.dismissAll()
           }}
         >
           Cancel

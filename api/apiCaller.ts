@@ -19,7 +19,7 @@ export const request = (
   params: object = {},
   body: object = {}
 ): Promise<AxiosResponse> => {
-  const API_URL = process.env.EXPO_PUBLIC_API_URL
+  const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://hair-api.kelvinpham.online/hair-salon'
   log.debug('requestUrl: ', API_URL + endpoint)
 
   return axios({
