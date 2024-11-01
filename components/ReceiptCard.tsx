@@ -124,7 +124,7 @@ const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: st
           <View
             style={{
               backgroundColor: 'green',
-              padding: 5,
+              padding: 15,
               borderRadius: 5,
               alignSelf: 'flex-start',
               marginTop: 5,

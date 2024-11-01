@@ -31,7 +31,7 @@ export const usePostBooking = ({ onSuccessCB }: { onSuccessCB: (data) => void })
 export const useMyBookingList = () => {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ['receipt', accessToken],
+    queryKey: ['receipt'],
     queryFn: async () => {
       const response = await GET(
         ENDPOINT.getMyBooking,
@@ -74,10 +74,10 @@ export const useBookingDetail = ({ id }: { id: string }) => {
   })
 }
 
-export const useBookingDetailById = (id:string) => {
+export const useBookingDetailById = (id: string) => {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ['bookingDetailById',id],
+    queryKey: ['bookingDetailById', id],
     queryFn: async () => {
       const response = await GET(
         ENDPOINT.getBookingDetailById(id),
