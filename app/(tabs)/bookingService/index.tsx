@@ -2,7 +2,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon'
 import { Actionsheet, Button, HStack, Pressable, Text, useDisclose, View, Box, Flex, Badge } from 'native-base'
 import { ActivityIndicator, Image, ScrollView, StyleSheet } from 'react-native'
 import Entypo from '@expo/vector-icons/Entypo'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Calendar, CalendarUtils, DateData } from 'react-native-calendars'
@@ -16,11 +16,12 @@ import { calculateTotalPricePerCourt, calculateTotalServicePrice, getThu } from 
 import { useCheckoutStore } from '@/hooks/useCheckoutStore'
 const mockImgae = require('@/assets/images/splash.jpg')
 const BookingService = () => {
+  const { branchId } = useLocalSearchParams()
   const router = useRouter()
   const { bookingData, setBookingData } = useCheckoutStore()
   console.log('bookingData', bookingData.selectedBrach?._id)
 
-  const { data: branchDetail, isLoading } = useBranchDetail({ id: bookingData.selectedBrach?._id })
+  const { data: branchDetail, isLoading } = useBranchDetail({ id: bookingData.selectedBrach?._id || branchId })
   const { isOpen, onOpen, onClose } = useDisclose()
   const [selectDay, setSelectDay] = useState(new Date())
   const [startSlot, setStartSlot] = useState<ITimeSlot | null>(null)
@@ -65,7 +66,7 @@ const BookingService = () => {
   }, [selectDay])
 
   const handleBooking = async () => {
-    if (bookingData.selectedBrach && bookingData?.service && bookingData?.service?.length > 0 && selectedStylist) {
+    if (branchDetail && bookingData?.service && bookingData?.service?.length > 0 && selectedStylist) {
       console.log('data format', {
         booking: {
           type: 'single_schedule',
@@ -76,7 +77,7 @@ const BookingService = () => {
           startDate: format(selectDay.toString(), 'yyyy-MM-dd'),
           endDate: format(selectDay.toString(), 'yyyy-MM-dd'),
           court: bookingData.service[0] ?? '',
-          branch: bookingData.selectedBrach
+          branch: branchDetail
         },
         schedule: {
           type: 'booking',
@@ -102,7 +103,7 @@ const BookingService = () => {
           startDate: format(selectDay.toString(), 'yyyy-MM-dd'),
           endDate: format(selectDay.toString(), 'yyyy-MM-dd'),
           court: bookingData.service[0] ?? '',
-          branch: bookingData.selectedBrach
+          branch: branchDetail
         },
         schedule: {
           type: 'booking',
@@ -326,7 +327,7 @@ const BookingService = () => {
           <Button
             colorScheme={'green'}
             onPress={handleBooking}
-            isDisabled={bookingData.selectedBrach && bookingData.service?.length > 0 && selectedStylist ? false : true}
+            isDisabled={branchDetail && bookingData.service?.length > 0 && selectedStylist ? false : true}
           >
             Chốt Giờ Cắt
           </Button>
