@@ -27,7 +27,7 @@ const ReceiptCard = ({ item, onPressReceiptCard }: { onPressReceiptCard: (id: st
     if (item.feedback) {
       router.push(`/(tabs)/receipt/${id}` + '?feedback=' + encodeURIComponent(JSON.stringify(item.feedback)))
     }
-    router.push(`/(tabs)/receipt/${id}`)
+    router.push(`/(tabs)/receipt/${id}` + '?feedback=' + encodeURIComponent(''))
   }
   return (
     <TouchableOpacity

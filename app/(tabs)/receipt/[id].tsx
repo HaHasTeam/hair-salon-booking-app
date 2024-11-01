@@ -6,9 +6,10 @@ import { ActivityIndicator, Image, Text, View, StyleSheet } from 'react-native'
 
 const ReceiptDetail = () => {
   const { id: bookingId, feedback } = useLocalSearchParams<{ id: string; feedback: any }>()
+  console.log(feedback, 'feedback')
 
   const { data: order, isLoading, error, refetch } = useBookingDetail({ id: bookingId })
-  const parseFeedback = JSON.parse(decodeURIComponent(feedback) as string) || ''
+  const parseFeedback = feedback ? JSON.parse(decodeURIComponent(feedback) as string) : ''
   console.log(parseFeedback, 'parseFeedback')
 
   if (isLoading) {
