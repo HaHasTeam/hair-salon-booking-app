@@ -35,6 +35,14 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
       ]
     ],
 
