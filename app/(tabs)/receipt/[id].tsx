@@ -106,7 +106,7 @@ const ReceiptDetail = () => {
         {!!parseFeedback && (
           <View
             style={{
-              backgroundColor: '#f0f0f0',
+              backgroundColor: '#fff',
               padding: 10,
               borderRadius: 5,
               alignSelf: 'flex-start',

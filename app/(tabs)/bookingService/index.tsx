@@ -177,7 +177,7 @@ const BookingService = () => {
             </Text>
             <Pressable
               onPress={() => {
-                router.push('/(tabs)/bookingService/ChooseService')
+                router.push(`/(tabs)/bookingService/ChooseService?branchId=${branchId}`)
               }}
               isDisabled={branchDetail ? false : true}
             >

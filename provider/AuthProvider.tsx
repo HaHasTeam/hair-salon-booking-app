@@ -1,7 +1,7 @@
 import { IUser } from '@/types/RootStackParamList.interface'
 import { log } from '@/utils/logger.util'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
 import { jwtDecode } from 'jwt-decode'
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
 
@@ -29,9 +29,13 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [refreshToken, setRefreshToken] = useState<string | null>(null)
   const [profile, setProfile] = useState<any | IUser.IModel>(null)
   const [loading, setLoading] = useState(true)
-  const navigation = useNavigation()
+  const navigation = useRouter()
   const data = useResgistRefetch()
-
+  useEffect(() => {
+    if (profile) {
+      navigation.navigate('/(tabs)')
+    }
+  }, [!!profile])
   useEffect(() => {
     const fetchSession = async () => {
       console.log('fetch session')
